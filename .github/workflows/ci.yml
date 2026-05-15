@@ -63,6 +63,58 @@ jobs:
           path: allure-results-e2e/
           if-no-files-found: warn
 
+  report-failure:
+    needs: [unit-tests, e2e-tests]
+    if: |
+      always() &&
+      github.event_name == 'push' &&
+      (needs.unit-tests.result == 'failure' || needs.e2e-tests.result == 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Build failure summary
+        id: summary
+        run: |
+          FAILED=""
+          [ "${{ needs.unit-tests.result }}" = "failure" ] && FAILED="${FAILED}- Unit tests\n"
+          [ "${{ needs.e2e-tests.result }}" = "failure" ] && FAILED="${FAILED}- E2E tests\n"
+          echo "failed_jobs<<EOF" >> $GITHUB_OUTPUT
+          printf "$FAILED" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create or comment on CI failure issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          LABEL="ci-failure"
+          TITLE="CI failure on main"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          COMMIT="${{ github.sha }}"
+          SHORT_SHA="${COMMIT:0:7}"
+          FAILED_JOBS="${{ steps.summary.outputs.failed_jobs }}"
+
+          BODY="## CI failed on [\`${SHORT_SHA}\`](${{ github.server_url }}/${{ github.repository }}/commit/${COMMIT})
+
+          **Failed jobs:**
+          ${FAILED_JOBS}
+          **Run:** ${RUN_URL}"
+
+          # Check for existing open issue with this label
+          EXISTING=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY"
+            echo "Commented on existing issue #${EXISTING}"
+          else
+            gh issue create \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "$LABEL"
+            echo "Created new CI failure issue"
+          fi
+
   publish-report:
     needs: [unit-tests, e2e-tests]
     if: always()
