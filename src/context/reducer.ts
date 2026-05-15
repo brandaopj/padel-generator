@@ -4,14 +4,10 @@ export type Action =
   | { type: 'SET_MODE'; payload: GameMode }
   | { type: 'SET_COURTS'; payload: number }
   | { type: 'SET_CLUB_NAME'; payload: string }
-  | { type: 'ADD_PLAYER'; payload: string }
-  | { type: 'REMOVE_PLAYER'; payload: number }
-  | { type: 'ADD_PAIR'; payload: Pair }
-  | { type: 'REMOVE_PAIR'; payload: number }
-  | { type: 'ADD_TABLE_A'; payload: string }
-  | { type: 'REMOVE_TABLE_A'; payload: number }
-  | { type: 'ADD_TABLE_B'; payload: string }
-  | { type: 'REMOVE_TABLE_B'; payload: number }
+  | { type: 'SET_PLAYERS'; payload: string[] }
+  | { type: 'SET_PAIRS'; payload: Pair[] }
+  | { type: 'SET_TABLE_A'; payload: string[] }
+  | { type: 'SET_TABLE_B'; payload: string[] }
   | { type: 'SET_GENERATED'; payload: Tournament | null }
   | { type: 'RESET' }
 
@@ -26,31 +22,38 @@ export const initialState: AppState = {
   generated: null,
 }
 
+function autoCourts(numPairs: number): number {
+  return Math.max(1, Math.floor(numPairs / 2))
+}
+
 export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'SET_MODE':
-      // Switching mode resets inputs but preserves courts and clubName
       return { ...initialState, mode: action.payload, courts: state.courts, clubName: state.clubName }
     case 'SET_COURTS':
       return { ...state, courts: action.payload }
     case 'SET_CLUB_NAME':
       return { ...state, clubName: action.payload }
-    case 'ADD_PLAYER':
-      return { ...state, players: [...state.players, action.payload] }
-    case 'REMOVE_PLAYER':
-      return { ...state, players: state.players.filter((_, i) => i !== action.payload) }
-    case 'ADD_PAIR':
-      return { ...state, pairs: [...state.pairs, action.payload] }
-    case 'REMOVE_PAIR':
-      return { ...state, pairs: state.pairs.filter((_, i) => i !== action.payload) }
-    case 'ADD_TABLE_A':
-      return { ...state, tableA: [...state.tableA, action.payload] }
-    case 'REMOVE_TABLE_A':
-      return { ...state, tableA: state.tableA.filter((_, i) => i !== action.payload) }
-    case 'ADD_TABLE_B':
-      return { ...state, tableB: [...state.tableB, action.payload] }
-    case 'REMOVE_TABLE_B':
-      return { ...state, tableB: state.tableB.filter((_, i) => i !== action.payload) }
+    case 'SET_PLAYERS': {
+      const players = action.payload
+      const courts = autoCourts(Math.floor(players.length / 2))
+      return { ...state, players, courts }
+    }
+    case 'SET_PAIRS': {
+      const pairs = action.payload
+      const courts = autoCourts(pairs.length)
+      return { ...state, pairs, courts }
+    }
+    case 'SET_TABLE_A': {
+      const tableA = action.payload
+      const courts = autoCourts(Math.min(tableA.length, state.tableB.length))
+      return { ...state, tableA, courts }
+    }
+    case 'SET_TABLE_B': {
+      const tableB = action.payload
+      const courts = autoCourts(Math.min(state.tableA.length, tableB.length))
+      return { ...state, tableB, courts }
+    }
     case 'SET_GENERATED':
       return { ...state, generated: action.payload }
     case 'RESET':

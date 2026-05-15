@@ -1,10 +1,9 @@
 import { test, expect } from '@playwright/test'
 
 test.describe('Regular mode', () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, context }) => {
+    await context.addInitScript(() => localStorage.clear())
     await page.goto('/')
-    await page.evaluate(() => localStorage.clear())
-    await page.reload()
   })
 
   test('generates rounds for 8 players on 2 courts', async ({ page }) => {
@@ -12,10 +11,7 @@ test.describe('Regular mode', () => {
     await expect(page.getByTestId('mode-regular')).toHaveAttribute('aria-selected', 'true')
 
     const players = ['Ana', 'Bruno', 'Carlos', 'Diana', 'Eva', 'Filipe', 'Gina', 'Hugo']
-    for (const player of players) {
-      await page.getByTestId('player-input').fill(player)
-      await page.getByTestId('player-add').click()
-    }
+    await page.getByTestId('player-input').fill(players.join('\n'))
 
     await expect(page.getByTestId('validation-error')).toHaveCount(0)
     await expect(page.getByTestId('generate-button')).toBeEnabled()
@@ -33,20 +29,14 @@ test.describe('Regular mode', () => {
   })
 
   test('generate button is disabled for fewer than 4 players', async ({ page }) => {
-    await page.getByTestId('player-input').fill('Ana')
-    await page.getByTestId('player-add').click()
-    await page.getByTestId('player-input').fill('Bruno')
-    await page.getByTestId('player-add').click()
+    await page.getByTestId('player-input').fill('Ana\nBruno')
 
     await expect(page.getByTestId('validation-error').first()).toBeVisible()
     await expect(page.getByTestId('generate-button')).toBeDisabled()
   })
 
   test('generate button is disabled for odd number of players', async ({ page }) => {
-    for (const player of ['Ana', 'Bruno', 'Carlos', 'Diana', 'Eva']) {
-      await page.getByTestId('player-input').fill(player)
-      await page.getByTestId('player-add').click()
-    }
+    await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana\nEva')
 
     await expect(page.getByTestId('validation-error').first()).toContainText('par')
     await expect(page.getByTestId('generate-button')).toBeDisabled()
@@ -54,10 +44,7 @@ test.describe('Regular mode', () => {
 
   test('generated tournament appears in history', async ({ page }) => {
     await page.getByTestId('club-name-input').fill('Clube Histórico')
-    for (const player of ['Ana', 'Bruno', 'Carlos', 'Diana']) {
-      await page.getByTestId('player-input').fill(player)
-      await page.getByTestId('player-add').click()
-    }
+    await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
     await page.getByTestId('generate-button').click()
     await expect(page.getByTestId('rounds-panel')).toBeVisible()
 
@@ -68,10 +55,7 @@ test.describe('Regular mode', () => {
 
   test('history entry links to tournament detail page', async ({ page }) => {
     await page.getByTestId('club-name-input').fill('Clube Link')
-    for (const player of ['Ana', 'Bruno', 'Carlos', 'Diana']) {
-      await page.getByTestId('player-input').fill(player)
-      await page.getByTestId('player-add').click()
-    }
+    await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
     await page.getByTestId('generate-button').click()
 
     await page.click('text=Histórico')

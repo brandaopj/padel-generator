@@ -36,7 +36,7 @@ export function RoundsPanel({ tournament }: Props) {
         )}
       </div>
       {tournament.rounds.map(round => (
-        <RoundCard key={round.number} round={round} />
+        <RoundCard key={round.number} round={round} courts={tournament.courts} />
       ))}
     </div>
   )

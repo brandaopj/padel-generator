@@ -17,6 +17,12 @@ export function GeneratorPage() {
   const { save } = useHistory()
   const { errors, warnings } = validate(state)
 
+  const hasInputs =
+    state.players.length > 0 ||
+    state.pairs.length > 0 ||
+    state.tableA.length > 0 ||
+    state.tableB.length > 0
+
   function handleGenerate() {
     const tournament = generateTournament({
       mode: state.mode,
@@ -64,16 +70,14 @@ export function GeneratorPage() {
           {state.mode === 'regular' && (
             <PlayerInput
               players={state.players}
-              onAdd={name => dispatch({ type: 'ADD_PLAYER', payload: name })}
-              onRemove={i => dispatch({ type: 'REMOVE_PLAYER', payload: i })}
+              onChange={players => dispatch({ type: 'SET_PLAYERS', payload: players })}
             />
           )}
 
           {state.mode === 'fixed-pairs' && (
             <PairInput
               pairs={state.pairs}
-              onAdd={pair => dispatch({ type: 'ADD_PAIR', payload: pair })}
-              onRemove={i => dispatch({ type: 'REMOVE_PAIR', payload: i })}
+              onChange={pairs => dispatch({ type: 'SET_PAIRS', payload: pairs })}
             />
           )}
 
@@ -81,14 +85,12 @@ export function GeneratorPage() {
             <SeededInput
               tableA={state.tableA}
               tableB={state.tableB}
-              onAddA={name => dispatch({ type: 'ADD_TABLE_A', payload: name })}
-              onRemoveA={i => dispatch({ type: 'REMOVE_TABLE_A', payload: i })}
-              onAddB={name => dispatch({ type: 'ADD_TABLE_B', payload: name })}
-              onRemoveB={i => dispatch({ type: 'REMOVE_TABLE_B', payload: i })}
+              onChangeA={tableA => dispatch({ type: 'SET_TABLE_A', payload: tableA })}
+              onChangeB={tableB => dispatch({ type: 'SET_TABLE_B', payload: tableB })}
             />
           )}
 
-          <ValidationBanner errors={errors} warnings={warnings} />
+          {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
 
           <button
             data-testid="generate-button"
