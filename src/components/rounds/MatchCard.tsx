@@ -25,7 +25,7 @@ function PairColumn({ pair }: { pair: Pair }) {
       {pair.map((name, i) => (
         <div key={i} className="flex items-center gap-2 min-w-0">
           <PlayerAvatar />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{name}</span>
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words">{name}</span>
         </div>
       ))}
     </div>
