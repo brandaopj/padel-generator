@@ -57,4 +57,20 @@ describe('useHistory', () => {
     const { getAll } = useHistory()
     expect(getAll()).toEqual([])
   })
+
+  it('update replaces tournament in history by id', () => {
+    const { save, update, getById } = useHistory()
+    save(makeTournament('t1', 'Original'))
+    const updated = { ...makeTournament('t1', 'Updated'), courtNames: { 1: 'Padel Lisboa' } }
+    update(updated)
+    expect(getById('t1')?.clubName).toBe('Updated')
+    expect(getById('t1')?.courtNames?.[1]).toBe('Padel Lisboa')
+  })
+
+  it('update does nothing when id not found', () => {
+    const { save, update, getAll } = useHistory()
+    save(makeTournament('t1'))
+    update(makeTournament('nonexistent'))
+    expect(getAll()).toHaveLength(1)
+  })
 })

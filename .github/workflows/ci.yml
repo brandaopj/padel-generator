@@ -87,16 +87,6 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Build failure summary
-        id: summary
-        run: |
-          FAILED=""
-          [ "${{ needs.unit-tests.result }}" = "failure" ] && FAILED="${FAILED}- Unit tests\n"
-          [ "${{ needs.e2e-tests.result }}" = "failure" ] && FAILED="${FAILED}- E2E tests\n"
-          echo "failed_jobs<<EOF" >> $GITHUB_OUTPUT
-          printf "$FAILED" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
       - name: Create or comment on CI failure issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -107,15 +97,18 @@ jobs:
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           COMMIT="${{ github.sha }}"
           SHORT_SHA="${COMMIT:0:7}"
-          FAILED_JOBS="${{ steps.summary.outputs.failed_jobs }}"
 
-          BODY="## CI failed on [\`${SHORT_SHA}\`](${{ github.server_url }}/${{ github.repository }}/commit/${COMMIT})
+          FAILED=""
+          [ "${{ needs.unit-tests.result }}" = "failure" ] && FAILED="${FAILED}- Unit tests\n"
+          [ "${{ needs.e2e-tests.result }}" = "failure" ] && FAILED="${FAILED}- E2E tests\n"
 
-          **Failed jobs:**
-          ${FAILED_JOBS}
-          **Run:** ${RUN_URL}"
+          BODY=$(printf "## CI failed on [\`%s\`](%s/%s/commit/%s)\n\n**Failed jobs:**\n%s\n**Run:** %s" \
+            "$SHORT_SHA" \
+            "${{ github.server_url }}/${{ github.repository }}" \
+            "$COMMIT" \
+            "$FAILED" \
+            "$RUN_URL")
 
-          # Check for existing open issue with this label
           EXISTING=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
 
           if [ -n "$EXISTING" ]; then

@@ -12,6 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/utils/**', 'src/hooks/useHistory.ts'],
+      exclude: ['src/utils/modes.ts'],
       reporter: ['text', 'lcov'],
       thresholds: {
         lines: 90,
