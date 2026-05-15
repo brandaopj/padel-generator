@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-unit
+          path: allure-results/
+          if-no-files-found: warn
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Build app
+        run: npm run build
+        env:
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+
+      - name: Run e2e tests against preview server
+        run: npm run test:e2e
+        env:
+          CI: true
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-e2e
+          path: allure-results-e2e/
+          if-no-files-found: warn
+
+  publish-report:
+    needs: [unit-tests, e2e-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: allure-results-unit
+          path: allure-input/
+        continue-on-error: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: allure-results-e2e
+          path: allure-input/
+        continue-on-error: true
+
+      - name: Generate Allure report
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-input --clean -o allure-report
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report/
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
