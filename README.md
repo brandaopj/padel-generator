@@ -19,8 +19,11 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 ### Other features
 
 - Club name field per tournament
-- Court count selector (matches distributed cyclically across courts)
-- Round-robin scheduling — every pair plays every other pair exactly once
+- Court count calculated automatically from the number of pairs
+- Round-robin scheduling — every pair plays every other pair exactly once, all matches per round are simultaneous
+- Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
+- Names preserved when switching between modes — no need to re-enter if the wrong mode was selected
+- Validation errors shown only after the user starts entering names
 - Read-only tournament history stored in `localStorage`
 - Dark mode with `localStorage` persistence
 - Print view with blank score lines for on-court annotation
@@ -57,9 +60,9 @@ src/
 │   └── useDarkMode.ts  # Dark mode toggle with persistence
 ├── context/
 │   ├── AppContext.tsx   # Provider + AppContext
-│   └── reducer.ts      # Reducer + initialState (13 action types)
+│   └── reducer.ts      # Reducer + initialState with auto-courts calculation
 ├── components/
-│   ├── generator/      # ModeSelector, CourtSelector, PlayerInput, PairInput, SeededInput, ValidationBanner
+│   ├── generator/      # ModeSelector, PlayerInput, PairInput, SeededInput, ValidationBanner
 │   ├── rounds/         # RoundsPanel, RoundCard, MatchCard
 │   ├── history/        # HistoryList, HistoryEntry
 │   └── ui/             # ErrorBoundary, DarkModeToggle, PrintButton
