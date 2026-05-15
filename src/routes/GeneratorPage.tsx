@@ -13,7 +13,7 @@ import { useHistory } from '../hooks/useHistory'
 
 export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
-  const { save } = useHistory()
+  const { save, update } = useHistory()
   const { errors, warnings } = validate(state)
   const [showSuccess, setShowSuccess] = useState(false)
   const [isStale, setIsStale] = useState(false)
@@ -30,6 +30,16 @@ export function GeneratorPage() {
       setIsStale(true)
     }
   }, [state.players, state.pairs, state.tableA, state.tableB, state.mode, state.clubName])
+
+  function handleEditCourtName(court: number, name: string) {
+    if (!state.generated) return
+    dispatch({ type: 'SET_COURT_NAME', payload: { court, name } })
+    const updated = {
+      ...state.generated,
+      courtNames: { ...state.generated.courtNames, [court]: name },
+    }
+    update(updated)
+  }
 
   function handleGenerate() {
     const tournament = generateTournament({
@@ -149,7 +159,7 @@ export function GeneratorPage() {
               <PrintButton />
             </div>
           )}
-          <RoundsPanel tournament={state.generated} />
+          <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} />
         </div>
 
       </div>

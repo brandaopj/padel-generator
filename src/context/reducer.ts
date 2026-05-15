@@ -9,6 +9,7 @@ export type Action =
   | { type: 'SET_TABLE_A'; payload: string[] }
   | { type: 'SET_TABLE_B'; payload: string[] }
   | { type: 'SET_GENERATED'; payload: Tournament | null }
+  | { type: 'SET_COURT_NAME'; payload: { court: number; name: string } }
   | { type: 'RESET' }
 
 export const initialState: AppState = {
@@ -56,6 +57,12 @@ export function reducer(state: AppState, action: Action): AppState {
     }
     case 'SET_GENERATED':
       return { ...state, generated: action.payload }
+    case 'SET_COURT_NAME': {
+      if (!state.generated) return state
+      const { court, name } = action.payload
+      const courtNames = { ...state.generated.courtNames, [court]: name }
+      return { ...state, generated: { ...state.generated, courtNames } }
+    }
     case 'RESET':
       return initialState
     default:

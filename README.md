@@ -34,6 +34,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Two-column symmetric layout — both pairs always aligned
 - Player names wrap to multiple lines — no truncation regardless of name length
 - Score writing area at the bottom of each card
+- Court names editable inline after generation — click the pencil icon to rename any court (e.g. "Padel Lisboa"); names persist in history and print
 
 ### Navigation & history
 

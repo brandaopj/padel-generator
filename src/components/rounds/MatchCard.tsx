@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import type { Match, Pair } from '../../types'
 
 function PlayerAvatar() {
@@ -32,17 +33,68 @@ function PairColumn({ pair }: { pair: Pair }) {
   )
 }
 
-type Props = { match: Match }
+function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) => void }) {
+  const [editing, setEditing] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
-export function MatchCard({ match }: Props) {
+  if (editing) {
+    return (
+      <input
+        ref={inputRef}
+        defaultValue={name}
+        autoFocus
+        aria-label="Nome do campo"
+        className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-b border-blue-500 outline-none w-40 mb-2"
+        onBlur={e => {
+          const val = e.target.value.trim()
+          onEdit?.(val || name)
+          setEditing(false)
+        }}
+        onKeyDown={e => {
+          if (e.key === 'Enter') (e.target as HTMLInputElement).blur()
+          if (e.key === 'Escape') setEditing(false)
+        }}
+      />
+    )
+  }
+
+  if (!onEdit) {
+    return (
+      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">{name}</div>
+    )
+  }
+
+  return (
+    <div className="flex items-center gap-1 mb-2">
+      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{name}</span>
+      <button
+        type="button"
+        onClick={() => setEditing(true)}
+        aria-label={`Editar nome: ${name}`}
+        title="Editar nome do campo"
+        className="print:hidden text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+      >
+        <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
+type Props = {
+  match: Match
+  courtName: string
+  onEditCourtName?: (name: string) => void
+}
+
+export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
       className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 print:p-4 print:border-gray-400"
     >
-      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
-        Campo {match.court}
-      </div>
+      <CourtLabel name={courtName} onEdit={onEditCourtName} />
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <PairColumn pair={match.pair1} />
         <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-1 self-center">vs</span>

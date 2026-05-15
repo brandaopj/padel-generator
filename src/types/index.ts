@@ -26,6 +26,7 @@ export type Tournament = {
   tableB?: string[]      // Seeded: original Table B
   rounds: Round[]
   seededWarning?: boolean
+  courtNames?: Record<number, string>
 }
 
 export type AppState = {

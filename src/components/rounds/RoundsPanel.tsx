@@ -1,9 +1,12 @@
 import type { Tournament } from '../../types'
 import { RoundCard } from './RoundCard'
 
-type Props = { tournament: Tournament | null }
+type Props = {
+  tournament: Tournament | null
+  onEditCourtName?: (court: number, name: string) => void
+}
 
-export function RoundsPanel({ tournament }: Props) {
+export function RoundsPanel({ tournament, onEditCourtName }: Props) {
   if (!tournament) {
     return (
       <div
@@ -37,7 +40,12 @@ export function RoundsPanel({ tournament }: Props) {
         )}
       </div>
       {tournament.rounds.map(round => (
-        <RoundCard key={round.number} round={round} />
+        <RoundCard
+          key={round.number}
+          round={round}
+          courtNames={tournament.courtNames}
+          onEditCourtName={onEditCourtName}
+        />
       ))}
     </div>
   )

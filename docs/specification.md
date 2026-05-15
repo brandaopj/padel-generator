@@ -203,11 +203,22 @@ O sistema deve suportar exactamente três modos:
 #### RF-17 — Card de jogo (MatchCard)
 
 Cada jogo deve ser apresentado num card com:
-- Número do campo (ex: "Campo 1")
+- Nome do campo (ex: "Campo 1", editável após geração — ver RF-17a)
 - Os dois jogadores de cada dupla com avatar (ícone de silhueta neutra) ao lado de cada nome
 - Layout de duas colunas simétricas (`1fr auto 1fr`) com "vs" centrado
 - Os nomes devem quebrar linha se forem longos (sem truncagem)
 - Área de escrita para o organizador anotar o resultado manualmente
+
+#### RF-17a — Edição do nome do campo
+
+- Após gerar um torneio, o nome de cada campo deve ser editável inline
+- Cada card mostra um ícone de lápis (oculto em impressão) junto ao nome do campo
+- Ao clicar, o nome torna-se um campo de texto inline; ao sair (blur) ou premir Enter, guarda o nome
+- Premir Escape cancela a edição sem guardar
+- O nome editado aplica-se a todos os cards do mesmo campo em todas as rondas
+- Os nomes editados são persistidos automaticamente no histórico (`localStorage`)
+- Em impressão e no detalhe histórico, o nome editado é mostrado em vez de "Campo N"
+- Por omissão (sem edição), o nome do campo é "Campo N" onde N é o número sequencial
 
 #### RF-18 — Estado vazio do painel
 
@@ -293,7 +304,7 @@ Header fixo (sticky) com:
 | RN-03 | Em modo Regular, o número de jogadores tem de ser múltiplo de 4 |
 | RN-04 | O número de campos é sempre `max(1, floor(numDuplas / 2))` |
 | RN-05 | Em modo Cabeças de Série com tabelas de tamanhos diferentes, são usados `min(|A|, |B|)` pares |
-| RN-06 | O histórico é de leitura — não é possível editar ou apagar torneios |
+| RN-06 | O histórico é de leitura — não é possível editar ou apagar torneios; excepção: o nome dos campos pode ser editado e é persistido automaticamente |
 | RN-07 | Cada torneio tem um UUID único gerado no momento da criação |
 | RN-08 | Um torneio com N duplas tem exactamente N−1 rondas (round-robin completo) |
 | RN-09 | Cada dupla joga contra todas as outras exactamente uma vez |
@@ -379,6 +390,7 @@ type Tournament = {
   tableB?: string[]                    // Cabeças de Série: Tabela B original
   rounds: Round[]
   seededWarning?: boolean              // true se |tableA| ≠ |tableB|
+  courtNames?: Record<number, string>  // nomes personalizados por número de campo
 }
 ```
 

@@ -176,6 +176,9 @@ O histórico de torneios deve ser persistido em `localStorage` sob a chave `pade
 #### RF-32 Tratamento de erros global
 A aplicação deve ter um error boundary global que captura erros de renderização React, reporta para Sentry (quando configurado) e apresenta ao utilizador um ecrã de erro com opção de recarregar a página.
 
+#### RF-33 Edição de nomes de campos
+Após gerar um torneio, o nome de cada campo deve ser editável inline nos cards de jogo. O utilizador clica no ícone de lápis junto ao nome do campo, escreve o nome personalizado (ex: "Padel Lisboa"), e confirma com Enter ou clicando noutro sítio. O nome editado deve ser visível em todos os cards do mesmo campo em todas as rondas, na versão de impressão e no detalhe do histórico. Os nomes editados são persistidos automaticamente no `localStorage`. Por omissão, cada campo é denominado "Campo N".
+
 ---
 
 ## 5. Regras de Negócio
@@ -187,7 +190,7 @@ A aplicação deve ter um error boundary global que captura erros de renderizaç
 | RN-03 | Em modo Regular, o número de jogadores tem de ser múltiplo de 4 |
 | RN-04 | O número de campos é sempre `max(1, floor(numDuplas / 2))` |
 | RN-05 | Em modo Cabeças de Série, se as tabelas tiverem tamanhos diferentes, são usados `min(\|A\|, \|B\|)` pares e o utilizador é avisado |
-| RN-06 | O histórico é apenas para leitura — não é possível editar ou apagar torneios passados |
+| RN-06 | O histórico é apenas para leitura — não é possível editar ou apagar torneios passados; excepção: o nome dos campos pode ser editado inline e é persistido automaticamente |
 | RN-07 | Cada torneio é identificado por um UUID gerado no momento da criação |
 
 ---
