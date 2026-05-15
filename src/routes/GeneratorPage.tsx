@@ -33,10 +33,10 @@ export function GeneratorPage() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 lg:p-8">
-      <div className="flex flex-col lg:flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
 
         {/* Form panel */}
-        <div className="lg:w-96 shrink-0 space-y-5">
+        <div className="lg:w-96 shrink-0 space-y-5 relative z-10">
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Nome do clube
