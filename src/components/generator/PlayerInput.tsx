@@ -41,7 +41,7 @@ export function PlayerInput({ players, onChange }: Props) {
         value={raw}
         onChange={handleChange}
         rows={6}
-        placeholder={'Um nome por linha\nEx:\nJoão\nMaria\nPedro\nAna'}
+        placeholder="Um nome por linha (ex: João)"
         className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
       />
     </div>

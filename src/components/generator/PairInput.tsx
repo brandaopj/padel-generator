@@ -51,7 +51,7 @@ export function PairInput({ pairs, onChange }: Props) {
         value={raw}
         onChange={handleChange}
         rows={6}
-        placeholder={'Uma dupla por linha\nEx:\nAna / Bruno\nCarlos / Diana'}
+        placeholder="Uma dupla por linha (ex: Ana / Bruno)"
         className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
       />
       <p className="text-xs text-gray-500 dark:text-gray-400">Formato: Jogador1 / Jogador2</p>
