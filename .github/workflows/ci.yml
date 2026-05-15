@@ -115,6 +115,37 @@ jobs:
             echo "Created new CI failure issue"
           fi
 
+  resolve-failure:
+    needs: [unit-tests, e2e-tests]
+    if: |
+      always() &&
+      github.event_name == 'push' &&
+      needs.unit-tests.result == 'success' &&
+      needs.e2e-tests.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close ci-failure issue if tests are green
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          LABEL="ci-failure"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          COMMIT="${{ github.sha }}"
+          SHORT_SHA="${COMMIT:0:7}"
+
+          EXISTING=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "All tests passed on [\`${SHORT_SHA}\`](${{ github.server_url }}/${{ github.repository }}/commit/${COMMIT}). Closing automatically. Run: ${RUN_URL}"
+            gh issue close "$EXISTING"
+            echo "Closed issue #${EXISTING}"
+          else
+            echo "No open ci-failure issue found — nothing to close"
+          fi
+
   publish-report:
     needs: [unit-tests, e2e-tests]
     if: always()
