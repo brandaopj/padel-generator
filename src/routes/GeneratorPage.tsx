@@ -1,7 +1,6 @@
 import { useContext } from 'react'
 import { AppContext } from '../context/AppContext'
 import { ModeSelector } from '../components/generator/ModeSelector'
-import { CourtSelector } from '../components/generator/CourtSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
 import { PairInput } from '../components/generator/PairInput'
 import { SeededInput } from '../components/generator/SeededInput'
@@ -62,12 +61,7 @@ export function GeneratorPage() {
             onChange={mode => dispatch({ type: 'SET_MODE', payload: mode })}
           />
 
-          <CourtSelector
-            value={state.courts}
-            onChange={courts => dispatch({ type: 'SET_COURTS', payload: courts })}
-          />
-
-          {state.mode === 'regular' && (
+{state.mode === 'regular' && (
             <PlayerInput
               players={state.players}
               onChange={players => dispatch({ type: 'SET_PLAYERS', payload: players })}
