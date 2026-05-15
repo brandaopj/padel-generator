@@ -29,7 +29,7 @@ function autoCourts(numPairs: number): number {
 export function reducer(state: AppState, action: Action): AppState {
   switch (action.type) {
     case 'SET_MODE':
-      return { ...initialState, mode: action.payload, courts: state.courts, clubName: state.clubName }
+      return { ...state, mode: action.payload, generated: null }
     case 'SET_COURTS':
       return { ...state, courts: action.payload }
     case 'SET_CLUB_NAME':
