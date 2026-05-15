@@ -155,8 +155,14 @@ push → unit-tests → e2e-tests → publish-report (GitHub Pages)
 | `unit-tests` | Vitest + Allure results upload |
 | `e2e-tests` | Build → preview server → Playwright → Allure results upload |
 | `publish-report` | Merges both Allure result sets → deploys to GitHub Pages |
+| `report-failure` | Opens a GitHub issue if any test job fails (adds a comment if one is already open) |
+| `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
 
 Vercel deployment is automatic via Git integration — every push to `main` triggers a new production deploy.
+
+### Failure tracking
+
+When tests fail on `main`, the pipeline automatically opens a GitHub issue labelled [`ci-failure`](https://github.com/brandaopj/padel-generator/labels/ci-failure) with a link to the failing run. Subsequent failures on the same issue add a comment rather than opening duplicates. The issue is closed automatically once all tests pass again.
 
 ### Required secret
 
