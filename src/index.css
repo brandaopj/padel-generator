@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* Class-based dark mode for Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Print: hide non-essential UI */
+@media print {
+  .print\:hidden { display: none !important; }
+}
