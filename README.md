@@ -1,60 +1,60 @@
 # Padel Generator
 
-Gerador de torneios de padel com suporte a três modos de jogo, histórico de torneios, dark mode e impressão de tabelas.
+Tournament scheduler for padel, supporting three game modes, tournament history, dark mode, and print-ready scoresheets.
 
-**App em produção:** https://padel-generator-three.vercel.app
-
----
-
-## Funcionalidades
-
-### Modos de jogo
-
-| Modo | Descrição |
-|------|-----------|
-| **Regular** | Pares aleatórios formados a partir de uma lista de jogadores |
-| **Duplas Fixas** | Pares pré-definidos pelo utilizador |
-| **Cabeças de Série** | Tabela A vs Tabela B — pares emparelhados por posição após shuffle |
-
-### Outras funcionalidades
-
-- Nome do clube configurável por torneio
-- Seletor de número de campos (distribui jogos ciclicamente)
-- Algoritmo round-robin — cada par joga contra todos os outros exatamente uma vez
-- Histórico de torneios guardado em `localStorage` (apenas leitura)
-- Dark mode com persistência em `localStorage`
-- Vista de impressão com espaço para anotar resultados
+**Live app:** https://padel-generator-three.vercel.app
 
 ---
 
-## Tecnologias
+## Features
 
-| Camada | Tecnologia |
-|--------|------------|
+### Game modes
+
+| Mode | Description |
+|------|-------------|
+| **Regular** | Random pairs drawn from a list of players |
+| **Fixed Pairs** | User-defined pairs |
+| **Seeded** | Table A vs Table B — pairs matched by position after independent shuffles |
+
+### Other features
+
+- Club name field per tournament
+- Court count selector (matches distributed cyclically across courts)
+- Round-robin scheduling — every pair plays every other pair exactly once
+- Read-only tournament history stored in `localStorage`
+- Dark mode with `localStorage` persistence
+- Print view with blank score lines for on-court annotation
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|-------|------------|
 | Framework | React 19 + TypeScript |
 | Build | Vite 8 |
 | Routing | React Router v7 |
-| Estado | Context + useReducer (sem biblioteca externa) |
-| Estilos | Tailwind CSS v4 |
+| State | Context + useReducer (no external library) |
+| Styles | Tailwind CSS v4 |
 | Monitoring | Sentry v8 (`@sentry/react`) |
-| Testes unitários | Vitest 4 + jsdom |
-| Testes e2e | Playwright + Chromium |
-| Relatórios de testes | Allure (unit + e2e) |
+| Unit tests | Vitest 4 + jsdom |
+| E2E tests | Playwright + Chromium |
+| Test reports | Allure (unit + e2e) |
 | CI/CD | GitHub Actions → Vercel (deploy) + GitHub Pages (Allure Report) |
 
 ---
 
-## Estrutura do projeto
+## Project structure
 
 ```
 src/
-├── types/          # Tipos partilhados (GameMode, Match, Round, Tournament, AppState)
+├── types/          # Shared types (GameMode, Match, Round, Tournament, AppState)
 ├── utils/
-│   ├── gameLogic.ts    # Lógica pura: shuffle, round-robin, distribuição de campos
-│   └── validation.ts   # Validações de formulário (errors + warnings)
+│   ├── gameLogic.ts    # Pure logic: shuffle, round-robin, court distribution
+│   └── validation.ts   # Form validation (errors + warnings)
 ├── hooks/
-│   ├── useHistory.ts   # CRUD de histórico em localStorage
-│   └── useDarkMode.ts  # Toggle dark mode com persistência
+│   ├── useHistory.ts   # localStorage CRUD for tournament history
+│   └── useDarkMode.ts  # Dark mode toggle with persistence
 ├── context/
 │   ├── AppContext.tsx   # Provider + AppContext
 │   └── reducer.ts      # Reducer + initialState (13 action types)
@@ -64,24 +64,24 @@ src/
 │   ├── history/        # HistoryList, HistoryEntry
 │   └── ui/             # ErrorBoundary, DarkModeToggle, PrintButton
 └── routes/
-    ├── GeneratorPage.tsx        # / — formulário + painel de rondas
-    ├── HistoryPage.tsx          # /history — lista de torneios guardados
-    └── TournamentDetailPage.tsx # /history/:id — detalhe de um torneio
+    ├── GeneratorPage.tsx        # / — form + rounds panel
+    ├── HistoryPage.tsx          # /history — saved tournament list
+    └── TournamentDetailPage.tsx # /history/:id — tournament detail
 tests/
-├── unit/           # 30 testes (gameLogic, validation, history)
-└── e2e/            # 12 testes Playwright (regular, fixed-pairs, seeded)
+├── unit/           # 30 tests (gameLogic, validation, history)
+└── e2e/            # 12 Playwright tests (regular, fixed-pairs, seeded)
 ```
 
 ---
 
-## Desenvolvimento local
+## Local development
 
-### Pré-requisitos
+### Prerequisites
 
 - Node.js 24+
 - npm
 
-### Instalação
+### Setup
 
 ```bash
 git clone git@github.com:brandaopj/padel-generator.git
@@ -89,82 +89,82 @@ cd padel-generator
 npm install
 ```
 
-### Variáveis de ambiente (opcionais)
+### Environment variables (optional)
 
 ```bash
 # .env.local
 VITE_SENTRY_DSN=https://<key>@sentry.io/<project>
 ```
 
-Sem a variável definida, o Sentry fica desativado silenciosamente.
+Without this variable, Sentry is silently disabled — the app works normally.
 
-### Comandos
+### Commands
 
 ```bash
-npm run dev           # Servidor de desenvolvimento (http://localhost:5173)
-npm run build         # Build de produção
-npm run preview       # Pré-visualização do build (http://localhost:4173)
+npm run dev           # Development server (http://localhost:5173)
+npm run build         # Production build
+npm run preview       # Preview production build (http://localhost:4173)
 
-npm run test:unit     # Testes unitários (Vitest)
-npm run test:e2e      # Testes e2e (Playwright, requer build prévia ou dev server)
-npm test              # Unitários + e2e
+npm run test:unit     # Unit tests (Vitest)
+npm run test:e2e      # E2E tests (Playwright — requires a prior build or dev server)
+npm test              # Unit + E2E
 ```
 
 ---
 
-## Testes
+## Tests
 
-### Unitários — 30 testes
+### Unit — 30 tests
 
 ```bash
 npm run test:unit
 ```
 
-Cobrem as funções puras em `src/utils/` e o módulo `useHistory`:
+Cover pure functions in `src/utils/` and the `useHistory` module:
 
 - `gameLogic`: shuffle, makePairs, makeSeededPairs, roundRobin, distribute, generateId
-- `validation`: todos os modos e casos de erro/aviso
-- `history`: getAll, save, getById, dados corrompidos
+- `validation`: all modes, error and warning cases
+- `history`: getAll, save, getById, corrupted data handling
 
-### E2E — 12 testes (Playwright + Chromium)
+### E2E — 12 tests (Playwright + Chromium)
 
 ```bash
 npm run build
 npm run test:e2e
 ```
 
-| Ficheiro | Cenários |
-|----------|----------|
-| `regular.spec.ts` | Geração com 8 jogadores, validações, histórico, detalhe |
-| `fixed-pairs.spec.ts` | Geração com 4 pares, validações, adicionar/remover |
-| `seeded.spec.ts` | Tabelas iguais, aviso para tabelas desiguais, validação mínima |
+| File | Scenarios |
+|------|-----------|
+| `regular.spec.ts` | Generate with 8 players, validation, history save, detail page |
+| `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
+| `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
 
 ---
 
 ## CI/CD
 
-O pipeline GitHub Actions corre em cada push para `main`:
+The GitHub Actions pipeline runs on every push to `main`:
 
 ```
 push → unit-tests → e2e-tests → publish-report (GitHub Pages)
-                              ↘ deploy automático (Vercel)
+                              ↘ auto-deploy (Vercel)
 ```
 
-| Job | O que faz |
-|-----|-----------|
-| `unit-tests` | Vitest + upload de resultados Allure |
-| `e2e-tests` | Build → preview server → Playwright → upload Allure |
-| `publish-report` | Merge dos dois resultados Allure → GitHub Pages |
+| Job | What it does |
+|-----|--------------|
+| `unit-tests` | Vitest + Allure results upload |
+| `e2e-tests` | Build → preview server → Playwright → Allure results upload |
+| `publish-report` | Merges both Allure result sets → deploys to GitHub Pages |
 
-O deploy para Vercel acontece automaticamente via integração Git — cada push para `main` gera um novo deploy de produção.
+Vercel deployment is automatic via Git integration — every push to `main` triggers a new production deploy.
 
-### Secret necessário
+### Required secret
 
-| Nome | Descrição |
-|------|-----------|
-| `VITE_SENTRY_DSN` | DSN do projeto Sentry (opcional — o build funciona sem ele) |
+| Name | Description |
+|------|-------------|
+| `VITE_SENTRY_DSN` | Sentry project DSN (optional — build succeeds without it) |
 
-Configurar em: **GitHub → Settings → Secrets and variables → Actions**
+Set it at: **GitHub → Settings → Secrets and variables → Actions**
 
 ---
 
@@ -173,5 +173,5 @@ Configurar em: **GitHub → Settings → Secrets and variables → Actions**
 | | URL |
 |-|-----|
 | App | https://padel-generator-three.vercel.app |
-| Repositório | https://github.com/brandaopj/padel-generator |
+| Repository | https://github.com/brandaopj/padel-generator |
 | Allure Report | https://brandaopj.github.io/padel-generator |
