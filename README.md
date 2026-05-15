@@ -16,17 +16,41 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | **Fixed Pairs** | User-defined pairs |
 | **Seeded** | Table A vs Table B — pairs matched by position after independent shuffles |
 
-### Other features
+### Generator
 
 - Club name field per tournament
-- Court count calculated automatically from the number of pairs
+- Court count calculated automatically from the number of pairs; shown in real time as names are entered
 - Round-robin scheduling — every pair plays every other pair exactly once, all matches per round are simultaneous
+- Mode description shown below the mode selector to guide first-time users
+- Stale-results warning when the form is edited after a tournament has been generated
 - Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
 - Names preserved when switching between modes — no need to re-enter if the wrong mode was selected
+- Clear button on every textarea with inline confirmation (no native browser dialog)
 - Validation errors shown only after the user starts entering names
+
+### Match cards
+
+- Player avatar (neutral silhouette) shown next to each name
+- Two-column symmetric layout — both pairs always aligned
+- Score writing area at the bottom of each card
+
+### Navigation & history
+
 - Read-only tournament history stored in `localStorage`
+- Auto-scroll to results after generation on mobile
+
+### Accessibility (WCAG 2.1 AA)
+
+- All form labels associated with inputs via `htmlFor`/`id`
+- Validation banner and success banner use `role="alert"` / `role="status"` with `aria-live` — announced by screen readers
+- All decorative icons have `aria-hidden="true"`
+- Input font size `text-base` on mobile — prevents iOS auto-zoom on focus
+- Adequate touch targets on all interactive elements
+
+### Appearance
+
 - Dark mode with `localStorage` persistence
-- Print view with blank score lines for on-court annotation
+- Print view: form panel hidden, A4 page size (`@page { size: A4; margin: 2cm }`), score writing area per match
 
 ---
 
@@ -54,7 +78,8 @@ src/
 ├── types/          # Shared types (GameMode, Match, Round, Tournament, AppState)
 ├── utils/
 │   ├── gameLogic.ts    # Pure logic: shuffle, round-robin, court distribution
-│   └── validation.ts   # Form validation (errors + warnings)
+│   ├── validation.ts   # Form validation (errors + warnings)
+│   └── modes.ts        # Centralised mode labels and descriptions
 ├── hooks/
 │   ├── useHistory.ts   # localStorage CRUD for tournament history
 │   └── useDarkMode.ts  # Dark mode toggle with persistence
@@ -65,7 +90,7 @@ src/
 │   ├── generator/      # ModeSelector, PlayerInput, PairInput, SeededInput, ValidationBanner
 │   ├── rounds/         # RoundsPanel, RoundCard, MatchCard
 │   ├── history/        # HistoryList, HistoryEntry
-│   └── ui/             # ErrorBoundary, DarkModeToggle, PrintButton
+│   └── ui/             # ErrorBoundary, DarkModeToggle, PrintButton, ClearButton
 └── routes/
     ├── GeneratorPage.tsx        # / — form + rounds panel
     ├── HistoryPage.tsx          # /history — saved tournament list
@@ -176,7 +201,7 @@ push → unit-tests ──┬──→ report-failure (if any failed)
 |-----|--------------|
 | `unit-tests` | Vitest with coverage thresholds + Allure and coverage artifacts |
 | `e2e-tests` | Build → preview server → Playwright → Allure and playwright-report artifacts |
-| `publish-report` | Merges both Allure result sets → deploys to GitHub Pages |
+| `publish-report` | Merges both Allure result sets → deploys to GitHub Pages (push to `main` only) |
 | `report-failure` | Opens a GitHub issue if any test job fails; comments on the existing issue if already open |
 | `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
 
@@ -192,7 +217,7 @@ When tests fail on `main`, the pipeline automatically opens a GitHub issue label
 
 ### Dependency updates
 
-Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validates them automatically before merge.
+Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validates them automatically before merge. The `publish-report` job is skipped on pull request runs to avoid conflicts with the GitHub Pages environment protection.
 
 ### Required secret
 
