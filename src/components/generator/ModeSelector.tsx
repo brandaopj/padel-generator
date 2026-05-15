@@ -21,7 +21,7 @@ export function ModeSelector({ value, onChange }: Props) {
           aria-selected={value === mode.value}
           data-testid={`mode-${mode.value}`}
           onClick={() => onChange(mode.value)}
-          className={`flex-1 py-2 px-2 text-sm font-medium transition-colors ${
+          className={`flex-1 py-2 px-2 text-sm font-medium transition-colors whitespace-nowrap ${
             value === mode.value
               ? 'bg-blue-600 text-white'
               : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'

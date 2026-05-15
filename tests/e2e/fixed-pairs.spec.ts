@@ -31,16 +31,17 @@ test.describe('Duplas Fixas mode', () => {
     await expect(page.getByTestId('generate-button')).toBeDisabled()
   })
 
-  test('pairs appear in list after adding', async ({ page }) => {
+  test('pairs appear in textarea after adding', async ({ page }) => {
     await page.getByTestId('pair-input').fill('Ana / Bruno')
 
-    await expect(page.getByTestId('pair-0')).toContainText('Ana / Bruno')
+    await expect(page.getByTestId('pair-input')).toHaveValue('Ana / Bruno')
   })
 
-  test('can remove a pair', async ({ page }) => {
-    await page.getByTestId('pair-input').fill('Ana / Bruno')
-    await page.getByTestId('pair-remove-0').click()
+  test('can remove a pair by editing the textarea', async ({ page }) => {
+    await page.getByTestId('pair-input').fill('Ana / Bruno\nCarlos / Diana')
+    await page.getByTestId('pair-input').fill('Carlos / Diana')
 
-    await expect(page.getByTestId('pair-0')).toHaveCount(0)
+    await expect(page.getByTestId('pair-input')).toHaveValue('Carlos / Diana')
+    await expect(page.getByTestId('generate-button')).toBeDisabled()
   })
 })

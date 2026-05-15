@@ -28,12 +28,6 @@ export function PairInput({ pairs, onChange }: Props) {
     onChange(parsePairs(text))
   }
 
-  function handleRemove(i: number) {
-    const updated = pairs.filter((_, j) => j !== i)
-    setRaw(updated.map(p => `${p[0]} / ${p[1]}`).join('\n'))
-    onChange(updated)
-  }
-
   return (
     <div className="space-y-2">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -48,28 +42,6 @@ export function PairInput({ pairs, onChange }: Props) {
         className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
       />
       <p className="text-xs text-gray-400 dark:text-gray-500">Formato: Jogador1 / Jogador2</p>
-      {pairs.length > 0 && (
-        <ul className="space-y-1">
-          {pairs.map((pair, i) => (
-            <li
-              key={i}
-              className="flex items-center justify-between bg-gray-50 dark:bg-gray-700 rounded px-3 py-1.5 text-sm"
-            >
-              <span data-testid={`pair-${i}`} className="text-gray-800 dark:text-gray-100">
-                {pair[0]} / {pair[1]}
-              </span>
-              <button
-                data-testid={`pair-remove-${i}`}
-                onClick={() => handleRemove(i)}
-                aria-label={`Remover dupla ${pair[0]} / ${pair[1]}`}
-                className="text-red-500 hover:text-red-700 ml-2 leading-none"
-              >
-                ✕
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   )
 }
