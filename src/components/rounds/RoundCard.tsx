@@ -9,7 +9,7 @@ export function RoundCard({ round }: Props) {
       <h3 className="font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wide">
         Ronda {round.number}
       </h3>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 print:grid-cols-1">
         {round.matches.map((match, i) => (
           <MatchCard key={i} match={match} />
         ))}

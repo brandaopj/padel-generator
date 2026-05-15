@@ -38,7 +38,7 @@ export function MatchCard({ match }: Props) {
   return (
     <div
       data-testid="match-card"
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 print:p-4 print:border-gray-400"
     >
       <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">
         Campo {match.court}
