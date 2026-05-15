@@ -35,10 +35,10 @@ test.describe('Regular mode', () => {
     await expect(page.getByTestId('generate-button')).toBeDisabled()
   })
 
-  test('generate button is disabled for odd number of players', async ({ page }) => {
-    await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana\nEva')
+  test('generate button is disabled for player count not a multiple of 4', async ({ page }) => {
+    await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana\nEva\nFilipe')
 
-    await expect(page.getByTestId('validation-error').first()).toContainText('par')
+    await expect(page.getByTestId('validation-error').first()).toContainText('múltiplo')
     await expect(page.getByTestId('generate-button')).toBeDisabled()
   })
 

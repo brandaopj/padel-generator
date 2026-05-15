@@ -16,8 +16,8 @@ export function validate(state: AppState): ValidationResult {
   if (state.mode === 'regular') {
     if (state.players.length < 4) {
       errors.push('Modo Regular requer pelo menos 4 jogadores')
-    } else if (state.players.length % 2 !== 0) {
-      errors.push('O número de jogadores deve ser par')
+    } else if (state.players.length % 4 !== 0) {
+      errors.push('O número de jogadores deve ser múltiplo de 4 (4, 8, 12…)')
     }
   }
 

@@ -19,9 +19,9 @@ describe('validate — Regular mode', () => {
     expect(errors.some(e => e.includes('4'))).toBe(true)
   })
 
-  it('errors when player count is odd', () => {
-    const { errors } = validate({ ...base, players: ['A', 'B', 'C', 'D', 'E'] })
-    expect(errors.some(e => e.toLowerCase().includes('par'))).toBe(true)
+  it('errors when player count is not a multiple of 4', () => {
+    const { errors } = validate({ ...base, players: ['A', 'B', 'C', 'D', 'E', 'F'] })
+    expect(errors.some(e => e.includes('múltiplo'))).toBe(true)
   })
 
   it('no errors for 4 players with 1 court', () => {
