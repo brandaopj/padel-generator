@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { ModeSelector } from '../components/generator/ModeSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
@@ -15,12 +15,12 @@ export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
   const { save } = useHistory()
   const { errors, warnings } = validate(state)
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const hasInputs =
-    state.players.length > 0 ||
-    state.pairs.length > 0 ||
-    state.tableA.length > 0 ||
-    state.tableB.length > 0
+    (state.mode === 'regular' && state.players.length > 0) ||
+    (state.mode === 'fixed-pairs' && state.pairs.length > 0) ||
+    (state.mode === 'seeded' && (state.tableA.length > 0 || state.tableB.length > 0))
 
   function handleGenerate() {
     const tournament = generateTournament({
@@ -34,6 +34,8 @@ export function GeneratorPage() {
     })
     dispatch({ type: 'SET_GENERATED', payload: tournament })
     save(tournament)
+    setShowSuccess(true)
+    setTimeout(() => setShowSuccess(false), 3000)
   }
 
   return (
@@ -61,7 +63,7 @@ export function GeneratorPage() {
             onChange={mode => dispatch({ type: 'SET_MODE', payload: mode })}
           />
 
-{state.mode === 'regular' && (
+          {state.mode === 'regular' && (
             <PlayerInput
               players={state.players}
               onChange={players => dispatch({ type: 'SET_PLAYERS', payload: players })}
@@ -85,6 +87,16 @@ export function GeneratorPage() {
           )}
 
           {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
+
+          {showSuccess && (
+            <div
+              data-testid="success-banner"
+              className="flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 text-sm text-green-700 dark:text-green-300"
+            >
+              <span>✓</span>
+              <span>Torneio gerado com sucesso!</span>
+            </div>
+          )}
 
           <button
             data-testid="generate-button"
