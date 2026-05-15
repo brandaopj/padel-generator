@@ -10,6 +10,7 @@ export default defineConfig({
   use: {
     baseURL: isCI ? 'http://localhost:4173' : 'http://localhost:5173',
     screenshot: 'only-on-failure',
+    trace: 'on-first-retry',
   },
   webServer: {
     command: isCI ? 'npm run preview' : 'npm run dev',

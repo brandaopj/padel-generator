@@ -9,5 +9,15 @@ export default defineConfig({
     reporters: process.env.CI
       ? [['allure-vitest/reporter', { resultsDir: 'allure-results' }]]
       : ['verbose'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/utils/**', 'src/hooks/useHistory.ts'],
+      reporter: ['text', 'lcov'],
+      thresholds: {
+        lines: 90,
+        functions: 90,
+        branches: 80,
+      },
+    },
   },
 })

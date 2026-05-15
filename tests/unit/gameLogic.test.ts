@@ -6,6 +6,7 @@ import {
   roundRobin,
   distribute,
   generateId,
+  generateTournament,
 } from '../../src/utils/gameLogic'
 import type { Pair } from '../../src/types'
 
@@ -114,6 +115,45 @@ describe('distribute', () => {
     const result = distribute(rounds, 2)
     expect(result[0].matches[0].court).toBe(1)
     expect(result[0].matches[1].court).toBe(2)
+  })
+})
+
+describe('generateTournament', () => {
+  const base = { clubName: 'Test Club', courts: 2, players: [], pairs: [], tableA: [], tableB: [] }
+
+  it('generates rounds in regular mode', () => {
+    const t = generateTournament({ ...base, mode: 'regular', players: ['A','B','C','D'] })
+    expect(t.mode).toBe('regular')
+    expect(t.rounds.length).toBeGreaterThan(0)
+    expect(t.players).toEqual(['A','B','C','D'])
+  })
+
+  it('generates rounds in fixed-pairs mode', () => {
+    const pairs: [string,string][] = [['A','B'],['C','D']]
+    const t = generateTournament({ ...base, mode: 'fixed-pairs', pairs })
+    expect(t.mode).toBe('fixed-pairs')
+    expect(t.rounds.length).toBeGreaterThan(0)
+    expect(t.players).toEqual([])
+  })
+
+  it('generates rounds in seeded mode with equal tables', () => {
+    const t = generateTournament({ ...base, mode: 'seeded', tableA: ['A','B'], tableB: ['C','D'] })
+    expect(t.mode).toBe('seeded')
+    expect(t.seededWarning).toBeFalsy()
+    expect(t.tableA).toEqual(['A','B'])
+    expect(t.tableB).toEqual(['C','D'])
+  })
+
+  it('sets seededWarning when table sizes differ', () => {
+    const t = generateTournament({ ...base, mode: 'seeded', tableA: ['A','B','E'], tableB: ['C','D'] })
+    expect(t.seededWarning).toBe(true)
+  })
+
+  it('includes id, date and clubName', () => {
+    const t = generateTournament({ ...base, mode: 'regular', players: ['A','B','C','D'] })
+    expect(t.id).toBeTruthy()
+    expect(t.date).toBeTruthy()
+    expect(t.clubName).toBe('Test Club')
   })
 })
 
