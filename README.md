@@ -22,7 +22,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Court count calculated automatically from the number of pairs; shown in real time as names are entered
 - Round-robin scheduling — every pair plays every other pair exactly once, all matches per round are simultaneous
 - Mode description shown below the mode selector to guide first-time users
-- Stale-results warning when the form is edited after a tournament has been generated
+- Stale-results warning when the form is edited after a tournament has been generated (only shown when the current mode has data entered)
 - Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
 - Names preserved when switching between modes — no need to re-enter if the wrong mode was selected
 - Clear button on every textarea with inline confirmation (no native browser dialog)
@@ -32,6 +32,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 - Player avatar (neutral silhouette) shown next to each name
 - Two-column symmetric layout — both pairs always aligned
+- Player names wrap to multiple lines — no truncation regardless of name length
 - Score writing area at the bottom of each card
 
 ### Navigation & history
@@ -50,7 +51,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 ### Appearance
 
 - Dark mode with `localStorage` persistence
-- Print view: form panel hidden, A4 page size (`@page { size: A4; margin: 2cm }`), score writing area per match
+- Print view: form panel hidden, A4 page size (`@page { size: A4; margin: 2cm }`), match cards in single full-width column with score writing area per match
 
 ---
 
