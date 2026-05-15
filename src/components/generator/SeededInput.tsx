@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ClearButton } from '../ui/ClearButton'
 
 function parseNames(text: string): string[] {
   return text.split('\n').map(n => n.trim()).filter(Boolean)
@@ -13,6 +14,7 @@ type TableProps = {
 
 function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
   const [raw, setRaw] = useState(() => players.join('\n'))
+  const inputId = `${testPrefix}-textarea`
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value
@@ -22,16 +24,28 @@ function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        {label} ({players.length})
-      </label>
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor={inputId}
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          {label} ({players.length})
+        </label>
+        {players.length > 0 && (
+          <ClearButton
+            label="Apagar"
+            onConfirm={() => { setRaw(''); onChange([]) }}
+          />
+        )}
+      </div>
       <textarea
+        id={inputId}
         data-testid={`${testPrefix}-input`}
         value={raw}
         onChange={handleChange}
         rows={5}
         placeholder={'Um nome por linha'}
-        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
       />
     </div>
   )

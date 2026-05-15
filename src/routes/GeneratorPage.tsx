@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { ModeSelector } from '../components/generator/ModeSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
@@ -16,11 +16,20 @@ export function GeneratorPage() {
   const { save } = useHistory()
   const { errors, warnings } = validate(state)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [isStale, setIsStale] = useState(false)
+  const hasGeneratedRef = useRef(false)
+  const roundsPanelRef = useRef<HTMLDivElement>(null)
 
   const hasInputs =
     (state.mode === 'regular' && state.players.length > 0) ||
     (state.mode === 'fixed-pairs' && state.pairs.length > 0) ||
     (state.mode === 'seeded' && (state.tableA.length > 0 || state.tableB.length > 0))
+
+  useEffect(() => {
+    if (hasGeneratedRef.current) {
+      setIsStale(true)
+    }
+  }, [state.players, state.pairs, state.tableA, state.tableB, state.mode, state.clubName])
 
   function handleGenerate() {
     const tournament = generateTournament({
@@ -34,8 +43,13 @@ export function GeneratorPage() {
     })
     dispatch({ type: 'SET_GENERATED', payload: tournament })
     save(tournament)
+    hasGeneratedRef.current = true
+    setIsStale(false)
     setShowSuccess(true)
     setTimeout(() => setShowSuccess(false), 3000)
+    setTimeout(() => {
+      roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }, 50)
   }
 
   return (
@@ -43,12 +57,16 @@ export function GeneratorPage() {
       <div className="flex flex-col lg:flex-row gap-8 items-start">
 
         {/* Form panel */}
-        <div className="lg:w-96 shrink-0 space-y-5 relative z-10">
+        <div className="lg:w-96 shrink-0 space-y-5 relative z-10 print:hidden">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label
+              htmlFor="club-name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+            >
               Nome do clube
             </label>
             <input
+              id="club-name"
               data-testid="club-name-input"
               type="text"
               value={state.clubName}
@@ -86,14 +104,30 @@ export function GeneratorPage() {
             />
           )}
 
+          {hasInputs && (
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Campos calculados automaticamente:{' '}
+              <span className="font-medium text-gray-700 dark:text-gray-300">{state.courts}</span>
+            </p>
+          )}
+
           {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
+
+          {isStale && (
+            <div className="flex items-start gap-2 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
+              <span aria-hidden="true" className="shrink-0">↻</span>
+              <span>Os resultados podem não refletir as alterações atuais.</span>
+            </div>
+          )}
 
           {showSuccess && (
             <div
+              role="status"
+              aria-live="polite"
               data-testid="success-banner"
               className="flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 text-sm text-green-700 dark:text-green-300"
             >
-              <span>✓</span>
+              <span aria-hidden="true">✓</span>
               <span>Torneio gerado com sucesso!</span>
             </div>
           )}
@@ -109,7 +143,7 @@ export function GeneratorPage() {
         </div>
 
         {/* Rounds panel */}
-        <div className="flex-1 min-w-0">
+        <div ref={roundsPanelRef} className="flex-1 min-w-0">
           {state.generated && (
             <div className="flex justify-end mb-4 print:hidden">
               <PrintButton />

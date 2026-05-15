@@ -1,15 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
 import { HistoryList } from '../components/history/HistoryList'
 
 export function HistoryPage() {
   const { getAll } = useHistory()
-  const [tournaments, setTournaments] = useState<Tournament[]>([])
-
-  useEffect(() => {
-    setTournaments(getAll())
-  }, [])
+  const [tournaments] = useState<Tournament[]>(() => getAll())
 
   return (
     <div className="max-w-2xl mx-auto p-4 lg:p-8">

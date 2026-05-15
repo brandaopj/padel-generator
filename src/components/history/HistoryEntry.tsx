@@ -1,11 +1,6 @@
 import { Link } from 'react-router-dom'
 import type { Tournament } from '../../types'
-
-const MODE_LABELS: Record<string, string> = {
-  regular: 'Regular',
-  'fixed-pairs': 'Duplas Fixas',
-  seeded: 'Cabeças de Série',
-}
+import { MODE_LABELS } from '../../utils/modes'
 
 type Props = { tournament: Tournament }
 
@@ -14,7 +9,7 @@ export function HistoryEntry({ tournament: t }: Props) {
     <Link
       to={`/history/${t.id}`}
       data-testid={`history-entry-${t.id}`}
-      className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+      className="block bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">

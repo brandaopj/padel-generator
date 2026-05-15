@@ -24,7 +24,7 @@ export class ErrorBoundary extends Component<Props, State> {
             Ocorreu um erro inesperado. Tenta recarregar a página.
           </p>
           <button
-            onClick={() => this.setState({ hasError: false })}
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
             Tentar novamente

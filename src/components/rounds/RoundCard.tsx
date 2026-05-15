@@ -1,9 +1,9 @@
 import type { Round } from '../../types'
 import { MatchCard } from './MatchCard'
 
-type Props = { round: Round; courts: number }
+type Props = { round: Round }
 
-export function RoundCard({ round, courts: _ }: Props) {
+export function RoundCard({ round }: Props) {
   return (
     <div data-testid={`round-${round.number}`} className="space-y-2">
       <h3 className="font-semibold text-gray-700 dark:text-gray-300 text-sm uppercase tracking-wide">

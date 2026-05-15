@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ClearButton } from '../ui/ClearButton'
 
 type Props = {
   players: string[]
@@ -20,16 +21,28 @@ export function PlayerInput({ players, onChange }: Props) {
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Jogadores ({players.length})
-      </label>
+      <div className="flex items-center justify-between">
+        <label
+          htmlFor="player-textarea"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          Jogadores ({players.length})
+        </label>
+        {players.length > 0 && (
+          <ClearButton
+            label="Apagar tudo"
+            onConfirm={() => { setRaw(''); onChange([]) }}
+          />
+        )}
+      </div>
       <textarea
+        id="player-textarea"
         data-testid="player-input"
         value={raw}
         onChange={handleChange}
         rows={6}
         placeholder={'Um nome por linha\nEx:\nJoão\nMaria\nPedro\nAna'}
-        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
       />
     </div>
   )

@@ -26,7 +26,7 @@ function Shell() {
                   `text-sm transition-colors ${isActive ? 'text-blue-600 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}`
                 }
               >
-                Gerar
+                Novo Torneio
               </NavLink>
               <NavLink
                 to="/history"

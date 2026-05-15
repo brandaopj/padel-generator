@@ -24,19 +24,20 @@ export function RoundsPanel({ tournament }: Props) {
           {tournament.clubName || 'Torneio'}
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-          {new Date(tournament.date).toLocaleDateString('pt-PT')} · {tournament.courts} campo(s) · {tournament.pairs.length} duplas
+          {new Date(tournament.date).toLocaleDateString('pt-PT')}
+          <span className="print:hidden"> · {tournament.courts} campo(s) · {tournament.pairs.length} duplas</span>
         </p>
         {tournament.seededWarning && (
           <p
             data-testid="seeded-warning"
-            className="text-sm text-yellow-600 dark:text-yellow-400 mt-1"
+            className="text-sm text-yellow-600 dark:text-yellow-400 mt-1 print:hidden"
           >
             Tabelas de tamanhos diferentes — usados {tournament.pairs.length} pares.
           </p>
         )}
       </div>
       {tournament.rounds.map(round => (
-        <RoundCard key={round.number} round={round} courts={tournament.courts} />
+        <RoundCard key={round.number} round={round} />
       ))}
     </div>
   )
