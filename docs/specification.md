@@ -1,371 +1,371 @@
-# Especificação de Software — Padel Generator
+# Software Specification — Padel Generator
 
-**Versão:** 1.0  
-**Data:** 2026-05-15  
-**Estado:** Produção  
-**App:** https://padel-generator-three.vercel.app  
-**Repositório:** https://github.com/brandaopj/padel-generator
-
----
-
-## Índice
-
-1. [Visão Geral](#1-visão-geral)
-2. [Actores e Contexto de Uso](#2-actores-e-contexto-de-uso)
-3. [Requisitos Funcionais](#3-requisitos-funcionais)
-4. [Regras de Negócio](#4-regras-de-negócio)
-5. [Requisitos Não Funcionais](#5-requisitos-não-funcionais)
-6. [Modelo de Dados](#6-modelo-de-dados)
-7. [Algoritmos](#7-algoritmos)
-8. [Especificação de UI](#8-especificação-de-ui)
-9. [Especificação de Testes](#9-especificação-de-testes)
-10. [Arquitectura e Decisões Técnicas](#10-arquitectura-e-decisões-técnicas)
-11. [Fora de Âmbito](#11-fora-de-âmbito)
+**Version:** 1.0
+**Date:** 2026-05-15
+**Status:** Production
+**App:** https://padel-generator-three.vercel.app
+**Repository:** https://github.com/brandaopj/padel-generator
 
 ---
 
-## 1. Visão Geral
+## Table of Contents
 
-### 1.1 Propósito
-
-O **Padel Generator** é uma aplicação web para geração de calendários de torneios de padel. O organizador insere os participantes, selecciona o modo de jogo, e a aplicação gera automaticamente um calendário round-robin com distribuição por campos, pronto a ser impresso ou consultado no ecrã.
-
-### 1.2 Âmbito
-
-A aplicação é client-side na totalidade. Não existe backend, autenticação, nem base de dados remota. A persistência limita-se ao histórico de torneios guardado em `localStorage` no dispositivo do utilizador.
-
-### 1.3 Contexto de Uso
-
-O caso de uso primário é um organizador de torneio a usar um smartphone no campo de padel imediatamente antes ou durante uma sessão. O fluxo típico dura menos de 60 segundos: inserir nomes (paste de lista de WhatsApp), gerar, imprimir ou mostrar no ecrã.
+1. [Overview](#1-overview)
+2. [Actors and Usage Context](#2-actors-and-usage-context)
+3. [Functional Requirements](#3-functional-requirements)
+4. [Business Rules](#4-business-rules)
+5. [Non-Functional Requirements](#5-non-functional-requirements)
+6. [Data Model](#6-data-model)
+7. [Algorithms](#7-algorithms)
+8. [UI Specification](#8-ui-specification)
+9. [Test Specification](#9-test-specification)
+10. [Architecture and Technical Decisions](#10-architecture-and-technical-decisions)
+11. [Out of Scope](#11-out-of-scope)
 
 ---
 
-## 2. Actores e Contexto de Uso
+## 1. Overview
 
-### 2.1 Actores
+### 1.1 Purpose
 
-| Actor | Descrição |
-|-------|-----------|
-| **Organizador** | Utilizador único. Cria torneios, consulta histórico, imprime tabelas. Usa principalmente smartphone. |
+**Padel Generator** is a web application for generating padel tournament schedules. The organiser enters the participants, selects the game mode, and the application automatically generates a round-robin schedule with court assignments, ready to be printed or viewed on screen.
 
-### 2.2 Casos de Uso Principais
+### 1.2 Scope
 
-| ID | Caso de Uso | Actor |
-|----|-------------|-------|
-| CU-01 | Gerar torneio em modo Regular | Organizador |
-| CU-02 | Gerar torneio em modo Duplas Fixas | Organizador |
-| CU-03 | Gerar torneio em modo Cabeças de Série | Organizador |
-| CU-04 | Consultar histórico de torneios | Organizador |
-| CU-05 | Ver detalhe de torneio passado | Organizador |
-| CU-06 | Imprimir tabela de torneio | Organizador |
+The application is entirely client-side. There is no backend, authentication, or remote database. Persistence is limited to the tournament history saved in `localStorage` on the user's device.
 
-### 2.3 Fluxo Típico (CU-01)
+### 1.3 Usage Context
+
+The primary use case is a tournament organiser using a smartphone at the padel court immediately before or during a session. The typical flow takes less than 60 seconds: enter names (paste from a WhatsApp list), generate, print or show on screen.
+
+---
+
+## 2. Actors and Usage Context
+
+### 2.1 Actors
+
+| Actor | Description |
+|-------|-------------|
+| **Organiser** | Single user. Creates tournaments, views history, prints schedules. Primarily uses a smartphone. |
+
+### 2.2 Main Use Cases
+
+| ID | Use Case | Actor |
+|----|----------|-------|
+| CU-01 | Generate tournament in Regular mode | Organiser |
+| CU-02 | Generate tournament in Fixed Pairs mode | Organiser |
+| CU-03 | Generate tournament in Seeded mode | Organiser |
+| CU-04 | View tournament history | Organiser |
+| CU-05 | View detail of a past tournament | Organiser |
+| CU-06 | Print tournament schedule | Organiser |
+
+### 2.3 Typical Flow (CU-01)
 
 ```
-1. Utilizador abre a app
-2. Selecciona modo "Regular" (pré-seleccionado por omissão)
-3. Insere nome do clube (opcional)
-4. Cola lista de jogadores na textarea (um nome por linha)
-5. App valida em tempo real e mostra número de campos calculado
-6. Utilizador clica "Gerar Torneio"
-7. App gera rondas e mostra resultados no painel direito
-8. Torneio é automaticamente guardado no histórico
-9. Utilizador clica "Imprimir" e entrega folha em campo
+1. User opens the app
+2. Selects "Regular" mode (pre-selected by default)
+3. Enters tournament name (optional)
+4. Pastes player list into the textarea (one name per line)
+5. App validates in real time and shows the calculated number of courts
+6. User clicks "Generate Tournament"
+7. App generates rounds and shows results in the right panel
+8. Tournament is automatically saved to history
+9. User clicks "Print" and hands out the sheet at the court
 ```
 
 ---
 
-## 3. Requisitos Funcionais
+## 3. Functional Requirements
 
-### 3.1 Modos de Jogo
+### 3.1 Game Modes
 
-#### RF-01 — Três modos de geração de torneio
+#### RF-01 — Three tournament generation modes
 
-O sistema deve suportar exactamente três modos:
+The system must support exactly three modes:
 
-| Modo | Label | Descrição |
-|------|-------|-----------|
-| `regular` | Regular | Duplas sorteadas aleatoriamente a partir de lista de jogadores individuais |
-| `fixed-pairs` | Duplas Fixas | Duplas pré-definidas pelo utilizador, usadas tal como estão |
-| `seeded` | Cabeças de Série | Tabela A vs Tabela B — cada tabela baralhada independentemente, emparelhamento por posição |
+| Mode | Label | Description |
+|------|-------|-------------|
+| `regular` | Regular | Pairs drawn randomly from a list of individual players |
+| `fixed-pairs` | Fixed Pairs | Pairs pre-defined by the user, used as-is |
+| `seeded` | Seeded | Table A vs Table B — each table shuffled independently, matched by position |
 
-#### RF-02 — Seleção de modo
+#### RF-02 — Mode selection
 
-- O modo activo deve ter indicação visual clara (fundo azul no tab)
-- Cada modo deve ter uma descrição sumária visível abaixo do selector para orientar utilizadores novos
-- O modo por omissão é `regular`
+- The active mode must have a clear visual indicator (blue background on the tab)
+- Each mode must have a brief summary description visible below the selector to guide new users
+- The default mode is `regular`
 
-#### RF-03 — Preservação de dados ao mudar de modo
+#### RF-03 — Data preservation when switching modes
 
-- Ao mudar de modo, os dados inseridos nos outros modos devem ser preservados em memória
-- O utilizador não deve precisar de reinserir dados se seleccionou o modo errado
-
----
-
-### 3.2 Formulário de Entrada
-
-#### RF-04 — Nome do clube
-
-- Campo de texto opcional
-- Se vazio, o torneio é identificado como "Torneio" na visualização de resultados e no histórico
-
-#### RF-05 — Inserção de jogadores (modo Regular)
-
-- Textarea com um jogador por linha
-- Deve aceitar paste directo de listas de WhatsApp
-- O label deve mostrar o número de jogadores reconhecidos em tempo real: `Jogadores (N)`
-
-#### RF-06 — Inserção de duplas (modo Duplas Fixas)
-
-- Textarea com uma dupla por linha, formato: `Jogador1 / Jogador2`
-- O separador é `/` com ou sem espaços
-- O label deve mostrar o número de duplas reconhecidas: `Duplas (N)`
-
-#### RF-07 — Inserção de tabelas (modo Cabeças de Série)
-
-- Duas textareas lado a lado: Tabela A e Tabela B
-- Um jogador por linha em cada textarea
-- Cada label deve mostrar o número de jogadores reconhecidos: `Tabela A (N)` / `Tabela B (N)`
-
-#### RF-08 — Limpar textarea
-
-- Cada textarea deve ter um botão "Apagar tudo" (ou "Apagar") visível apenas quando existem dados
-- Ao clicar, deve mostrar uma confirmação inline com dois botões: "Cancelar" e "Apagar"
-- Não deve usar `window.confirm` do browser (incompatível com padrões de UX mobile)
-
-#### RF-09 — Cálculo automático de campos
-
-- O número de campos é calculado automaticamente: `max(1, floor(numDuplas / 2))`
-- O valor deve ser mostrado em tempo real abaixo dos inputs: `Campos calculados automaticamente: N`
-- Só é visível quando o modo activo tem dados inseridos (`hasInputs = true`)
-- Não existe campo manual para o utilizador alterar este valor
+- When switching modes, data entered in other modes must be preserved in memory
+- The user must not need to re-enter data if they selected the wrong mode
 
 ---
 
-### 3.3 Validação
+### 3.2 Input Form
 
-#### RF-10 — Regras de validação
+#### RF-04 — Tournament name
 
-| Modo | Condição | Tipo | Mensagem |
-|------|----------|------|----------|
-| Regular | `players.length < 4` | Erro | "Modo Regular requer pelo menos 4 jogadores" |
-| Regular | `players.length % 4 !== 0` | Erro | "O número de jogadores deve ser múltiplo de 4 (4, 8, 12…)" |
-| Duplas Fixas | `pairs.length < 2` | Erro | "Modo Duplas Fixas requer pelo menos 2 duplas" |
-| Cabeças de Série | `tableA.length < 2` | Erro | "A Tabela A requer pelo menos 2 jogadores" |
-| Cabeças de Série | `tableB.length < 2` | Erro | "A Tabela B requer pelo menos 2 jogadores" |
-| Cabeças de Série | `tableA.length !== tableB.length` (e ambas ≥ 2) | Aviso | "As tabelas têm tamanhos diferentes (A: X, B: Y). Serão usados Z pares." |
-| Todos | `courts < 1` | Erro | "É necessário pelo menos 1 campo" |
+- Optional text field
+- If empty, the tournament is identified as "Tournament" in the results view and in the history
 
-#### RF-11 — Comportamento das mensagens de validação
+#### RF-05 — Player entry (Regular mode)
 
-- Erros bloqueiam o botão "Gerar Torneio" (fica desactivado)
-- Avisos não bloqueiam a geração
-- As mensagens só aparecem após o utilizador ter começado a inserir dados no modo activo (`hasInputs = true`)
-- Ao mudar de modo sem dados inseridos no novo modo, nenhuma mensagem deve aparecer
+- Textarea with one player per line
+- Must accept direct paste from WhatsApp lists
+- The label must show the number of recognised players in real time: `Players (N)`
 
----
+#### RF-06 — Pair entry (Fixed Pairs mode)
 
-### 3.4 Geração de Torneio
+- Textarea with one pair per line, format: `Player1 / Player2`
+- The separator is `/` with or without spaces
+- The label must show the number of recognised pairs: `Pairs (N)`
 
-#### RF-12 — Botão de geração
+#### RF-07 — Table entry (Seeded mode)
 
-- Label: "Gerar Torneio"
-- Desactivado enquanto existirem erros de validação (`errors.length > 0`)
-- Ao clicar com inputs válidos: gera torneio, guarda no histórico, mostra mensagem de sucesso
+- Two textareas side by side: Table A and Table B
+- One player per line in each textarea
+- Each label must show the number of recognised players: `Table A (N)` / `Table B (N)`
 
-#### RF-13 — Mensagem de sucesso
+#### RF-08 — Clear textarea
 
-- Após geração bem-sucedida, mostrar mensagem "Torneio gerado com sucesso!" durante 3 segundos
-- Deve usar `role="status"` e `aria-live="polite"` para ser anunciada por leitores de ecrã
+- Each textarea must have a "Clear all" (or "Clear") button visible only when there is data
+- On click, it must show an inline confirmation with two buttons: "Cancel" and "Clear"
+- Must not use the browser's `window.confirm` (incompatible with mobile UX standards)
 
-#### RF-14 — Aviso de resultados desactualizados
+#### RF-09 — Automatic court calculation
 
-- Após gerar um torneio, se o utilizador alterar qualquer input (jogadores, duplas, tabelas, modo, nome do clube), deve aparecer um aviso: "Os resultados podem não refletir as alterações atuais."
-- O aviso só aparece quando `hasInputs = true` no modo activo (não aparece ao trocar de modo para um sem dados)
-- Desaparece ao gerar novamente
-
-#### RF-15 — Scroll automático após geração (mobile)
-
-- Em dispositivos móveis, após gerar, a página deve fazer scroll suave para o painel de resultados
-- Deve usar `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` para não afectar layouts desktop onde o painel já é visível
+- The number of courts is calculated automatically: `max(1, floor(numPairs / 2))`
+- The value must be shown in real time below the inputs: `Courts calculated automatically: N`
+- Only visible when the active mode has data entered (`hasInputs = true`)
+- There is no manual field for the user to change this value
 
 ---
 
-### 3.5 Visualização de Resultados
+### 3.3 Validation
 
-#### RF-16 — Painel de resultados
+#### RF-10 — Validation rules
 
-- Mostra o nome do clube e a data do torneio gerado
-- Lista todas as rondas em sequência
-- Em ecrã, as rondas mostram também o número de campos e o número de duplas
-- Em impressão, apenas o nome do clube e a data são visíveis no cabeçalho
+| Mode | Condition | Type | Message |
+|------|-----------|------|---------|
+| Regular | `players.length < 4` | Error | "Regular mode requires at least 4 players" |
+| Regular | `players.length % 4 !== 0` | Error | "The number of players must be a multiple of 4 (4, 8, 12…)" |
+| Fixed Pairs | `pairs.length < 2` | Error | "Fixed Pairs mode requires at least 2 pairs" |
+| Seeded | `tableA.length < 2` | Error | "Table A requires at least 2 players" |
+| Seeded | `tableB.length < 2` | Error | "Table B requires at least 2 players" |
+| Seeded | `tableA.length !== tableB.length` (and both ≥ 2) | Warning | "The tables have different sizes (A: X, B: Y). Z pairs will be used." |
+| All | `courts < 1` | Error | "At least 1 court is required" |
 
-#### RF-17 — Card de jogo (MatchCard)
+#### RF-11 — Validation message behaviour
 
-Cada jogo deve ser apresentado num card com:
-- Nome do campo (ex: "Campo 1", editável após geração — ver RF-17a)
-- Os dois jogadores de cada dupla com avatar (ícone de silhueta neutra) ao lado de cada nome
-- Layout de duas colunas simétricas (`1fr auto 1fr`) com "vs" centrado
-- Os nomes devem quebrar linha se forem longos (sem truncagem)
-- Área de escrita para o organizador anotar o resultado manualmente
-
-#### RF-17a — Edição do nome do campo
-
-- Após gerar um torneio, o nome de cada campo deve ser editável inline
-- Cada card mostra um ícone de lápis (oculto em impressão) junto ao nome do campo
-- Ao clicar, o nome torna-se um campo de texto inline; ao sair (blur) ou premir Enter, guarda o nome
-- Premir Escape cancela a edição sem guardar
-- O nome editado aplica-se a todos os cards do mesmo campo em todas as rondas
-- Os nomes editados são persistidos automaticamente no histórico (`localStorage`)
-- Em impressão e no detalhe histórico, o nome editado é mostrado em vez de "Campo N"
-- Por omissão (sem edição), o nome do campo é "Campo N" onde N é o número sequencial
-
-#### RF-18 — Estado vazio do painel
-
-Enquanto não existe torneio gerado, o painel deve mostrar a mensagem: "Preenche o formulário e clica em Gerar Torneio"
+- Errors disable the "Generate Tournament" button (it becomes inactive)
+- Warnings do not block generation
+- Messages only appear after the user has started entering data in the active mode (`hasInputs = true`)
+- When switching to a mode with no data entered, no messages should appear
 
 ---
 
-### 3.6 Histórico
+### 3.4 Tournament Generation
 
-#### RF-19 — Gravação automática
+#### RF-12 — Generate button
 
-Cada torneio gerado deve ser guardado automaticamente em `localStorage` sem acção do utilizador.
+- Label: "Generate Tournament"
+- Disabled while validation errors exist (`errors.length > 0`)
+- On click with valid inputs: generates tournament, saves to history, shows success message
 
-#### RF-20 — Lista de histórico (`/history`)
+#### RF-13 — Success message
 
-- Lista todos os torneios ordenados do mais recente para o mais antigo
-- Cada entrada mostra: nome do clube (ou "Sem nome"), modo de jogo, número de campos, número de duplas, data
-- Cada entrada é um link para `/history/:id`
-- Se o histórico estiver vazio, mostrar: "Nenhum torneio gerado ainda."
+- After successful generation, show the message "Tournament generated successfully!" for 3 seconds
+- Must use `role="status"` and `aria-live="polite"` to be announced by screen readers
 
-#### RF-21 — Detalhe de torneio (`/history/:id`)
+#### RF-14 — Stale results warning
 
-- Mostra o torneio em modo de leitura (apenas visualização, sem edição)
-- Inclui link de regresso "← Histórico"
-- Inclui botão "Imprimir"
-- Se o ID não existir no histórico, mostrar: "Torneio não encontrado."
+- After generating a tournament, if the user changes any input (players, pairs, tables, mode, tournament name), a warning must appear: "The results may not reflect the current changes."
+- The warning only appears when `hasInputs = true` in the active mode (it does not appear when switching to a mode with no data)
+- It disappears when the tournament is generated again
 
----
+#### RF-15 — Automatic scroll after generation (mobile)
 
-### 3.7 Impressão
-
-#### RF-22 — Conteúdo impresso
-
-Em impressão devem estar visíveis apenas:
-- Nome do clube e data
-- Todas as rondas com os respectivos cards de jogo
-
-Devem estar ocultos: formulário, cabeçalho da app, botão de impressão, avisos de validação, aviso de resultados desactualizados, mensagem de sucesso, metadados de campos/duplas.
-
-#### RF-23 — Formato da página
-
-- Tamanho: A4
-- Margens: 2 cm
-- Implementado via `@page { size: A4; margin: 2cm }`
-
-#### RF-24 — Layout de impressão
-
-- Cards de jogo em coluna única (largura total da página)
-- Padding aumentado nos cards para melhor legibilidade
-- Bordas dos cards mais visíveis em impressão
-
-#### RF-25 — Área de resultado
-
-- Cada card deve ter uma linha de escrita para anotação manual do resultado: `Resultado: ___________`
+- On mobile devices, after generating, the page must smoothly scroll to the results panel
+- Must use `scrollIntoView({ behavior: 'smooth', block: 'nearest' })` to avoid affecting desktop layouts where the panel is already visible
 
 ---
 
-### 3.8 Navegação e Aparência
+### 3.5 Results View
 
-#### RF-26 — Navegação
+#### RF-16 — Results panel
 
-Header fixo (sticky) com:
+- Shows the tournament name and the date of the generated tournament
+- Lists all rounds in sequence
+- On screen, rounds also show the number of courts and the number of pairs
+- When printing, only the tournament name and date are visible in the header
+
+#### RF-17 — Match card (MatchCard)
+
+Each match must be presented in a card with:
+- Court name (e.g. "Court 1", editable after generation — see RF-17a)
+- Both players of each pair with an avatar (neutral silhouette icon) next to each name
+- Two-column symmetric layout (`1fr auto 1fr`) with "vs" centred
+- Names must wrap if they are long (no truncation)
+- A writing area for the organiser to manually record the result
+
+#### RF-17a — Court name editing
+
+- After generating a tournament, the name of each court must be editable inline
+- Each card shows a pencil icon (hidden when printing) next to the court name
+- On click, the name becomes an inline text field; on blur or pressing Enter, the name is saved
+- Pressing Escape cancels editing without saving
+- The edited name applies to all cards for the same court across all rounds
+- Edited names are automatically persisted in the history (`localStorage`)
+- When printing and in the history detail view, the edited name is shown instead of "Court N"
+- By default (no edit), the court name is "Court N" where N is the sequential number
+
+#### RF-18 — Empty panel state
+
+While no tournament has been generated, the panel must show the message: "Fill in the form and click Generate Tournament"
+
+---
+
+### 3.6 History
+
+#### RF-19 — Automatic saving
+
+Each generated tournament must be automatically saved to `localStorage` without any action by the user.
+
+#### RF-20 — History list (`/history`)
+
+- Lists all tournaments ordered from most recent to oldest
+- Each entry shows: tournament name (or "No name"), game mode, number of courts, number of pairs, date
+- Each entry is a link to `/history/:id`
+- If the history is empty, show: "No tournaments generated yet."
+
+#### RF-21 — Tournament detail (`/history/:id`)
+
+- Shows the tournament in read-only mode (view only, no editing)
+- Includes a back link "← History"
+- Includes a "Print" button
+- If the ID does not exist in the history, show: "Tournament not found."
+
+---
+
+### 3.7 Printing
+
+#### RF-22 — Printed content
+
+When printing, only the following must be visible:
+- Tournament name and date
+- All rounds with their match cards
+
+The following must be hidden: form, app header, print button, validation warnings, stale results warning, success message, court/pair metadata.
+
+#### RF-23 — Page format
+
+- Size: A4
+- Margins: 2 cm
+- Implemented via `@page { size: A4; margin: 2cm }`
+
+#### RF-24 — Print layout
+
+- Match cards in a single column (full page width)
+- Increased padding on cards for better legibility
+- Card borders more visible when printing
+
+#### RF-25 — Result area
+
+- Each card must have a writing line for manual result annotation: `Result: ___________`
+
+---
+
+### 3.8 Navigation and Appearance
+
+#### RF-26 — Navigation
+
+Sticky header with:
 - Logo/link "Padel Generator" → `/`
-- Link "Novo Torneio" → `/`
-- Link "Histórico" → `/history`
-- Toggle de dark mode
-- Oculto em impressão
+- Link "New Tournament" → `/`
+- Link "History" → `/history`
+- Dark mode toggle
+- Hidden when printing
 
 #### RF-27 — Dark mode
 
-- Toggle visível no header com ícones ☀️ / 🌙
-- Preferência persistida em `localStorage` sob a chave `padel-theme`
-- Aplicada automaticamente nas visitas seguintes
+- Toggle visible in the header with ☀️ / 🌙 icons
+- Preference persisted in `localStorage` under the key `padel-theme`
+- Applied automatically on subsequent visits
 
 ---
 
-## 4. Regras de Negócio
+## 4. Business Rules
 
-| ID | Regra |
-|----|-------|
-| RN-01 | Um jogo envolve exactamente 4 jogadores: 2 duplas de 2 |
-| RN-02 | Todos os jogos de uma ronda ocorrem em simultâneo — não existe lista de espera |
-| RN-03 | Em modo Regular, o número de jogadores tem de ser múltiplo de 4 |
-| RN-04 | O número de campos é sempre `max(1, floor(numDuplas / 2))` |
-| RN-05 | Em modo Cabeças de Série com tabelas de tamanhos diferentes, são usados `min(|A|, |B|)` pares |
-| RN-06 | O histórico é de leitura — não é possível editar ou apagar torneios; excepção: o nome dos campos pode ser editado e é persistido automaticamente |
-| RN-07 | Cada torneio tem um UUID único gerado no momento da criação |
-| RN-08 | Um torneio com N duplas tem exactamente N−1 rondas (round-robin completo) |
-| RN-09 | Cada dupla joga contra todas as outras exactamente uma vez |
-| RN-10 | Nenhuma dupla aparece em mais do que um jogo por ronda |
+| ID | Rule |
+|----|------|
+| RN-01 | A match involves exactly 4 players: 2 pairs of 2 |
+| RN-02 | All matches in a round occur simultaneously — there is no waiting list |
+| RN-03 | In Regular mode, the number of players must be a multiple of 4 |
+| RN-04 | The number of courts is always `max(1, floor(numPairs / 2))` |
+| RN-05 | In Seeded mode with tables of different sizes, `min(|A|, |B|)` pairs are used |
+| RN-06 | History is read-only — tournaments cannot be edited or deleted; exception: court names can be edited and are automatically persisted |
+| RN-07 | Each tournament has a unique UUID generated at the time of creation |
+| RN-08 | A tournament with N pairs has exactly N−1 rounds (complete round-robin) |
+| RN-09 | Each pair plays against every other pair exactly once |
+| RN-10 | No pair appears in more than one match per round |
 
 ---
 
-## 5. Requisitos Não Funcionais
+## 5. Non-Functional Requirements
 
-### 5.1 Disponibilidade e Deploy
+### 5.1 Availability and Deployment
 
-| ID | Requisito |
-|----|-----------|
-| RNF-01 | A aplicação deve funcionar inteiramente no browser, sem backend |
-| RNF-02 | O deploy em produção deve ser automático em cada push para `main` (Vercel) |
-| RNF-03 | O pipeline de CI deve correr testes unitários e E2E em cada push e pull request |
+| ID | Requirement |
+|----|-------------|
+| RNF-01 | The application must run entirely in the browser, without a backend |
+| RNF-02 | The production deployment must be automatic on each push to `main` (Vercel) |
+| RNF-03 | The CI pipeline must run unit and E2E tests on each push and pull request |
 
 ### 5.2 Performance
 
-| ID | Requisito |
-|----|-----------|
-| RNF-04 | A geração de torneio deve ser instantânea (< 100ms) — lógica pura sem I/O |
-| RNF-05 | O bundle JS gzipado não deve exceder 200KB |
+| ID | Requirement |
+|----|-------------|
+| RNF-04 | Tournament generation must be instantaneous (< 100ms) — pure logic with no I/O |
+| RNF-05 | The gzipped JS bundle must not exceed 200KB |
 
-### 5.3 Usabilidade
+### 5.3 Usability
 
-| ID | Requisito |
-|----|-----------|
-| RNF-06 | A aplicação deve ser totalmente utilizável em smartphone (caso de uso primário) |
-| RNF-07 | O fluxo completo (inserir jogadores → gerar → ver resultados) deve ser executável em menos de 60 segundos |
-| RNF-08 | Os inputs de texto devem ter `font-size` ≥ 16px em mobile para evitar zoom automático no iOS |
+| ID | Requirement |
+|----|-------------|
+| RNF-06 | The application must be fully usable on a smartphone (primary use case) |
+| RNF-07 | The complete flow (enter players → generate → view results) must be completable in less than 60 seconds |
+| RNF-08 | Text inputs must have `font-size` ≥ 16px on mobile to prevent automatic zoom on iOS |
 
-### 5.4 Acessibilidade (WCAG 2.1 AA)
+### 5.4 Accessibility (WCAG 2.1 AA)
 
-| ID | Requisito |
-|----|-----------|
-| RNF-09 | Todos os labels de formulário devem estar associados aos inputs via `htmlFor`/`id` |
-| RNF-10 | Mensagens dinâmicas devem usar `role="alert"` ou `role="status"` com `aria-live` |
-| RNF-11 | Ícones decorativos devem ter `aria-hidden="true"` |
-| RNF-12 | Todos os elementos interactivos devem ter área de toque mínima adequada |
-| RNF-13 | Contraste de texto: mínimo 4.5:1 para texto normal (WCAG AA) |
-| RNF-14 | Navegação por teclado deve ser possível em toda a aplicação |
+| ID | Requirement |
+|----|-------------|
+| RNF-09 | All form labels must be associated with inputs via `htmlFor`/`id` |
+| RNF-10 | Dynamic messages must use `role="alert"` or `role="status"` with `aria-live` |
+| RNF-11 | Decorative icons must have `aria-hidden="true"` |
+| RNF-12 | All interactive elements must have an adequate minimum touch target area |
+| RNF-13 | Text contrast: minimum 4.5:1 for normal text (WCAG AA) |
+| RNF-14 | Keyboard navigation must be possible throughout the entire application |
 
-### 5.5 Qualidade de Código
+### 5.5 Code Quality
 
-| ID | Requisito |
-|----|-----------|
-| RNF-15 | Cobertura de testes unitários ≥ 90% de linhas e funções nas camadas `src/utils/` e `src/hooks/useHistory.ts` |
-| RNF-16 | Cobertura de branches ≥ 80% nas mesmas camadas |
-| RNF-17 | Build TypeScript sem erros de compilação |
+| ID | Requirement |
+|----|-------------|
+| RNF-15 | Unit test coverage ≥ 90% of lines and functions in the `src/utils/` and `src/hooks/useHistory.ts` layers |
+| RNF-16 | Branch coverage ≥ 80% in the same layers |
+| RNF-17 | TypeScript build with no compilation errors |
 
 ---
 
-## 6. Modelo de Dados
+## 6. Data Model
 
-### 6.1 Tipos Principais
+### 6.1 Main Types
 
 ```typescript
 type GameMode = 'regular' | 'fixed-pairs' | 'seeded'
 
-type Pair = [string, string]           // exactamente 2 jogadores
+type Pair = [string, string]           // exactly 2 players
 
 type Match = {
   pair1: Pair
@@ -374,142 +374,142 @@ type Match = {
 }
 
 type Round = {
-  number: number                       // >= 1, sequencial
+  number: number                       // >= 1, sequential
   matches: Match[]
 }
 
 type Tournament = {
   id: string                           // UUID (nanoid)
-  date: string                         // ISO 8601, gerado no momento
-  clubName: string                     // pode ser vazio
+  date: string                         // ISO 8601, generated at creation time
+  clubName: string                     // can be empty
   mode: GameMode
   courts: number                       // >= 1
-  players: string[]                    // Regular: jogadores inseridos; vazio noutros modos
-  pairs: Pair[]                        // todos os modos: duplas finais geradas
-  tableA?: string[]                    // Cabeças de Série: Tabela A original
-  tableB?: string[]                    // Cabeças de Série: Tabela B original
+  players: string[]                    // Regular: entered players; empty in other modes
+  pairs: Pair[]                        // all modes: final generated pairs
+  tableA?: string[]                    // Seeded: original Table A
+  tableB?: string[]                    // Seeded: original Table B
   rounds: Round[]
-  seededWarning?: boolean              // true se |tableA| ≠ |tableB|
-  courtNames?: Record<number, string>  // nomes personalizados por número de campo
+  seededWarning?: boolean              // true if |tableA| ≠ |tableB|
+  courtNames?: Record<number, string>  // custom names by court number
 }
 ```
 
-### 6.2 Estado da Aplicação
+### 6.2 Application State
 
 ```typescript
 type AppState = {
   mode: GameMode
-  courts: number                       // calculado automaticamente
+  courts: number                       // calculated automatically
   clubName: string
-  players: string[]                    // modo Regular
-  pairs: Pair[]                        // modo Duplas Fixas
-  tableA: string[]                     // modo Cabeças de Série
-  tableB: string[]                     // modo Cabeças de Série
-  generated: Tournament | null         // último torneio gerado
+  players: string[]                    // Regular mode
+  pairs: Pair[]                        // Fixed Pairs mode
+  tableA: string[]                     // Seeded mode
+  tableB: string[]                     // Seeded mode
+  generated: Tournament | null         // last generated tournament
 }
 ```
 
-### 6.3 Persistência
+### 6.3 Persistence
 
-| Chave localStorage | Tipo | Descrição |
-|--------------------|------|-----------|
-| `padel-history` | `Tournament[]` (JSON) | Histórico de torneios, ordem decrescente |
-| `padel-theme` | `'dark' \| 'light'` | Preferência de dark mode |
+| localStorage key | Type | Description |
+|------------------|------|-------------|
+| `padel-history` | `Tournament[]` (JSON) | Tournament history, descending order |
+| `padel-theme` | `'dark' \| 'light'` | Dark mode preference |
 
-### 6.4 Cálculo de Campos (derivado)
+### 6.4 Court Calculation (derived)
 
-O campo `courts` em `AppState` é sempre calculado automaticamente pelo reducer a partir dos inputs:
+The `courts` field in `AppState` is always calculated automatically by the reducer from the inputs:
 
-| Modo | Fórmula |
+| Mode | Formula |
 |------|---------|
-| Regular | `max(1, floor(players.length / 2))` → converte jogadores em duplas primeiro |
-| Duplas Fixas | `max(1, floor(pairs.length / 2))` |
-| Cabeças de Série | `max(1, floor(min(tableA.length, tableB.length) / 2))` |
+| Regular | `max(1, floor(players.length / 2))` → converts players to pairs first |
+| Fixed Pairs | `max(1, floor(pairs.length / 2))` |
+| Seeded | `max(1, floor(min(tableA.length, tableB.length) / 2))` |
 
 ---
 
-## 7. Algoritmos
+## 7. Algorithms
 
-### 7.1 Geração de Duplas — modo Regular
+### 7.1 Pair Generation — Regular mode
 
 ```
-1. shuffle(players)           → Fisher-Yates sobre cópia
-2. Agrupar em pares: [[p0,p1], [p2,p3], ...]
+1. shuffle(players)           → Fisher-Yates on a copy
+2. Group into pairs: [[p0,p1], [p2,p3], ...]
 ```
 
-### 7.2 Geração de Duplas — modo Cabeças de Série
+### 7.2 Pair Generation — Seeded mode
 
 ```
 1. shuffledA = shuffle(tableA)
 2. shuffledB = shuffle(tableB)
 3. n = min(|shuffledA|, |shuffledB|)
 4. pairs = [[shuffledA[0], shuffledB[0]], ..., [shuffledA[n-1], shuffledB[n-1]]]
-5. Se |tableA| ≠ |tableB|: seededWarning = true
+5. If |tableA| ≠ |tableB|: seededWarning = true
 ```
 
 ### 7.3 Round-Robin
 
-Implementação do algoritmo de rotação circular para N duplas:
+Implementation of the circular rotation algorithm for N pairs:
 
 ```
-Para i = 0 até N-2:
-  Fixar dupla[0], rodar as restantes N-1 uma posição
-  Gerar matches: [dupla[0] vs dupla[N-1]], [dupla[1] vs dupla[N-2]], ...
-Resultado: N-1 rondas, cada dupla joga contra todas as outras exactamente uma vez
+For i = 0 to N-2:
+  Fix pair[0], rotate the remaining N-1 one position
+  Generate matches: [pair[0] vs pair[N-1]], [pair[1] vs pair[N-2]], ...
+Result: N-1 rounds, each pair plays against every other exactly once
 ```
 
-### 7.4 Distribuição por Campos
+### 7.4 Court Assignment
 
 ```
-Para cada ronda, para cada match (índice i):
+For each round, for each match (index i):
   court = (i % courts) + 1
 ```
 
 ---
 
-## 8. Especificação de UI
+## 8. UI Specification
 
-### 8.1 Rotas
+### 8.1 Routes
 
-| Rota | Componente | Descrição |
-|------|------------|-----------|
-| `/` | `GeneratorPage` | Formulário + painel de resultados |
-| `/history` | `HistoryPage` | Lista de torneios guardados |
-| `/history/:id` | `TournamentDetailPage` | Detalhe de torneio em leitura |
+| Route | Component | Description |
+|-------|-----------|-------------|
+| `/` | `GeneratorPage` | Form + results panel |
+| `/history` | `HistoryPage` | List of saved tournaments |
+| `/history/:id` | `TournamentDetailPage` | Tournament detail in read-only mode |
 
 ### 8.2 Layout — GeneratorPage
 
-**Desktop (≥ 1024px):** dois painéis lado a lado  
-- Painel esquerdo (fixo, 384px): formulário  
-- Painel direito (flex-1): resultados  
+**Desktop (≥ 1024px):** two panels side by side
+- Left panel (fixed, 384px): form
+- Right panel (flex-1): results
 
-**Mobile (< 1024px):** coluna única  
-- Formulário no topo  
-- Resultados abaixo (scroll automático após geração)
+**Mobile (< 1024px):** single column
+- Form at the top
+- Results below (automatic scroll after generation)
 
-**Impressão:** apenas o painel de resultados
+**Print:** results panel only
 
-### 8.3 Hierarquia de Componentes
+### 8.3 Component Hierarchy
 
 ```
 App
 └── Shell
     ├── Header (sticky, print:hidden)
     │   ├── Logo/link "Padel Generator"
-    │   ├── NavLink "Novo Torneio" (/)
-    │   ├── NavLink "Histórico" (/history)
+    │   ├── NavLink "New Tournament" (/)
+    │   ├── NavLink "History" (/history)
     │   └── DarkModeToggle
     └── main
         ├── GeneratorPage (/)
         │   ├── [form panel — print:hidden]
-        │   │   ├── club-name input
+        │   │   ├── tournament-name input
         │   │   ├── ModeSelector (tablist)
         │   │   ├── PlayerInput | PairInput | SeededInput
         │   │   ├── courts preview
         │   │   ├── ValidationBanner
         │   │   ├── stale warning
         │   │   ├── success banner
-        │   │   └── "Gerar Torneio" button
+        │   │   └── "Generate Tournament" button
         │   └── [rounds panel]
         │       ├── PrintButton (print:hidden)
         │       └── RoundsPanel
@@ -519,135 +519,136 @@ App
         │   └── HistoryList
         │       └── HistoryEntry[]
         └── TournamentDetailPage (/history/:id)
-            ├── "← Histórico" link (print:hidden)
+            ├── "← History" link (print:hidden)
             ├── PrintButton (print:hidden)
             └── RoundsPanel
 ```
 
-### 8.4 Estados de UI
+### 8.4 UI States
 
-| Componente | Estados |
-|------------|---------|
-| Botão "Gerar Torneio" | enabled / disabled (erros presentes) |
-| ValidationBanner | oculto / erros / avisos |
-| Success banner | visível 3s após geração / oculto |
-| Stale warning | visível (gerado + inputs alterados + hasInputs) / oculto |
-| Painel de resultados | vazio (mensagem) / com torneio |
-| ClearButton | normal / confirmação inline |
-| HistoryList | vazio / com entradas |
+| Component | States |
+|-----------|--------|
+| "Generate Tournament" button | enabled / disabled (errors present) |
+| ValidationBanner | hidden / errors / warnings |
+| Success banner | visible for 3s after generation / hidden |
+| Stale warning | visible (generated + inputs changed + hasInputs) / hidden |
+| Results panel | empty (message) / with tournament |
+| ClearButton | normal / inline confirmation |
+| HistoryList | empty / with entries |
 
-### 8.5 Convenções de data-testid
+### 8.5 data-testid Conventions
 
-Todos os elementos interactivos e contêineres de output usam `data-testid`. Não são usadas classes CSS como selectores em testes.
+All interactive elements and output containers use `data-testid`. CSS classes are not used as selectors in tests.
 
-| data-testid | Elemento |
+| data-testid | Element |
 |-------------|---------|
-| `club-name-input` | Input do nome do clube |
-| `mode-regular` / `mode-fixed-pairs` / `mode-seeded` | Tabs do ModeSelector |
-| `player-input` | Textarea de jogadores |
-| `pair-input` | Textarea de duplas |
-| `table-a-input` / `table-b-input` | Textareas Cabeças de Série |
-| `validation-error` / `validation-warning` | Mensagens de validação |
-| `generate-button` | Botão de geração |
-| `success-banner` | Mensagem de sucesso |
-| `rounds-panel` / `rounds-empty` | Painel de resultados |
-| `round-{N}` | Card de ronda N |
-| `match-card` | Card de jogo |
-| `print-button` | Botão de impressão |
-| `history-list` / `history-empty` | Lista de histórico |
-| `history-entry-{id}` | Entrada de histórico |
-| `tournament-not-found` | Mensagem de torneio não encontrado |
-| `seeded-warning` | Aviso de tabelas com tamanhos diferentes |
-| `dark-mode-toggle` | Toggle de dark mode |
+| `club-name-input` | Tournament name input |
+| `mode-regular` / `mode-fixed-pairs` / `mode-seeded` | ModeSelector tabs |
+| `player-input` | Players textarea |
+| `pair-input` | Pairs textarea |
+| `table-a-input` / `table-b-input` | Seeded mode textareas |
+| `validation-error` / `validation-warning` | Validation messages |
+| `generate-button` | Generate button |
+| `success-banner` | Success message |
+| `rounds-panel` / `rounds-empty` | Results panel |
+| `round-{N}` | Round N card |
+| `match-card` | Match card |
+| `print-button` | Print button |
+| `history-list` / `history-empty` | History list |
+| `history-entry-{id}` | History entry |
+| `tournament-not-found` | Tournament not found message |
+| `seeded-warning` | Different-size tables warning |
+| `dark-mode-toggle` | Dark mode toggle |
 
 ---
 
-## 9. Especificação de Testes
+## 9. Test Specification
 
-### 9.1 Testes Unitários (Vitest + jsdom)
+### 9.1 Unit Tests (Vitest + jsdom)
 
-**Localização:** `tests/unit/`
+**Location:** `tests/unit/`
 
-| Ficheiro | Cobertura |
-|----------|-----------|
+| File | Coverage |
+|------|----------|
 | `gameLogic.test.ts` | `shuffle`, `makePairs`, `makeSeededPairs`, `roundRobin`, `distribute`, `generateTournament`, `generateId` |
-| `validation.test.ts` | Todos os modos, todos os casos de erro e aviso |
-| `history.test.ts` | `getAll`, `save`, `getById`, dados corrompidos |
+| `validation.test.ts` | All modes, all error and warning cases |
+| `history.test.ts` | `getAll`, `save`, `getById`, `update`, corrupted data |
 
-**Thresholds de cobertura** (aplicados a `src/utils/` e `src/hooks/useHistory.ts`):
+**Coverage thresholds** (applied to `src/utils/` and `src/hooks/useHistory.ts`):
 
-| Métrica | Mínimo |
-|---------|--------|
+| Metric | Minimum |
+|--------|---------|
 | Lines | 90% |
 | Functions | 90% |
 | Branches | 80% |
 
-### 9.2 Testes E2E (Playwright + Chromium)
+### 9.2 E2E Tests (Playwright + Chromium)
 
-**Localização:** `tests/e2e/`
+**Location:** `tests/e2e/`
 
-| Ficheiro | Cenários |
-|----------|----------|
-| `regular.spec.ts` | Gerar com 8 jogadores, validação < 4, validação não-múltiplo-4, guardar no histórico, link para detalhe |
-| `fixed-pairs.spec.ts` | Gerar com 4 duplas, validação < 2 duplas, adicionar/remover duplas |
-| `seeded.spec.ts` | Tabelas iguais, aviso tabelas diferentes, validação mínima |
+| File | Scenarios |
+|------|-----------|
+| `regular.spec.ts` | Generate with 8 players, validation < 4, non-multiple-of-4 validation, save to history, link to detail |
+| `fixed-pairs.spec.ts` | Generate with 4 pairs, validation < 2 pairs, add/remove pairs |
+| `seeded.spec.ts` | Equal tables, different-size tables warning, minimum validation |
 
-**Configuração:**
-- `context.addInitScript(() => localStorage.clear())` em cada `beforeEach` para isolamento
-- Screenshots em falha, traces no primeiro retry
-- Artifacts publicados como GitHub Actions artifacts
+**Configuration:**
+- `context.addInitScript(() => localStorage.clear())` in each `beforeEach` for isolation
+- Screenshots on failure, traces on first retry
+- Artifacts published as GitHub Actions artifacts
 
-### 9.3 Relatório de Testes
+### 9.3 Test Report
 
-- Allure Report publicado em GitHub Pages após cada push para `main`
+- Allure Report published to GitHub Pages after each push to `main`
 - URL: https://brandaopj.github.io/padel-generator
 
 ---
 
-## 10. Arquitectura e Decisões Técnicas
+## 10. Architecture and Technical Decisions
 
 ### 10.1 Stack
 
-| Camada | Tecnologia | Versão |
-|--------|------------|--------|
+| Layer | Technology | Version |
+|-------|------------|---------|
 | Framework | React | 19 |
-| Linguagem | TypeScript | — |
+| Language | TypeScript | — |
 | Build | Vite | 8 |
 | Routing | React Router | v7 |
-| Estado | Context + useReducer | (sem biblioteca externa) |
-| Estilos | Tailwind CSS | v4 |
+| State | Context + useReducer | (no external library) |
+| Styles | Tailwind CSS | v4 |
 | Monitoring | Sentry (`@sentry/react`) | v8 |
-| Testes unitários | Vitest + jsdom | 4 |
-| Testes E2E | Playwright + Chromium | — |
-| Relatórios | Allure | — |
+| Unit tests | Vitest + jsdom | 4 |
+| E2E tests | Playwright + Chromium | — |
+| Reports | Allure | — |
 | CI/CD | GitHub Actions + Vercel | — |
 
-### 10.2 Gestão de Estado
+### 10.2 State Management
 
-`AppContext` com `useReducer` gere o estado global da aplicação. O reducer calcula `courts` automaticamente em cada acção de input, mantendo consistência sem lógica nos componentes.
+`AppContext` with `useReducer` manages the global application state. The reducer calculates `courts` automatically on every input action, maintaining consistency without logic in the components.
 
-Acções do reducer:
+Reducer actions:
 
-| Acção | Efeito |
-|-------|--------|
-| `SET_MODE` | Muda modo; limpa `generated`; preserva todos os inputs |
-| `SET_CLUB_NAME` | Actualiza nome do clube |
-| `SET_PLAYERS` | Actualiza jogadores; recalcula `courts` |
-| `SET_PAIRS` | Actualiza duplas; recalcula `courts` |
-| `SET_TABLE_A` | Actualiza Tabela A; recalcula `courts` |
-| `SET_TABLE_B` | Actualiza Tabela B; recalcula `courts` |
-| `SET_GENERATED` | Guarda torneio gerado em estado |
-| `RESET` | Volta ao estado inicial |
+| Action | Effect |
+|--------|--------|
+| `SET_MODE` | Changes mode; clears `generated`; preserves all inputs |
+| `SET_CLUB_NAME` | Updates tournament name |
+| `SET_PLAYERS` | Updates players; recalculates `courts` |
+| `SET_PAIRS` | Updates pairs; recalculates `courts` |
+| `SET_TABLE_A` | Updates Table A; recalculates `courts` |
+| `SET_TABLE_B` | Updates Table B; recalculates `courts` |
+| `SET_GENERATED` | Saves generated tournament to state |
+| `SET_COURT_NAME` | Updates a court's custom name in the generated tournament |
+| `RESET` | Returns to initial state |
 
-### 10.3 Persistência
+### 10.3 Persistence
 
-`useHistory` é um hook que encapsula operações em `localStorage`. Leitura com `useState(() => getAll())` (lazy init) para evitar renders extra. Escrita síncrona na geração.
+`useHistory` is a hook that encapsulates operations on `localStorage`. Reading uses `useState(() => getAll())` (lazy init) to avoid extra renders. Writing is synchronous at generation time. The `update()` function patches an existing entry by id (used when court names are edited).
 
-### 10.4 Monitorização
+### 10.4 Monitoring
 
-Sentry inicializado condicionalmente em `main.tsx` — apenas quando `VITE_SENTRY_DSN` está definido. `ErrorBoundary` global captura erros de renderização React e reporta para Sentry. Em desenvolvimento ou sem DSN, a app funciona normalmente.
+Sentry is initialised conditionally in `main.tsx` — only when `VITE_SENTRY_DSN` is defined. A global `ErrorBoundary` captures React rendering errors and reports them to Sentry. In development or without a DSN, the app runs normally.
 
-### 10.5 Pipeline CI/CD
+### 10.5 CI/CD Pipeline
 
 ```
 push/PR → main
@@ -658,33 +659,33 @@ push/PR → main
 ├── e2e-tests
 │   └── build → preview server → playwright test → artifacts
 │
-├── publish-report [apenas push, não PRs]
+├── publish-report [push only, not PRs]
 │   └── allure generate → deploy GitHub Pages
 │
-├── report-failure [apenas push, apenas se falhou]
-│   └── abre/comenta issue com label ci-failure
+├── report-failure [push only, only if failed]
+│   └── opens/comments issue with label ci-failure
 │
-└── resolve-failure [apenas push, apenas se passou]
-    └── fecha issue ci-failure se existir
+└── resolve-failure [push only, only if passed]
+    └── closes ci-failure issue if it exists
 ```
 
-**Protecção de branch `main`:** merge requer `unit-tests` e `e2e-tests` verdes. Push directo bloqueado.
+**`main` branch protection:** merge requires `unit-tests` and `e2e-tests` to be green. Direct push is blocked.
 
-**Dependências:** Dependabot abre PRs semanais para actualizações npm. `publish-report` é skipped em PRs para evitar conflito com environment protection do GitHub Pages.
+**Dependencies:** Dependabot opens weekly PRs for npm updates. `publish-report` is skipped on PRs to avoid conflict with GitHub Pages environment protection.
 
 ---
 
-## 11. Fora de Âmbito
+## 11. Out of Scope
 
-Os seguintes requisitos estão explicitamente fora do âmbito actual:
+The following requirements are explicitly out of the current scope:
 
-- Autenticação ou contas de utilizador
-- Backend ou base de dados remota
-- Edição ou eliminação de torneios no histórico
-- Exportação para PDF, CSV ou outros formatos
-- Partilha de torneios entre dispositivos
-- Registo de resultados de jogos na aplicação
-- Gestão de jogadores (base de dados persistente)
-- Notificações ou funcionalidades em tempo real
-- Suporte offline (PWA / service worker)
-- Internacionalização (a app está em Português)
+- Authentication or user accounts
+- Backend or remote database
+- Editing or deleting tournaments from history
+- Export to PDF, CSV, or other formats
+- Sharing tournaments between devices
+- Recording match results within the application
+- Player management (persistent database)
+- Notifications or real-time features
+- Offline support (PWA / service worker)
+- Internationalisation (the app UI is in Portuguese)

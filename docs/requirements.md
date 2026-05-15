@@ -1,223 +1,223 @@
-# Requisitos Funcionais — Padel Generator
+# Functional Requirements — Padel Generator
 
-**Versão:** 1.0  
-**Data:** 2026-05-15  
+**Version:** 1.0
+**Date:** 2026-05-15
 **App:** https://padel-generator-three.vercel.app
 
 ---
 
-## 1. Âmbito
+## 1. Scope
 
-Aplicação web client-side para geração de calendários de torneios de padel. Permite ao organizador inserir jogadores ou duplas, gerar rondas com distribuição automática por campos, consultar histórico de torneios passados e imprimir a tabela para uso em campo.
+A client-side web application for generating padel tournament schedules. It allows the organiser to enter players or pairs, generate rounds with automatic court assignment, consult the history of past tournaments, and print the schedule for use on court.
 
-Não existe backend nem autenticação. Toda a persistência é feita em `localStorage` no dispositivo do utilizador.
-
----
-
-## 2. Actores
-
-| Actor | Descrição |
-|-------|-----------|
-| **Organizador** | Utilizador que cria e gere o torneio. Uso principal em smartphone no campo de padel. |
+There is no backend or authentication. All persistence is handled via `localStorage` on the user's device.
 
 ---
 
-## 3. Módulos
+## 2. Actors
 
-| ID | Módulo |
+| Actor | Description |
+|-------|-------------|
+| **Organiser** | User who creates and manages the tournament. Primary use on a smartphone at the padel court. |
+
+---
+
+## 3. Modules
+
+| ID | Module |
 |----|--------|
-| M1 | Gerador de torneio |
-| M2 | Histórico |
-| M3 | Detalhe de torneio |
-| M4 | Impressão |
+| M1 | Tournament generator |
+| M2 | History |
+| M3 | Tournament detail |
+| M4 | Printing |
 
 ---
 
-## 4. Requisitos Funcionais
+## 4. Functional Requirements
 
-### M1 — Gerador de torneio
+### M1 — Tournament Generator
 
-#### RF-01 Modos de jogo
-O sistema deve suportar três modos de geração de torneio:
+#### RF-01 Game modes
+The system must support three tournament generation modes:
 
-| Modo | Identificador | Descrição |
-|------|---------------|-----------|
-| Regular | `regular` | Duplas sorteadas aleatoriamente a partir de uma lista de jogadores individuais |
-| Duplas Fixas | `fixed-pairs` | Duplas pré-definidas pelo utilizador; os pares não mudam entre rondas |
-| Cabeças de Série | `seeded` | Tabela A vs Tabela B — cada tabela é baralhada independentemente e os jogadores são emparelhados por posição |
+| Mode | Identifier | Description |
+|------|------------|-------------|
+| Regular | `regular` | Pairs drawn randomly from a list of individual players |
+| Fixed Pairs | `fixed-pairs` | Pairs pre-defined by the user; partners do not change between rounds |
+| Seeded | `seeded` | Table A vs Table B — each table is shuffled independently and players are paired by position |
 
-#### RF-02 Seleção de modo
-O utilizador deve poder selecionar o modo de jogo através de um selector de tabs. O modo activo deve ter indicação visual clara. Cada tab deve mostrar uma descrição sumária do modo para orientar utilizadores novos.
+#### RF-02 Mode selection
+The user must be able to select the game mode via a tab selector. The active mode must have a clear visual indicator. Each tab must show a brief description of the mode to guide new users.
 
-#### RF-03 Preservação de dados ao mudar de modo
-Ao mudar de modo, os dados introduzidos nos outros modos devem ser preservados em memória. O utilizador não deve precisar de reinserir dados se seleccionou o modo errado.
+#### RF-03 Data preservation when switching modes
+When switching modes, data entered in other modes must be preserved in memory. The user must not need to re-enter data if they selected the wrong mode.
 
-#### RF-04 Nome do clube
-O utilizador deve poder introduzir o nome do clube. Este campo é opcional. Se não preenchido, o torneio é identificado como "Torneio" na visualização.
+#### RF-04 Tournament name
+The user must be able to enter the tournament name. This field is optional. If left blank, the tournament is identified as "Tournament" in the view.
 
-#### RF-05 Inserção de jogadores (modo Regular)
-O utilizador deve poder inserir a lista de jogadores através de uma textarea, um nome por linha. A textarea deve aceitar paste directo de listas do WhatsApp.
+#### RF-05 Player entry (Regular mode)
+The user must be able to enter the list of players via a textarea, one name per line. The textarea must accept direct paste from WhatsApp lists.
 
-#### RF-06 Inserção de duplas (modo Duplas Fixas)
-O utilizador deve poder inserir as duplas através de uma textarea, uma dupla por linha, no formato `Jogador1 / Jogador2`.
+#### RF-06 Pair entry (Fixed Pairs mode)
+The user must be able to enter pairs via a textarea, one pair per line, in the format `Player1 / Player2`.
 
-#### RF-07 Inserção de tabelas (modo Cabeças de Série)
-O utilizador deve poder inserir dois grupos de jogadores (Tabela A e Tabela B) em textareas separadas, um nome por linha.
+#### RF-07 Table entry (Seeded mode)
+The user must be able to enter two groups of players (Table A and Table B) in separate textareas, one name per line.
 
-#### RF-08 Limpar textarea
-Cada textarea deve ter um botão "Apagar tudo" que limpa todo o conteúdo. Antes de apagar, o sistema deve pedir confirmação ao utilizador através de um diálogo inline (sem usar `window.confirm` do browser).
+#### RF-08 Clear textarea
+Each textarea must have a "Clear all" button that clears all content. Before clearing, the system must ask for user confirmation via an inline dialogue (without using the browser's `window.confirm`).
 
-#### RF-09 Cálculo automático de campos
-O número de campos deve ser calculado automaticamente a partir do número de duplas, pela fórmula `max(1, floor(numDuplas / 2))`. O valor calculado deve ser mostrado em tempo real conforme o utilizador insere nomes. O utilizador não deve poder alterar este valor manualmente.
+#### RF-09 Automatic court calculation
+The number of courts must be calculated automatically from the number of pairs, using the formula `max(1, floor(numPairs / 2))`. The calculated value must be shown in real time as the user enters names. The user must not be able to change this value manually.
 
-#### RF-10 Validação de inputs
+#### RF-10 Input validation
 
-| Modo | Regra | Tipo | Mensagem |
-|------|-------|------|----------|
-| Regular | Mínimo 4 jogadores | Erro (bloqueia geração) | "Modo Regular requer pelo menos 4 jogadores" |
-| Regular | Número de jogadores múltiplo de 4 | Erro (bloqueia geração) | "O número de jogadores deve ser múltiplo de 4 (4, 8, 12…)" |
-| Duplas Fixas | Mínimo 2 duplas | Erro (bloqueia geração) | "Modo Duplas Fixas requer pelo menos 2 duplas" |
-| Cabeças de Série | Mínimo 2 jogadores na Tabela A | Erro (bloqueia geração) | "A Tabela A requer pelo menos 2 jogadores" |
-| Cabeças de Série | Mínimo 2 jogadores na Tabela B | Erro (bloqueia geração) | "A Tabela B requer pelo menos 2 jogadores" |
-| Cabeças de Série | Tabelas com tamanhos diferentes | Aviso (não bloqueia) | Informa quantos pares serão usados |
-| Todos | Mínimo 1 campo | Erro (bloqueia geração) | "É necessário pelo menos 1 campo" |
+| Mode | Rule | Type | Message |
+|------|------|------|---------|
+| Regular | Minimum 4 players | Error (blocks generation) | "Regular mode requires at least 4 players" |
+| Regular | Number of players must be a multiple of 4 | Error (blocks generation) | "The number of players must be a multiple of 4 (4, 8, 12…)" |
+| Fixed Pairs | Minimum 2 pairs | Error (blocks generation) | "Fixed Pairs mode requires at least 2 pairs" |
+| Seeded | Minimum 2 players in Table A | Error (blocks generation) | "Table A requires at least 2 players" |
+| Seeded | Minimum 2 players in Table B | Error (blocks generation) | "Table B requires at least 2 players" |
+| Seeded | Tables of different sizes | Warning (does not block) | Informs how many pairs will be used |
+| All | Minimum 1 court | Error (blocks generation) | "At least 1 court is required" |
 
-As mensagens de validação só devem aparecer após o utilizador começar a inserir dados no modo activo. Não devem aparecer imediatamente ao carregar a página ou ao mudar de modo sem dados.
+Validation messages must only appear after the user has started entering data in the active mode. They must not appear immediately on page load or when switching modes with no data.
 
-#### RF-11 Botão de geração
-O botão "Gerar Torneio" deve estar desactivado enquanto existirem erros de validação. Ao ser clicado com inputs válidos, deve gerar o torneio e mostrar uma mensagem de confirmação de sucesso por 3 segundos.
+#### RF-11 Generate button
+The "Generate Tournament" button must be disabled while validation errors exist. When clicked with valid inputs, it must generate the tournament and display a success confirmation message for 3 seconds.
 
-#### RF-12 Aviso de resultados desactualizados
-Após gerar um torneio, se o utilizador alterar qualquer input (jogadores, modo, nome do clube), deve aparecer um aviso a indicar que os resultados apresentados podem não reflectir as alterações. Este aviso só deve aparecer se o modo activo tiver dados introduzidos. Desaparece ao gerar novamente.
+#### RF-12 Stale results warning
+After generating a tournament, if the user changes any input (players, mode, tournament name), a warning must appear indicating that the displayed results may not reflect the changes. This warning must only appear if the active mode has data entered. It disappears upon generating again.
 
-#### RF-13 Algoritmo de geração — modo Regular
-1. Baralhar a lista de jogadores (Fisher-Yates)
-2. Agrupar em duplas consecutivas: `[j0,j1]`, `[j2,j3]`, etc.
-3. Aplicar algoritmo round-robin sobre as duplas
-4. Distribuir os jogos pelos campos disponíveis
+#### RF-13 Generation algorithm — Regular mode
+1. Shuffle the list of players (Fisher-Yates)
+2. Group into consecutive pairs: `[p0,p1]`, `[p2,p3]`, etc.
+3. Apply the round-robin algorithm to the pairs
+4. Distribute the matches across the available courts
 
-#### RF-14 Algoritmo de geração — modo Duplas Fixas
-1. Usar as duplas tal como definidas pelo utilizador
-2. Aplicar algoritmo round-robin
-3. Distribuir pelos campos
+#### RF-14 Generation algorithm — Fixed Pairs mode
+1. Use the pairs as defined by the user
+2. Apply the round-robin algorithm
+3. Distribute across courts
 
-#### RF-15 Algoritmo de geração — modo Cabeças de Série
-1. Baralhar a Tabela A independentemente
-2. Baralhar a Tabela B independentemente
-3. Emparelhar por posição: `[A[0],B[0]]`, `[A[1],B[1]]`, etc.
-4. Se as tabelas tiverem tamanhos diferentes, usar os primeiros `min(|A|,|B|)` pares
-5. Aplicar algoritmo round-robin
-6. Distribuir pelos campos
+#### RF-15 Generation algorithm — Seeded mode
+1. Shuffle Table A independently
+2. Shuffle Table B independently
+3. Pair by position: `[A[0],B[0]]`, `[A[1],B[1]]`, etc.
+4. If the tables are of different sizes, use the first `min(|A|,|B|)` pairs
+5. Apply the round-robin algorithm
+6. Distribute across courts
 
-#### RF-16 Algoritmo round-robin
-Cada dupla deve jogar contra todas as outras duplas exactamente uma vez. Todos os jogos de uma ronda devem ocorrer em simultâneo (sem lista de espera). O número de rondas é `N-1` para `N` duplas.
+#### RF-16 Round-robin algorithm
+Each pair must play against every other pair exactly once. All matches in a round must occur simultaneously (no waiting list). The number of rounds is `N-1` for `N` pairs.
 
-#### RF-17 Distribuição por campos
-Os jogos de cada ronda devem ser distribuídos pelos campos disponíveis de forma cíclica (campo 1, campo 2, …, campo N, campo 1, …).
+#### RF-17 Court distribution
+The matches in each round must be distributed across the available courts in a cyclic manner (court 1, court 2, …, court N, court 1, …).
 
-#### RF-18 Scroll automático após geração (mobile)
-Após gerar um torneio em dispositivo móvel, a página deve fazer scroll suave para o painel de resultados.
+#### RF-18 Automatic scroll after generation (mobile)
+After generating a tournament on a mobile device, the page must smoothly scroll to the results panel.
 
-#### RF-19 Persistência do torneio no histórico
-Cada torneio gerado deve ser guardado automaticamente no histórico (`localStorage`) sem necessidade de acção do utilizador.
-
----
-
-### M2 — Histórico
-
-#### RF-20 Lista de torneios
-A página `/history` deve listar todos os torneios gerados, ordenados do mais recente para o mais antigo. Cada entrada deve mostrar: nome do clube, modo de jogo, número de campos, número de duplas e data.
-
-#### RF-21 Estado vazio
-Se não existirem torneios no histórico, deve ser apresentada uma mensagem a informar o utilizador.
-
-#### RF-22 Navegação para detalhe
-Cada entrada do histórico deve ser um link para `/history/:id`.
+#### RF-19 Tournament persistence in history
+Each generated tournament must be saved automatically to the history (`localStorage`) without any action required from the user.
 
 ---
 
-### M3 — Detalhe de torneio
+### M2 — History
 
-#### RF-23 Visualização de torneio histórico
-A página `/history/:id` deve mostrar as rondas do torneio seleccionado em modo de leitura. Deve incluir o nome do clube, a data e todas as rondas com os respectivos jogos.
+#### RF-20 Tournament list
+The `/history` page must list all generated tournaments, ordered from most recent to oldest. Each entry must show: tournament name, game mode, number of courts, number of pairs, and date.
 
-#### RF-24 Navegação de regresso
-A página de detalhe deve incluir um link de regresso para `/history`.
+#### RF-21 Empty state
+If no tournaments exist in the history, a message must be displayed informing the user.
 
-#### RF-25 Torneio não encontrado
-Se o ID não corresponder a nenhum torneio no histórico, deve ser apresentada uma mensagem de erro.
-
----
-
-### M4 — Impressão
-
-#### RF-26 Conteúdo impresso
-Ao imprimir, apenas deve ser visível o painel de resultados: nome do clube, data e rondas com os respectivos jogos. O formulário, o cabeçalho, o botão de impressão e todos os elementos de navegação devem estar ocultos.
-
-#### RF-27 Formato da página impressa
-A impressão deve usar formato A4 com margens de 2 cm (`@page { size: A4; margin: 2cm }`).
-
-#### RF-28 Espaço para resultado
-Cada card de jogo deve incluir uma área com linha de escrita para o organizador anotar o resultado manualmente em campo.
-
-#### RF-29 Layout de impressão
-Em impressão, os cards de jogo devem ocupar a largura total da página (coluna única), independentemente do layout em ecrã.
+#### RF-22 Navigation to detail
+Each history entry must be a link to `/history/:id`.
 
 ---
 
-### Geral
+### M3 — Tournament Detail
+
+#### RF-23 Historical tournament view
+The `/history/:id` page must display the rounds of the selected tournament in read-only mode. It must include the tournament name, the date, and all rounds with their respective matches.
+
+#### RF-24 Back navigation
+The detail page must include a back link to `/history`.
+
+#### RF-25 Tournament not found
+If the ID does not correspond to any tournament in the history, an error message must be displayed.
+
+---
+
+### M4 — Printing
+
+#### RF-26 Printed content
+When printing, only the results panel must be visible: tournament name, date, and rounds with their respective matches. The form, header, print button, and all navigation elements must be hidden.
+
+#### RF-27 Printed page format
+Printing must use A4 format with 2 cm margins (`@page { size: A4; margin: 2cm }`).
+
+#### RF-28 Score space
+Each match card must include an area with a writing line for the organiser to manually record the result on court.
+
+#### RF-29 Print layout
+When printing, match cards must occupy the full page width (single column), regardless of the on-screen layout.
+
+---
+
+### General
 
 #### RF-30 Dark mode
-A aplicação deve suportar modo escuro. A preferência do utilizador deve ser persistida em `localStorage` e aplicada nas visitas seguintes.
+The application must support dark mode. The user's preference must be persisted in `localStorage` and applied on subsequent visits.
 
-#### RF-31 Persistência do histórico
-O histórico de torneios deve ser persistido em `localStorage` sob a chave `padel-history`. A leitura deve ser tolerante a dados corrompidos (retorna lista vazia em caso de erro de parsing).
+#### RF-31 History persistence
+The tournament history must be persisted in `localStorage` under the key `padel-history`. Reading must be tolerant of corrupted data (returns an empty list in case of a parsing error).
 
-#### RF-32 Tratamento de erros global
-A aplicação deve ter um error boundary global que captura erros de renderização React, reporta para Sentry (quando configurado) e apresenta ao utilizador um ecrã de erro com opção de recarregar a página.
+#### RF-32 Global error handling
+The application must have a global error boundary that captures React rendering errors, reports to Sentry (when configured), and presents the user with an error screen with an option to reload the page.
 
-#### RF-33 Edição de nomes de campos
-Após gerar um torneio, o nome de cada campo deve ser editável inline nos cards de jogo. O utilizador clica no ícone de lápis junto ao nome do campo, escreve o nome personalizado (ex: "Padel Lisboa"), e confirma com Enter ou clicando noutro sítio. O nome editado deve ser visível em todos os cards do mesmo campo em todas as rondas, na versão de impressão e no detalhe do histórico. Os nomes editados são persistidos automaticamente no `localStorage`. Por omissão, cada campo é denominado "Campo N".
-
----
-
-## 5. Regras de Negócio
-
-| ID | Regra |
-|----|-------|
-| RN-01 | Um jogo envolve exactamente 4 jogadores: 2 duplas de 2 |
-| RN-02 | Todos os jogos de uma ronda ocorrem em simultâneo — não existe lista de espera |
-| RN-03 | Em modo Regular, o número de jogadores tem de ser múltiplo de 4 |
-| RN-04 | O número de campos é sempre `max(1, floor(numDuplas / 2))` |
-| RN-05 | Em modo Cabeças de Série, se as tabelas tiverem tamanhos diferentes, são usados `min(\|A\|, \|B\|)` pares e o utilizador é avisado |
-| RN-06 | O histórico é apenas para leitura — não é possível editar ou apagar torneios passados; excepção: o nome dos campos pode ser editado inline e é persistido automaticamente |
-| RN-07 | Cada torneio é identificado por um UUID gerado no momento da criação |
+#### RF-33 Court name editing
+After generating a tournament, the name of each court must be editable inline in the match cards. The user clicks the pencil icon next to the court name, types a custom name (e.g. "Padel Lisboa"), and confirms with Enter or by clicking elsewhere. The edited name must be visible in all cards for the same court across all rounds, in the print version, and in the history detail. Edited names are persisted automatically in `localStorage`. By default, each court is named "Court N".
 
 ---
 
-## 6. Requisitos Não Funcionais
+## 5. Business Rules
 
-| ID | Requisito |
-|----|-----------|
-| RNF-01 | A aplicação deve funcionar sem backend — toda a lógica é client-side |
-| RNF-02 | A aplicação deve ser responsiva e utilizável em smartphone (caso de uso primário) |
-| RNF-03 | Os inputs de texto devem ter `font-size` ≥ 16px em mobile para evitar zoom automático no iOS |
-| RNF-04 | Todos os labels de formulário devem estar associados aos respectivos inputs via `htmlFor`/`id` |
-| RNF-05 | Mensagens dinâmicas (erros, sucesso) devem ter `role="alert"` ou `role="status"` com `aria-live` para leitores de ecrã |
-| RNF-06 | Ícones decorativos devem ter `aria-hidden="true"` |
-| RNF-07 | A cobertura de testes unitários deve ser ≥ 90% de linhas e funções, ≥ 80% de branches, nas camadas `src/utils/` e `src/hooks/useHistory.ts` |
-| RNF-08 | O pipeline de CI deve correr testes unitários e E2E em cada push para `main` e em cada pull request |
-| RNF-09 | O deploy em produção (Vercel) deve ser automático em cada push para `main` |
+| ID | Rule |
+|----|------|
+| RN-01 | A match involves exactly 4 players: 2 pairs of 2 |
+| RN-02 | All matches in a round occur simultaneously — there is no waiting list |
+| RN-03 | In Regular mode, the number of players must be a multiple of 4 |
+| RN-04 | The number of courts is always `max(1, floor(numPairs / 2))` |
+| RN-05 | In Seeded mode, if the tables are of different sizes, `min(\|A\|, \|B\|)` pairs are used and the user is warned |
+| RN-06 | History is read-only — past tournaments cannot be edited or deleted; exception: court names can be edited inline and are persisted automatically |
+| RN-07 | Each tournament is identified by a UUID generated at the moment of creation |
 
 ---
 
-## 7. Fora de Âmbito
+## 6. Non-Functional Requirements
 
-- Autenticação ou contas de utilizador
-- Backend ou base de dados remota
-- Edição ou eliminação de torneios no histórico
-- Exportação para PDF, CSV ou outros formatos
-- Partilha de torneios entre dispositivos
-- Registo de resultados de jogos na aplicação
-- Gestão de jogadores (base de dados de jogadores persistente)
-- Notificações push ou tempo real
+| ID | Requirement |
+|----|-------------|
+| RNF-01 | The application must work without a backend — all logic is client-side |
+| RNF-02 | The application must be responsive and usable on a smartphone (primary use case) |
+| RNF-03 | Text inputs must have `font-size` ≥ 16px on mobile to avoid automatic zoom on iOS |
+| RNF-04 | All form labels must be associated with their respective inputs via `htmlFor`/`id` |
+| RNF-05 | Dynamic messages (errors, success) must have `role="alert"` or `role="status"` with `aria-live` for screen readers |
+| RNF-06 | Decorative icons must have `aria-hidden="true"` |
+| RNF-07 | Unit test coverage must be ≥ 90% of lines and functions, ≥ 80% of branches, in the `src/utils/` and `src/hooks/useHistory.ts` layers |
+| RNF-08 | The CI pipeline must run unit and E2E tests on every push to `main` and on every pull request |
+| RNF-09 | The production deployment (Vercel) must be automatic on every push to `main` |
+
+---
+
+## 7. Out of Scope
+
+- Authentication or user accounts
+- Backend or remote database
+- Editing or deleting tournaments from history
+- Export to PDF, CSV, or other formats
+- Sharing tournaments between devices
+- Recording match results in the application
+- Player management (persistent player database)
+- Push notifications or real-time features

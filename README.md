@@ -237,6 +237,15 @@ Open a pull request against `main`. The PR template includes a checklist. CI mus
 
 ---
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Requirements](docs/requirements.md) | Functional and non-functional requirements (RF, RN, RNF) |
+| [Specification](docs/specification.md) | Full SRS — data model, algorithms, UI spec, test spec, architecture |
+
+---
+
 ## Links
 
 | | URL |
