@@ -68,7 +68,7 @@ function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }
     <div className="flex flex-col gap-3 print:gap-2 min-w-0">
       {pair.map((name, i) => {
         const nameEl = (
-          <span className={`truncate flex-1 min-w-0 text-sm font-medium text-gray-800 dark:text-gray-100 print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
+          <span className={`flex-1 min-w-0 break-words text-sm font-medium leading-snug text-gray-800 dark:text-gray-100 print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
             {name}
           </span>
         )
@@ -148,7 +148,7 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-5 md:gap-x-6 w-full">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full">
         <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
           <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
