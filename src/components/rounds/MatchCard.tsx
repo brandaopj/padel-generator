@@ -65,7 +65,7 @@ function PlayerAvatar({ name }: { name: string }) {
 
 function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }) {
   return (
-    <div className="flex flex-col gap-2 print:gap-1 min-w-0">
+    <div className="flex flex-col gap-3 print:gap-2 min-w-0">
       {pair.map((name, i) => {
         const nameEl = (
           <span className={`truncate flex-1 min-w-0 text-sm font-medium text-gray-800 dark:text-gray-100 print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
@@ -110,12 +110,12 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
 
   if (!onEdit) {
     return (
-      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 print:mb-1">{name}</div>
+      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-3 print:mb-2">{name}</div>
     )
   }
 
   return (
-    <div className="flex items-center gap-1 mb-2 print:mb-1">
+    <div className="flex items-center gap-1 mb-3 print:mb-2">
       <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{name}</span>
       <button
         type="button"
@@ -144,11 +144,11 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-4 pb-5 print:p-2 print:pb-2 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
+      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 md:gap-4 w-full">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-5 md:gap-x-6 w-full">
         <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
           <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
@@ -159,7 +159,7 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
       </div>
 
       {/* Score boxes — dashed, one per pair, for hand-written scores */}
-      <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:pt-1.5 print:mt-2">
+      <div className="mt-auto pt-5 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:pt-3 print:mt-3">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-3 print:gap-1 items-center">
           <div className="flex justify-center">
             <div
