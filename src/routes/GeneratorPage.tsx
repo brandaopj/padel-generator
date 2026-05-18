@@ -1,5 +1,6 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext'
+import { useToast } from '../context/ToastContext'
 import { ModeSelector } from '../components/generator/ModeSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
 import { PairInput } from '../components/generator/PairInput'
@@ -19,8 +20,8 @@ const EXAMPLE_PLAYERS = [
 export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
   const { save, update } = useHistory()
+  const { showToast } = useToast()
   const { errors, warnings } = validate(state)
-  const [showSuccess, setShowSuccess] = useState(false)
   const [isStale, setIsStale] = useState(false)
   const [exampleKey, setExampleKey] = useState(0)
   const hasGeneratedRef = useRef(false)
@@ -45,6 +46,7 @@ export function GeneratorPage() {
       courtNames: { ...state.generated.courtNames, [court]: name },
     }
     update(updated)
+    showToast('info', 'Nome do campo atualizado', { duration: 2000 })
   }
 
   function handleLoadExample() {
@@ -67,8 +69,9 @@ export function GeneratorPage() {
     save(tournament)
     hasGeneratedRef.current = true
     setIsStale(false)
-    setShowSuccess(true)
-    setTimeout(() => setShowSuccess(false), 3000)
+    const roundCount = tournament.rounds.length
+    const matchCount = tournament.rounds.reduce((sum, r) => sum + r.matches.length, 0)
+    showToast('success', `Torneio gerado — ${roundCount} rondas · ${matchCount} jogos`)
     setTimeout(() => {
       roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     }, 50)
@@ -141,18 +144,6 @@ export function GeneratorPage() {
               <div className="flex items-start gap-2 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
                 <span aria-hidden="true" className="shrink-0">↻</span>
                 <span>Os resultados podem não refletir as alterações atuais.</span>
-              </div>
-            )}
-
-            {showSuccess && (
-              <div
-                role="status"
-                aria-live="polite"
-                data-testid="success-banner"
-                className="flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-3 text-sm text-green-700 dark:text-green-300"
-              >
-                <span aria-hidden="true">✓</span>
-                <span>Torneio gerado com sucesso!</span>
               </div>
             )}
 

@@ -9,6 +9,23 @@
   animation: fade-in-up 0.35s ease-out both;
 }
 
+@keyframes toast-in {
+  from { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+@keyframes toast-out {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+}
+.animate-toast-in  { animation: toast-in  0.3s ease-out both; }
+.animate-toast-out { animation: toast-out 0.2s ease-in  both; }
+
+@keyframes scale-in {
+  from { transform: scale(0.95); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+.animate-scale-in { animation: scale-in 0.15s ease-out both; }
+
 /* Class-based dark mode for Tailwind v4 */
 @custom-variant dark (&:where(.dark, .dark *));
 

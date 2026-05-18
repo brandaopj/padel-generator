@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ConfirmModal } from './ConfirmModal'
 
 function TrashIcon() {
   return (
@@ -12,41 +13,38 @@ function TrashIcon() {
   )
 }
 
-type Props = { label: string; onConfirm: () => void }
+type Props = {
+  label: string
+  onConfirm: () => void
+  modalTitle?: string
+  modalDescription?: string
+}
 
-export function ClearButton({ label, onConfirm }: Props) {
-  const [confirming, setConfirming] = useState(false)
+export function ClearButton({ label, onConfirm, modalTitle, modalDescription }: Props) {
+  const [open, setOpen] = useState(false)
 
-  if (confirming) {
-    return (
-      <span className="flex items-center gap-1 text-xs">
-        <button
-          type="button"
-          onClick={() => setConfirming(false)}
-          className="px-2 py-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-        >
-          Cancelar
-        </button>
-        <button
-          type="button"
-          onClick={() => { onConfirm(); setConfirming(false) }}
-          className="flex items-center gap-1 px-2 py-1 text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors"
-        >
-          <TrashIcon />
-          Apagar
-        </button>
-      </span>
-    )
-  }
+  const title = modalTitle ?? (label === 'Apagar tudo' ? 'Apagar todos os jogadores?' : 'Apagar?')
+  const description = modalDescription ?? 'Esta ação não pode ser desfeita.'
 
   return (
-    <button
-      type="button"
-      onClick={() => setConfirming(true)}
-      className="flex items-center gap-1 px-2 py-1 text-xs text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
-    >
-      <TrashIcon />
-      {label}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1 px-2 py-1 text-xs text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+      >
+        <TrashIcon />
+        {label}
+      </button>
+      {open && (
+        <ConfirmModal
+          title={title}
+          description={description}
+          confirmLabel={label}
+          onConfirm={() => { onConfirm(); setOpen(false) }}
+          onCancel={() => setOpen(false)}
+        />
+      )}
+    </>
   )
 }

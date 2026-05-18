@@ -2,6 +2,7 @@ import { useContext, useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { AppContext } from './context/AppContext'
+import { ToastProvider } from './context/ToastContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { DarkModeToggle } from './components/ui/DarkModeToggle'
 import { PrintButton } from './components/ui/PrintButton'
@@ -116,9 +117,11 @@ export default function App() {
   return (
     <ErrorBoundary>
       <AppProvider>
-        <BrowserRouter>
-          <Shell />
-        </BrowserRouter>
+        <ToastProvider>
+          <BrowserRouter>
+            <Shell />
+          </BrowserRouter>
+        </ToastProvider>
       </AppProvider>
     </ErrorBoundary>
   )

@@ -1,30 +1,25 @@
 import { useEffect } from 'react'
+import { MODES } from '../../utils/modes'
+
+const MODE_DESCRIPTIONS = [
+  'Os jogadores são introduzidos individualmente na lista. O algoritmo sorteia pares completamente aleatórios a cada ronda, garantindo que jogas com parceiros e adversários diferentes ao longo do torneio (formato americano/social).',
+  "Ideal para torneios onde as equipas já estão fechadas. Introduz os nomes no formato 'Jogador 1 / Jogador 2'. O algoritmo gera um calendário Round-Robin onde cada dupla defronta todas as outras duplas exatamente uma vez.",
+  'Para jogos equilibrados por nível. Introduzes duas listas independentes (Tabela A — Avançados; Tabela B — Iniciantes). O sistema faz um shuffle independente e emparelha a posição 1 da Tabela A com a posição 1 da Tabela B, criando duplas equilibradas de forma automática antes de gerar o calendário.',
+]
+
+const TABLE_IDEAL = [
+  'Confraternizações / Sociais',
+  'Torneios Competitivos',
+  'Níveis Mistos (Prós + Amadores)',
+]
+
+const TABLE_INPUT = [
+  '1 Jogador por linha',
+  'Jogador 1 / Jogador 2',
+  'Duas tabelas (A e B)',
+]
 
 type Props = { onClose: () => void }
-
-const MODES = [
-  {
-    label: 'Modo Regular',
-    description:
-      'Os jogadores são introduzidos individualmente na lista. O algoritmo sorteia pares completamente aleatórios a cada ronda, garantindo que jogas com parceiros e adversários diferentes ao longo do torneio (formato americano/social).',
-  },
-  {
-    label: 'Duplas Fixas (Fixed Pairs)',
-    description:
-      "Ideal para torneios onde as equipas já estão fechadas. Introduz os nomes no formato 'Jogador 1 / Jogador 2'. O algoritmo gera um calendário Round-Robin onde cada dupla defronta todas as outras duplas exatamente uma vez.",
-  },
-  {
-    label: 'Semeado (Seeded)',
-    description:
-      'Para jogos equilibrados por nível. Introduzes duas listas independentes (Tabela A — Avançados; Tabela B — Iniciantes). O sistema faz um shuffle independente e emparelha a posição 1 da Tabela A com a posição 1 da Tabela B, criando duplas equilibradas de forma automática antes de gerar o calendário.',
-  },
-]
-
-const TABLE_ROWS = [
-  { mode: 'Regular', input: '1 Jogador por linha', ideal: 'Confraternizações / Sociais' },
-  { mode: 'Fixed Duplas', input: 'Jogador 1 / Jogador 2', ideal: 'Torneios Competitivos' },
-  { mode: 'Seeded', input: 'Duas tabelas (A e B)', ideal: 'Níveis Mistos (Prós + Amadores)' },
-]
 
 export function HowItWorksModal({ onClose }: Props) {
   useEffect(() => {
@@ -64,15 +59,19 @@ export function HowItWorksModal({ onClose }: Props) {
 
         {/* Mode sections */}
         <div className="p-6 space-y-6">
-          {MODES.map(mode => (
-            <div key={mode.label}>
-              <h3 className="flex items-center gap-2 text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
-                  <path d="M6 0L7.5 4.5H12L8.25 7.25L9.75 12L6 9.25L2.25 12L3.75 7.25L0 4.5H4.5L6 0Z" />
-                </svg>
+          {MODES.map((mode, i) => (
+            <div key={mode.value}>
+              <h3 className="flex items-center gap-2.5 text-base font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <span className="flex items-center justify-center w-6 h-6 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 shrink-0">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule={mode.iconFillRule ?? 'nonzero'} d={mode.iconPath} />
+                  </svg>
+                </span>
                 {mode.label}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{mode.description}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed pl-8.5">
+                {MODE_DESCRIPTIONS[i]}
+              </p>
             </div>
           ))}
 
@@ -87,11 +86,18 @@ export function HowItWorksModal({ onClose }: Props) {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map((row, i) => (
-                  <tr key={row.mode} className={i < TABLE_ROWS.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''}>
-                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">{row.mode}</td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{row.input}</td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{row.ideal}</td>
+                {MODES.map((mode, i) => (
+                  <tr key={mode.value} className={i < MODES.length - 1 ? 'border-b border-gray-100 dark:border-gray-700' : ''}>
+                    <td className="px-4 py-3">
+                      <span className="flex items-center gap-2 font-medium text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                        <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path fillRule={mode.iconFillRule ?? 'nonzero'} d={mode.iconPath} />
+                        </svg>
+                        {mode.label}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{TABLE_INPUT[i]}</td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{TABLE_IDEAL[i]}</td>
                   </tr>
                 ))}
               </tbody>
