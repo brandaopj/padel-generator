@@ -73,4 +73,21 @@ describe('useHistory', () => {
     update(makeTournament('nonexistent'))
     expect(getAll()).toHaveLength(1)
   })
+
+  it('remove deletes tournament by id', () => {
+    const { save, remove, getAll } = useHistory()
+    save(makeTournament('t1'))
+    save(makeTournament('t2'))
+    remove('t1')
+    const all = getAll()
+    expect(all).toHaveLength(1)
+    expect(all[0].id).toBe('t2')
+  })
+
+  it('remove does nothing when id not found', () => {
+    const { save, remove, getAll } = useHistory()
+    save(makeTournament('t1'))
+    remove('nonexistent')
+    expect(getAll()).toHaveLength(1)
+  })
 })

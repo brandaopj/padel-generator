@@ -28,5 +28,9 @@ export function useHistory() {
     localStorage.setItem(KEY, JSON.stringify(all))
   }
 
-  return { getAll, save, getById, update }
+  function remove(id: string): void {
+    localStorage.setItem(KEY, JSON.stringify(getAll().filter(t => t.id !== id)))
+  }
+
+  return { getAll, save, getById, update, remove }
 }
