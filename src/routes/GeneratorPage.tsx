@@ -162,7 +162,7 @@ export function GeneratorPage() {
               disabled={errors.length > 0}
               className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
-              Gerar Torneio
+              {state.generated ? 'Regenerar Torneio' : 'Gerar Torneio'}
             </button>
           </div>
         </div>

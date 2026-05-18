@@ -10,7 +10,7 @@ export function RoundsPanel({ tournament, onEditCourtName }: Props) {
   if (!tournament) return null
 
   return (
-    <div data-testid="rounds-panel" className="space-y-6">
+    <div data-testid="rounds-panel" className="space-y-8 animate-fade-in-up">
       <div className="print:pt-2">
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 print:text-2xl print:mb-1">
           {tournament.clubName || 'Torneio'}
