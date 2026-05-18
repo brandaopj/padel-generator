@@ -63,13 +63,18 @@ function PlayerAvatar({ name }: { name: string }) {
   )
 }
 
-function PairColumn({ pair }: { pair: Pair }) {
+function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }) {
   return (
     <div className="flex flex-col gap-2 print:gap-1 min-w-0">
       {pair.map((name, i) => (
-        <div key={i} className="flex items-center gap-2 print:gap-0 min-w-0">
+        <div
+          key={i}
+          className={`flex items-center gap-2 print:gap-1 min-w-0 w-full ${reverse ? 'flex-row-reverse' : ''}`}
+        >
           <PlayerAvatar name={name} />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0 print:text-xs print:font-semibold">{name}</span>
+          <span className={`text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0 print:text-xs print:font-semibold ${reverse ? 'text-right' : 'text-left'}`}>
+            {name}
+          </span>
         </div>
       ))}
     </div>
@@ -141,8 +146,8 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 w-full print:gap-1">
-        <PairColumn pair={match.pair1} />
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 w-full print:gap-2">
+        <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
           <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
             VS
