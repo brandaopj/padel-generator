@@ -22,6 +22,7 @@ export function GeneratorPage() {
   const { errors, warnings } = validate(state)
   const [showSuccess, setShowSuccess] = useState(false)
   const [isStale, setIsStale] = useState(false)
+  const [exampleKey, setExampleKey] = useState(0)
   const hasGeneratedRef = useRef(false)
   const roundsPanelRef = useRef<HTMLDivElement>(null)
 
@@ -49,6 +50,7 @@ export function GeneratorPage() {
   function handleLoadExample() {
     dispatch({ type: 'SET_MODE', payload: 'regular' })
     dispatch({ type: 'SET_PLAYERS', payload: EXAMPLE_PLAYERS })
+    setExampleKey(k => k + 1)
   }
 
   function handleGenerate() {
@@ -104,6 +106,7 @@ export function GeneratorPage() {
 
             {state.mode === 'regular' && (
               <PlayerInput
+                key={exampleKey}
                 players={state.players}
                 onChange={players => dispatch({ type: 'SET_PLAYERS', payload: players })}
               />
