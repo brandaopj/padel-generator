@@ -13,10 +13,13 @@ export function RoundCard({ round, courtNames, onEditCourtName }: Props) {
       data-testid={`round-${round.number}`}
       className="space-y-3 print:space-y-2"
     >
-      <div className="flex items-center gap-3 print:mb-1">
-        <span className="inline-flex items-center px-3 py-1 bg-lime-400 text-gray-900 rounded-full text-xs font-black uppercase tracking-widest shrink-0 print:bg-gray-200 print:px-2 print:py-0.5">
-          Ronda {round.number}
-        </span>
+      <div className="flex items-center gap-4 print:gap-3 print:mb-1">
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-1 h-7 rounded-full bg-blue-600 dark:bg-blue-500 shrink-0 print:hidden" />
+          <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-gray-100 print:text-xs print:font-black print:uppercase print:tracking-widest print:bg-gray-200 print:text-gray-900 print:px-2 print:py-0.5 print:rounded-full">
+            Ronda {round.number}
+          </span>
+        </div>
         <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
       </div>
       <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2 print:gap-2">

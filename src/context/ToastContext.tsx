@@ -74,10 +74,10 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
             key={toast.id}
             role="alert"
             aria-live="polite"
-            className={`flex items-start gap-2.5 pl-3.5 pr-3 py-3 rounded-lg border shadow-lg w-72 text-sm font-medium ${container} ${toast.leaving ? 'animate-toast-out' : 'animate-toast-in'}`}
+            className={`flex items-center gap-2.5 pl-3.5 pr-3 py-3 rounded-lg border shadow-lg min-w-72 max-w-sm text-sm font-medium whitespace-nowrap ${container} ${toast.leaving ? 'animate-toast-out' : 'animate-toast-in'}`}
           >
             <IconComponent />
-            <span className="flex-1 leading-snug">{toast.message}</span>
+            <span className="shrink-0">{toast.message}</span>
             {toast.persistent && (
               <button
                 type="button"

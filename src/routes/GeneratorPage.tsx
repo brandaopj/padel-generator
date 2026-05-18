@@ -23,6 +23,7 @@ export function GeneratorPage() {
   const { showToast } = useToast()
   const { errors, warnings } = validate(state)
   const [isStale, setIsStale] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [exampleKey, setExampleKey] = useState(0)
   const hasGeneratedRef = useRef(false)
   const roundsPanelRef = useRef<HTMLDivElement>(null)
@@ -56,25 +57,35 @@ export function GeneratorPage() {
   }
 
   function handleGenerate() {
-    const tournament = generateTournament({
-      mode: state.mode,
-      clubName: state.clubName,
-      courts: state.courts,
-      players: state.players,
-      pairs: state.pairs,
-      tableA: state.tableA,
-      tableB: state.tableB,
+    if (isGenerating) return
+    setIsGenerating(true)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try {
+          const tournament = generateTournament({
+            mode: state.mode,
+            clubName: state.clubName,
+            courts: state.courts,
+            players: state.players,
+            pairs: state.pairs,
+            tableA: state.tableA,
+            tableB: state.tableB,
+          })
+          dispatch({ type: 'SET_GENERATED', payload: tournament })
+          save(tournament)
+          hasGeneratedRef.current = true
+          setIsStale(false)
+          const roundCount = tournament.rounds.length
+          const matchCount = tournament.rounds.reduce((sum, r) => sum + r.matches.length, 0)
+          showToast('success', `Torneio gerado — ${roundCount} rondas · ${matchCount} jogos`)
+          setTimeout(() => {
+            roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+          }, 50)
+        } finally {
+          setIsGenerating(false)
+        }
+      })
     })
-    dispatch({ type: 'SET_GENERATED', payload: tournament })
-    save(tournament)
-    hasGeneratedRef.current = true
-    setIsStale(false)
-    const roundCount = tournament.rounds.length
-    const matchCount = tournament.rounds.reduce((sum, r) => sum + r.matches.length, 0)
-    showToast('success', `Torneio gerado — ${roundCount} rondas · ${matchCount} jogos`)
-    setTimeout(() => {
-      roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-    }, 50)
   }
 
   return (
@@ -150,10 +161,27 @@ export function GeneratorPage() {
             <button
               data-testid="generate-button"
               onClick={handleGenerate}
-              disabled={errors.length > 0}
-              className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg text-sm font-semibold tracking-wide whitespace-nowrap hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              disabled={errors.length > 0 || isGenerating}
+              className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg text-sm font-semibold tracking-wide hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
-              {state.generated ? 'Regenerar Torneio' : 'Gerar Torneio'}
+              {isGenerating ? (
+                <>
+                  <svg className="w-4 h-4 animate-spin shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  A gerar...
+                </>
+              ) : state.generated ? (
+                <>
+                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+                  </svg>
+                  Regenerar Torneio
+                </>
+              ) : (
+                'Gerar Torneio'
+              )}
             </button>
           </div>
         </div>

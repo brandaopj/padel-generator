@@ -45,7 +45,7 @@ function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
         onChange={handleChange}
         rows={5}
         placeholder="Um nome por linha"
-        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-28 sm:min-h-36 lg:min-h-44"
       />
     </div>
   )

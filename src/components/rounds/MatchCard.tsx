@@ -122,7 +122,7 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
         onClick={() => setEditing(true)}
         aria-label={`Editar nome: ${name}`}
         title="Editar nome do campo"
-        className="print:hidden text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-all opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+        className="print:hidden text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
       >
         <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
