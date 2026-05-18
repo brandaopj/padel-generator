@@ -10,6 +10,26 @@ import { GeneratorPage } from './routes/GeneratorPage'
 import { HistoryPage } from './routes/HistoryPage'
 import { TournamentDetailPage } from './routes/TournamentDetailPage'
 
+function PadelLogo() {
+  return (
+    <Link to="/" className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
+      <span className="font-black text-gray-900 dark:text-white tracking-tight text-lg leading-none select-none">
+        PADEL
+      </span>
+      {/* Padel ball */}
+      <span className="w-[18px] h-[18px] rounded-full bg-lime-400 flex items-center justify-center shrink-0" aria-hidden="true">
+        <svg className="w-3 h-3 text-lime-700" viewBox="0 0 10 10" fill="none">
+          <path d="M1.5 5 Q5 1.5 8.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M1.5 5 Q5 8.5 8.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        </svg>
+      </span>
+      <span className="font-light text-gray-400 dark:text-gray-500 tracking-widest text-sm leading-none select-none">
+        GENERATOR
+      </span>
+    </Link>
+  )
+}
+
 function Shell() {
   const { dark, toggle } = useDarkMode()
   const { state } = useContext(AppContext)
@@ -22,9 +42,7 @@ function Shell() {
       <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 print:hidden sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link to="/" className="font-bold text-lg text-blue-600 hover:text-blue-700">
-              Padel Generator
-            </Link>
+            <PadelLogo />
             <nav className="flex gap-4">
               <NavLink
                 to="/"

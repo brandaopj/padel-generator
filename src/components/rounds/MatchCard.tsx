@@ -1,22 +1,38 @@
 import { useRef, useState } from 'react'
 import type { Match, Pair } from '../../types'
 
-function PlayerAvatar() {
+function PlayerAvatar({ name }: { name: string }) {
+  const [errored, setErrored] = useState(false)
+  const initials = name
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase()
+
+  const url =
+    `https://api.dicebear.com/7.x/initials/svg` +
+    `?seed=${encodeURIComponent(name)}` +
+    `&backgroundColor=dbeafe&textColor=1e40af&fontSize=40&bold=true`
+
+  if (errored) {
+    return (
+      <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300 select-none">
+        {initials}
+      </div>
+    )
+  }
+
   return (
-    <div className="w-7 h-7 rounded-full bg-blue-100 dark:bg-blue-900/40 print:bg-gray-100 flex items-center justify-center shrink-0">
-      <svg
-        className="w-4 h-4 text-blue-500 dark:text-blue-400 print:text-gray-500"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fillRule="evenodd"
-          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </div>
+    <img
+      src={url}
+      alt={initials}
+      width={32}
+      height={32}
+      className="w-8 h-8 rounded-full shrink-0 bg-blue-100"
+      loading="lazy"
+      onError={() => setErrored(true)}
+    />
   )
 }
 
@@ -25,7 +41,7 @@ function PairColumn({ pair }: { pair: Pair }) {
     <div className="flex flex-col gap-2 min-w-0">
       {pair.map((name, i) => (
         <div key={i} className="flex items-center gap-2 min-w-0">
-          <PlayerAvatar />
+          <PlayerAvatar name={name} />
           <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0">{name}</span>
         </div>
       ))}
@@ -98,11 +114,11 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
         <PairColumn pair={match.pair1} />
-        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-1 pt-1.5 self-start">vs</span>
+        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-1 pt-2 self-start">vs</span>
         <PairColumn pair={match.pair2} />
       </div>
 
-      {/* Score boxes — one per pair, aligned to each column */}
+      {/* Score boxes — dashed, one per pair, aligned to each column */}
       <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 print:border-gray-300">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center">
           <div className="flex justify-center">
