@@ -103,6 +103,7 @@ function Shell() {
           <div className="flex items-center gap-3">
             {showPrint && <PrintButton />}
             {showPrint && state.generated && <ShareButton tournament={state.generated} />}
+            <KofiButton />
             <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden text-xs font-medium">
               <button
                 onClick={() => setLang('pt')}
@@ -129,7 +130,6 @@ function Shell() {
         </Routes>
       </main>
       {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}
-      <KofiButton />
     </div>
   )
 }
