@@ -1,7 +1,10 @@
-import { BrowserRouter, Routes, Route, Link, NavLink } from 'react-router-dom'
+import { useContext } from 'react'
+import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
+import { AppContext } from './context/AppContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { DarkModeToggle } from './components/ui/DarkModeToggle'
+import { PrintButton } from './components/ui/PrintButton'
 import { useDarkMode } from './hooks/useDarkMode'
 import { GeneratorPage } from './routes/GeneratorPage'
 import { HistoryPage } from './routes/HistoryPage'
@@ -9,6 +12,10 @@ import { TournamentDetailPage } from './routes/TournamentDetailPage'
 
 function Shell() {
   const { dark, toggle } = useDarkMode()
+  const { state } = useContext(AppContext)
+  const location = useLocation()
+
+  const showPrint = location.pathname === '/' && state.generated !== null
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -38,7 +45,10 @@ function Shell() {
               </NavLink>
             </nav>
           </div>
-          <DarkModeToggle dark={dark} onToggle={toggle} />
+          <div className="flex items-center gap-3">
+            {showPrint && <PrintButton />}
+            <DarkModeToggle dark={dark} onToggle={toggle} />
+          </div>
         </div>
       </header>
       <main>

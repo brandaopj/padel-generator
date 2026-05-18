@@ -7,23 +7,12 @@ type Props = {
 }
 
 export function RoundsPanel({ tournament, onEditCourtName }: Props) {
-  if (!tournament) {
-    return (
-      <div
-        data-testid="rounds-empty"
-        className="flex flex-col items-center justify-center h-64 text-gray-400 dark:text-gray-600"
-      >
-        <p className="text-base text-center">
-          Preenche o formulário e clica em Gerar Torneio
-        </p>
-      </div>
-    )
-  }
+  if (!tournament) return null
 
   return (
     <div data-testid="rounds-panel" className="space-y-6">
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">
+      <div className="print:pt-2">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 print:text-2xl print:mb-1">
           {tournament.clubName || 'Torneio'}
         </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">

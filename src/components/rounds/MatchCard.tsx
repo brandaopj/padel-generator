@@ -22,11 +22,11 @@ function PlayerAvatar() {
 
 function PairColumn({ pair }: { pair: Pair }) {
   return (
-    <div className="flex flex-col gap-1.5 min-w-0">
+    <div className="flex flex-col gap-2 min-w-0">
       {pair.map((name, i) => (
         <div key={i} className="flex items-center gap-2 min-w-0">
           <PlayerAvatar />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words">{name}</span>
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0">{name}</span>
         </div>
       ))}
     </div>
@@ -92,18 +92,32 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-3 print:p-4 print:border-gray-400"
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 print:p-5 print:border-gray-400 print:break-inside-avoid break-inside-avoid"
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+
+      <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
         <PairColumn pair={match.pair1} />
-        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-1 self-center">vs</span>
+        <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 px-1 pt-1.5 self-start">vs</span>
         <PairColumn pair={match.pair2} />
       </div>
-      <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 print:border-gray-300">
-        <div className="flex items-end gap-2 text-xs text-gray-400 dark:text-gray-500 print:text-gray-600">
-          <span className="shrink-0">Resultado:</span>
-          <div className="flex-1 border-b-2 border-gray-200 dark:border-gray-600 print:border-gray-500 h-7" />
+
+      {/* Score boxes — one per pair, aligned to each column */}
+      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 print:border-gray-300">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center">
+          <div className="flex justify-center">
+            <div
+              aria-label="Score da dupla 1"
+              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 rounded"
+            />
+          </div>
+          <span className="text-sm font-medium text-gray-400 dark:text-gray-500 px-1 text-center">–</span>
+          <div className="flex justify-center">
+            <div
+              aria-label="Score da dupla 2"
+              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 rounded"
+            />
+          </div>
         </div>
       </div>
     </div>

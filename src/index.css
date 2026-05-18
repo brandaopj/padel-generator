@@ -12,3 +12,12 @@
   size: A4;
   margin: 2cm;
 }
+
+/* Prevent match cards and round blocks from splitting across A4 pages */
+@media print {
+  [data-testid="match-card"],
+  [data-testid^="round-"] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
