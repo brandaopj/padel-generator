@@ -160,7 +160,7 @@ export function GeneratorPage() {
               data-testid="generate-button"
               onClick={handleGenerate}
               disabled={errors.length > 0}
-              className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg text-sm font-semibold tracking-wide hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg text-sm font-semibold tracking-wide whitespace-nowrap hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {state.generated ? 'Regenerar Torneio' : 'Gerar Torneio'}
             </button>

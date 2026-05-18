@@ -137,11 +137,11 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-4 print:p-2 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
+      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-4 pb-5 print:p-2 print:pb-2 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 print:gap-1">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 w-full print:gap-1">
         <PairColumn pair={match.pair1} />
         <div className="flex items-center justify-center self-center">
           <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
