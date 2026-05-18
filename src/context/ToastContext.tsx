@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState } from 'react'
 import type { ReactNode, ReactElement } from 'react'
+import { useLanguage } from './LanguageContext'
 
 export type ToastVariant = 'success' | 'error' | 'info'
 
@@ -59,13 +60,15 @@ const VARIANT_STYLES: Record<ToastVariant, VariantStyle> = {
 }
 
 function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss: (id: string) => void }) {
+  const { t } = useLanguage()
+
   if (!toasts.length) return null
 
   return (
     <div
       className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 print:hidden"
       role="region"
-      aria-label="Notificações"
+      aria-label={t.toast.notifications}
     >
       {toasts.map(toast => {
         const { container, IconComponent } = VARIANT_STYLES[toast.variant]
@@ -82,7 +85,7 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
               <button
                 type="button"
                 onClick={() => onDismiss(toast.id)}
-                aria-label="Fechar"
+                aria-label={t.toast.close}
                 className="shrink-0 mt-0.5 opacity-60 hover:opacity-100 transition-opacity"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

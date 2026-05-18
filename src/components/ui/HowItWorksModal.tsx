@@ -1,27 +1,12 @@
 import { useEffect } from 'react'
 import { MODES } from '../../utils/modes'
-
-const MODE_DESCRIPTIONS = [
-  'Os jogadores são introduzidos individualmente na lista. O algoritmo sorteia pares completamente aleatórios a cada ronda, garantindo que jogas com parceiros e adversários diferentes ao longo do torneio (formato americano/social).',
-  "Ideal para torneios onde as equipas já estão fechadas. Introduz os nomes no formato 'Jogador 1 / Jogador 2'. O algoritmo gera um calendário Round-Robin onde cada dupla defronta todas as outras duplas exatamente uma vez.",
-  'Para jogos equilibrados por nível. Introduzes duas listas independentes (Tabela A — Avançados; Tabela B — Iniciantes). O sistema faz um shuffle independente e emparelha a posição 1 da Tabela A com a posição 1 da Tabela B, criando duplas equilibradas de forma automática antes de gerar o calendário.',
-]
-
-const TABLE_IDEAL = [
-  'Confraternizações / Sociais',
-  'Torneios Competitivos',
-  'Níveis Mistos (Prós + Amadores)',
-]
-
-const TABLE_INPUT = [
-  '1 Jogador por linha',
-  'Jogador 1 / Jogador 2',
-  'Duas tabelas (A e B)',
-]
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = { onClose: () => void }
 
 export function HowItWorksModal({ onClose }: Props) {
+  const { t } = useLanguage()
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handler)
@@ -34,7 +19,7 @@ export function HowItWorksModal({ onClose }: Props) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Como Funciona?"
+      aria-label={t.howItWorks.title}
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
@@ -44,11 +29,11 @@ export function HowItWorksModal({ onClose }: Props) {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Como Funciona?</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t.howItWorks.title}</h2>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label={t.toast.close}
             className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -67,10 +52,10 @@ export function HowItWorksModal({ onClose }: Props) {
                     <path fillRule={mode.iconFillRule ?? 'nonzero'} d={mode.iconPath} />
                   </svg>
                 </span>
-                {mode.label}
+                {t.modes[mode.value].label}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed pl-8.5">
-                {MODE_DESCRIPTIONS[i]}
+                {t.howItWorks.modeDescriptions[i]}
               </p>
             </div>
           ))}
@@ -80,9 +65,9 @@ export function HowItWorksModal({ onClose }: Props) {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-700/50 text-left">
-                  <th className="px-4 py-2.5 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">Modo</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">Entrada de Dados</th>
-                  <th className="px-4 py-2.5 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">Ideal Para</th>
+                  {t.howItWorks.tableHeaders.map((header, i) => (
+                    <th key={i} className="px-4 py-2.5 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">{header}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -93,11 +78,11 @@ export function HowItWorksModal({ onClose }: Props) {
                         <svg className="w-3.5 h-3.5 text-blue-500 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                           <path fillRule={mode.iconFillRule ?? 'nonzero'} d={mode.iconPath} />
                         </svg>
-                        {mode.label}
+                        {t.modes[mode.value].label}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{TABLE_INPUT[i]}</td>
-                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{TABLE_IDEAL[i]}</td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{t.howItWorks.tableInputs[i]}</td>
+                    <td className="px-4 py-3 text-gray-600 dark:text-gray-400">{t.howItWorks.tableIdeal[i]}</td>
                   </tr>
                 ))}
               </tbody>

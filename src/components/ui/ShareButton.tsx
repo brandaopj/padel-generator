@@ -1,4 +1,5 @@
 import { useToast } from '../../context/ToastContext'
+import { useLanguage } from '../../context/LanguageContext'
 import type { Tournament } from '../../types'
 import { shareTournament } from '../../utils/shareTournament'
 
@@ -17,9 +18,14 @@ type Props = {
 
 export function ShareButton({ tournament, variant = 'button' }: Props) {
   const { showToast } = useToast()
+  const { t } = useLanguage()
 
   function handleShare() {
-    shareTournament(tournament, showToast)
+    shareTournament(tournament, showToast, {
+      shareCopied: t.toast.shareCopied,
+      shareError: t.toast.shareError,
+      copyError: t.toast.copyError,
+    })
   }
 
   if (variant === 'icon') {
@@ -27,8 +33,8 @@ export function ShareButton({ tournament, variant = 'button' }: Props) {
       <button
         type="button"
         onClick={handleShare}
-        title="Partilhar torneio"
-        aria-label="Partilhar torneio"
+        title={t.share}
+        aria-label={t.share}
         className="p-1.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
       >
         <ShareIcon />
@@ -40,12 +46,12 @@ export function ShareButton({ tournament, variant = 'button' }: Props) {
     <button
       type="button"
       onClick={handleShare}
-      title="Partilhar torneio"
-      aria-label="Partilhar torneio"
+      title={t.share}
+      aria-label={t.share}
       className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
     >
       <ShareIcon />
-      Partilhar
+      {t.share}
     </button>
   )
 }

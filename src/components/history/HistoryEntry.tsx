@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import type { GameMode, Tournament } from '../../types'
-import { MODE_LABELS } from '../../utils/modes'
+import type { Tournament } from '../../types'
+import { useLanguage } from '../../context/LanguageContext'
 import { ConfirmModal } from '../ui/ConfirmModal'
 import { ShareButton } from '../ui/ShareButton'
 
-function tournamentTitle(t: Tournament): string {
+function tournamentTitle(t: Tournament, autoTitle: { regular: (n: number) => string; fixedPairs: (n: number) => string; seeded: (n: number) => string }): string {
   if (t.clubName) return t.clubName
-  const auto: Record<GameMode, string> = {
-    'regular': `Torneio Regular — ${t.pairs.length} duplas`,
-    'fixed-pairs': `Duplas Fixas — ${t.pairs.length} pares`,
-    'seeded': `Cabeças de Série — ${t.pairs.length} duplas`,
+  const auto = {
+    'regular': autoTitle.regular(t.pairs.length),
+    'fixed-pairs': autoTitle.fixedPairs(t.pairs.length),
+    'seeded': autoTitle.seeded(t.pairs.length),
   }
   return auto[t.mode]
 }
 
-const MODE_BADGE_CLASS: Record<GameMode, string> = {
+const MODE_BADGE_CLASS: Record<string, string> = {
   'regular':     'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
   'fixed-pairs': 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300',
   'seeded':      'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
@@ -33,6 +33,7 @@ function TrashIcon({ className = 'w-4 h-4' }: { className?: string }) {
 }
 
 function DeleteButton({ onDelete }: { onDelete: () => void }) {
+  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
 
   return (
@@ -40,17 +41,18 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
       <button
         type="button"
         onClick={e => { e.stopPropagation(); setOpen(true) }}
-        aria-label="Apagar torneio"
-        title="Apagar torneio"
+        aria-label={t.history.deleteTooltip}
+        title={t.history.deleteTooltip}
         className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
       >
         <TrashIcon />
       </button>
       {open && (
         <ConfirmModal
-          title="Apagar torneio?"
-          description="Esta ação não pode ser desfeita."
-          confirmLabel="Apagar"
+          title={`${t.history.deleteTooltip}?`}
+          description={t.confirm.clearPlayers.description}
+          confirmLabel={t.history.delete}
+          cancelLabel={t.confirm.cancel}
           onConfirm={() => { setOpen(false); onDelete() }}
           onCancel={() => setOpen(false)}
         />
@@ -61,17 +63,19 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
 
 type Props = { tournament: Tournament; onDelete: (id: string) => void }
 
-export function HistoryEntry({ tournament: t, onDelete }: Props) {
+export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
+  const { lang, t } = useLanguage()
   const navigate = useNavigate()
-  const title = tournamentTitle(t)
-  const date = new Date(t.date).toLocaleDateString('pt-PT', {
+  const title = tournamentTitle(tourney, t.history.autoTitle)
+  const dateLocale = lang === 'pt' ? 'pt-PT' : 'en-GB'
+  const date = new Date(tourney.date).toLocaleDateString(dateLocale, {
     day: 'numeric', month: 'long', year: 'numeric',
   })
 
   return (
     <article
-      data-testid={`history-entry-${t.id}`}
-      onClick={() => navigate(`/history/${t.id}`)}
+      data-testid={`history-entry-${tourney.id}`}
+      onClick={() => navigate(`/history/${tourney.id}`)}
       className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -86,23 +90,23 @@ export function HistoryEntry({ tournament: t, onDelete }: Props) {
 
         {/* Badges */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${MODE_BADGE_CLASS[t.mode]}`}>
-            {MODE_LABELS[t.mode]}
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${MODE_BADGE_CLASS[tourney.mode]}`}>
+            {t.modes[tourney.mode].label}
           </span>
           <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
-            {t.courts} campo(s) · {t.pairs.length} duplas
+            {t.history.courts(tourney.courts)} · {t.history.pairs(tourney.pairs.length)}
           </span>
         </div>
 
         {/* Actions — stopPropagation so clicks here don't trigger card navigation */}
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
-          <ShareButton tournament={t} variant="icon" />
-          <DeleteButton onDelete={() => onDelete(t.id)} />
+          <ShareButton tournament={tourney} variant="icon" />
+          <DeleteButton onDelete={() => onDelete(tourney.id)} />
           <Link
-            to={`/history/${t.id}`}
+            to={`/history/${tourney.id}`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md text-xs font-medium hover:bg-blue-700 transition-colors"
           >
-            Ver Jogos
+            {t.history.viewGames}
             <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fillRule="evenodd" d={ARROW_PATH} clipRule="evenodd" />
             </svg>

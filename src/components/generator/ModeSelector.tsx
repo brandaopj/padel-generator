@@ -1,9 +1,11 @@
 import { MODES } from '../../utils/modes'
+import { useLanguage } from '../../context/LanguageContext'
 import type { GameMode } from '../../types'
 
 type Props = { value: GameMode; onChange: (mode: GameMode) => void }
 
 export function ModeSelector({ value, onChange }: Props) {
+  const { t } = useLanguage()
   const selected = MODES.find(m => m.value === value)
 
   return (
@@ -37,14 +39,14 @@ export function ModeSelector({ value, onChange }: Props) {
                   d={mode.iconPath}
                 />
               </svg>
-              <span>{mode.label}</span>
+              <span>{t.modes[mode.value].label}</span>
             </span>
           </button>
         ))}
       </div>
       {selected && (
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-snug">
-          {selected.description}
+          {t.modes[selected.value].description}
         </p>
       )}
     </div>

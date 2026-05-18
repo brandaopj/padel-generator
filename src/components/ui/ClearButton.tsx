@@ -18,13 +18,14 @@ type Props = {
   onConfirm: () => void
   modalTitle?: string
   modalDescription?: string
+  cancelLabel?: string
 }
 
-export function ClearButton({ label, onConfirm, modalTitle, modalDescription }: Props) {
+export function ClearButton({ label, onConfirm, modalTitle, modalDescription, cancelLabel }: Props) {
   const [open, setOpen] = useState(false)
 
-  const title = modalTitle ?? (label === 'Apagar tudo' ? 'Apagar todos os jogadores?' : 'Apagar?')
-  const description = modalDescription ?? 'Esta ação não pode ser desfeita.'
+  const title = modalTitle ?? label
+  const description = modalDescription ?? ''
 
   return (
     <>
@@ -41,6 +42,7 @@ export function ClearButton({ label, onConfirm, modalTitle, modalDescription }: 
           title={title}
           description={description}
           confirmLabel={label}
+          cancelLabel={cancelLabel}
           onConfirm={() => { onConfirm(); setOpen(false) }}
           onCancel={() => setOpen(false)}
         />

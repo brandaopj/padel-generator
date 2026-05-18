@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { Match, Pair } from '../../types'
+import { useLanguage } from '../../context/LanguageContext'
 
 const AVATAR_PALETTE = [
   { bg: 'dbeafe', fg: '1e40af', fbBg: 'bg-blue-100 dark:bg-blue-900/40', fbText: 'text-blue-700 dark:text-blue-300' },
@@ -84,6 +85,7 @@ function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }
 }
 
 function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) => void }) {
+  const { t } = useLanguage()
   const [editing, setEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -93,7 +95,7 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
         ref={inputRef}
         defaultValue={name}
         autoFocus
-        aria-label="Nome do campo"
+        aria-label={t.rounds.courtNameLabel}
         className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-b border-blue-500 outline-none w-40 mb-2"
         onBlur={e => {
           const val = e.target.value.trim()
@@ -120,8 +122,8 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
       <button
         type="button"
         onClick={() => setEditing(true)}
-        aria-label={`Editar nome: ${name}`}
-        title="Editar nome do campo"
+        aria-label={t.rounds.editCourtName(name)}
+        title={t.rounds.editCourtTitle}
         className="print:hidden text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
       >
         <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -139,6 +141,7 @@ type Props = {
 }
 
 export function MatchCard({ match, courtName, onEditCourtName }: Props) {
+  const { t } = useLanguage()
   const accentClass = COURT_ACCENTS[(match.court - 1) % COURT_ACCENTS.length]
 
   return (
@@ -148,7 +151,7 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full pb-5 print:pb-3">
         <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
           <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
@@ -159,18 +162,18 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
       </div>
 
       {/* Score boxes — dashed, one per pair, for hand-written scores */}
-      <div className="mt-auto pt-5 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:pt-3 print:mt-3">
+      <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:pt-3 print:mt-3">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-3 print:gap-1 items-center">
           <div className="flex justify-center">
             <div
-              aria-label="Score da dupla 1"
+              aria-label={t.rounds.scoreTeam1}
               className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>
           <span className="text-sm font-medium text-gray-400 dark:text-gray-500 px-1 text-center">–</span>
           <div className="flex justify-center">
             <div
-              aria-label="Score da dupla 2"
+              aria-label={t.rounds.scoreTeam2}
               className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>

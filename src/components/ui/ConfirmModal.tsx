@@ -1,15 +1,20 @@
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {
   title: string
   description?: string
   confirmLabel?: string
+  cancelLabel?: string
   onConfirm: () => void
   onCancel: () => void
 }
 
-export function ConfirmModal({ title, description, confirmLabel = 'Confirmar', onConfirm, onCancel }: Props) {
+export function ConfirmModal({ title, description, confirmLabel = 'OK', cancelLabel, onConfirm, onCancel }: Props) {
+  const { t } = useLanguage()
+  const resolvedCancelLabel = cancelLabel ?? t.confirm.cancel
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onCancel() }
     document.addEventListener('keydown', handler)
@@ -44,7 +49,7 @@ export function ConfirmModal({ title, description, confirmLabel = 'Confirmar', o
             onClick={onCancel}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
           >
-            Cancelar
+            {resolvedCancelLabel}
           </button>
           <button
             type="button"

@@ -1,6 +1,10 @@
+import { useLanguage } from '../../context/LanguageContext'
+
 type Props = { onLoadExample: () => void }
 
 export function EmptyState({ onLoadExample }: Props) {
+  const { t } = useLanguage()
+
   return (
     <div
       data-testid="rounds-empty"
@@ -25,10 +29,10 @@ export function EmptyState({ onLoadExample }: Props) {
 
       <div className="space-y-1">
         <p className="text-base font-medium text-gray-500 dark:text-gray-400">
-          Os teus jogos vão aparecer aqui
+          {t.emptyState.title}
         </p>
         <p className="text-sm text-gray-400 dark:text-gray-500">
-          Preenche o formulário e clica em Gerar Torneio
+          {t.emptyState.subtitle}
         </p>
       </div>
 
@@ -37,7 +41,7 @@ export function EmptyState({ onLoadExample }: Props) {
         onClick={onLoadExample}
         className="px-4 py-2 text-sm text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
       >
-        Carregar Exemplo (8 Jogadores)
+        {t.emptyState.loadExample}
       </button>
     </div>
   )

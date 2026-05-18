@@ -1,4 +1,8 @@
+import { useLanguage } from '../../context/LanguageContext'
+
 export function PrintButton() {
+  const { t } = useLanguage()
+
   return (
     <button
       data-testid="print-button"
@@ -12,7 +16,7 @@ export function PrintButton() {
           clipRule="evenodd"
         />
       </svg>
-      Imprimir
+      {t.print}
     </button>
   )
 }

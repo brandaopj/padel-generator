@@ -1,5 +1,6 @@
 import type { Round } from '../../types'
 import { MatchCard } from './MatchCard'
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {
   round: Round
@@ -8,6 +9,8 @@ type Props = {
 }
 
 export function RoundCard({ round, courtNames, onEditCourtName }: Props) {
+  const { t } = useLanguage()
+
   return (
     <div
       data-testid={`round-${round.number}`}
@@ -17,7 +20,7 @@ export function RoundCard({ round, courtNames, onEditCourtName }: Props) {
         <div className="flex items-center gap-3 shrink-0">
           <div className="w-1 h-7 rounded-full bg-blue-600 dark:bg-blue-500 shrink-0 print:hidden" />
           <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-gray-100 print:text-xs print:font-black print:uppercase print:tracking-widest print:bg-gray-200 print:text-gray-900 print:px-2 print:py-0.5 print:rounded-full">
-            Ronda {round.number}
+            {t.rounds.round(round.number)}
           </span>
         </div>
         <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
@@ -27,7 +30,7 @@ export function RoundCard({ round, courtNames, onEditCourtName }: Props) {
           <MatchCard
             key={i}
             match={match}
-            courtName={courtNames?.[match.court] ?? `Campo ${match.court}`}
+            courtName={courtNames?.[match.court] ?? t.rounds.courtName(match.court)}
             onEditCourtName={onEditCourtName ? (name) => onEditCourtName(match.court, name) : undefined}
           />
         ))}

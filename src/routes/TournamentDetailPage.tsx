@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
+import { useLanguage } from '../context/LanguageContext'
 import { RoundsPanel } from '../components/rounds/RoundsPanel'
 import { PrintButton } from '../components/ui/PrintButton'
 import { ShareButton } from '../components/ui/ShareButton'
@@ -9,6 +10,7 @@ import { ShareButton } from '../components/ui/ShareButton'
 export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { getById } = useHistory()
+  const { t } = useLanguage()
   const [tournament, setTournament] = useState<Tournament | null>(null)
 
   useEffect(() => {
@@ -19,7 +21,7 @@ export function TournamentDetailPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <p data-testid="tournament-not-found" className="text-gray-400">
-          Torneio não encontrado.
+          {t.history.notFound}
         </p>
       </div>
     )
@@ -32,7 +34,7 @@ export function TournamentDetailPage() {
           to="/history"
           className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
         >
-          ← Histórico
+          {t.history.back}
         </Link>
         <div className="flex items-center gap-2">
           <ShareButton tournament={tournament} />

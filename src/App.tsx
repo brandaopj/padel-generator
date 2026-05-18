@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-
 import { AppProvider } from './context/AppContext'
 import { AppContext } from './context/AppContext'
 import { ToastProvider } from './context/ToastContext'
+import { LanguageProvider } from './context/LanguageContext'
+import { useLanguage } from './context/LanguageContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { DarkModeToggle } from './components/ui/DarkModeToggle'
 import { PrintButton } from './components/ui/PrintButton'
@@ -60,6 +62,7 @@ function HelpIcon() {
 function Shell() {
   const { dark, toggle } = useDarkMode()
   const { state, dispatch } = useContext(AppContext)
+  const { lang, setLang, t } = useLanguage()
   const location = useLocation()
   const [helpOpen, setHelpOpen] = useState(false)
 
@@ -80,11 +83,11 @@ function Shell() {
             <nav className="flex gap-4">
               <NavLink to="/" end onClick={handleReset} className={navLinkClass}>
                 <TrophyIcon />
-                <span>Novo Torneio</span>
+                <span>{t.nav.newTournament}</span>
               </NavLink>
               <NavLink to="/history" className={navLinkClass}>
                 <HistoryIcon />
-                <span>Histórico</span>
+                <span>{t.nav.history}</span>
               </NavLink>
               <button
                 type="button"
@@ -92,13 +95,27 @@ function Shell() {
                 className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
               >
                 <HelpIcon />
-                <span>Como Funciona?</span>
+                <span>{t.nav.howItWorks}</span>
               </button>
             </nav>
           </div>
           <div className="flex items-center gap-3">
             {showPrint && <PrintButton />}
             {showPrint && state.generated && <ShareButton tournament={state.generated} />}
+            <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden text-xs font-medium">
+              <button
+                onClick={() => setLang('pt')}
+                className={`px-2 py-1 transition-colors ${lang === 'pt' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+              >
+                PT
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-2 py-1 transition-colors ${lang === 'en' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
+              >
+                EN
+              </button>
+            </div>
             <DarkModeToggle dark={dark} onToggle={toggle} />
           </div>
         </div>
@@ -118,13 +135,15 @@ function Shell() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <AppProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <Shell />
-          </BrowserRouter>
-        </ToastProvider>
-      </AppProvider>
+      <LanguageProvider>
+        <AppProvider>
+          <ToastProvider>
+            <BrowserRouter>
+              <Shell />
+            </BrowserRouter>
+          </ToastProvider>
+        </AppProvider>
+      </LanguageProvider>
     </ErrorBoundary>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ClearButton } from '../ui/ClearButton'
+import { useLanguage } from '../../context/LanguageContext'
 
 type Props = {
   players: string[]
@@ -11,6 +12,7 @@ function parseNames(text: string): string[] {
 }
 
 export function PlayerInput({ players, onChange }: Props) {
+  const { t } = useLanguage()
   const [raw, setRaw] = useState(() => players.join('\n'))
   const prevLenRef = useRef(players.length)
 
@@ -32,11 +34,14 @@ export function PlayerInput({ players, onChange }: Props) {
           htmlFor="player-textarea"
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
-          Jogadores ({players.length})
+          {t.playerInput.label(players.length)}
         </label>
         {players.length > 0 && (
           <ClearButton
-            label="Apagar tudo"
+            label={t.playerInput.clearAll}
+            modalTitle={t.confirm.clearPlayers.title}
+            modalDescription={t.confirm.clearPlayers.description}
+            cancelLabel={t.confirm.cancel}
             onConfirm={() => { setRaw(''); onChange([]) }}
           />
         )}
@@ -47,7 +52,7 @@ export function PlayerInput({ players, onChange }: Props) {
         value={raw}
         onChange={handleChange}
         rows={6}
-        placeholder="Um nome por linha (ex: João)"
+        placeholder={t.playerInput.placeholder}
         className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-36 sm:min-h-44 lg:min-h-52"
       />
     </div>

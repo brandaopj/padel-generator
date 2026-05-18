@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test'
 
 test.describe('Cabeças de Série mode', () => {
   test.beforeEach(async ({ page, context }) => {
-    await context.addInitScript(() => localStorage.clear())
+    await context.addInitScript(() => {
+      localStorage.clear()
+      localStorage.setItem('padel-lang', 'pt')
+    })
     await page.goto('/')
     await page.getByTestId('mode-seeded').click()
   })

@@ -123,7 +123,12 @@ export const translations = {
       close: 'Fechar',
       generated: (rounds: number, matches: number) => `Torneio gerado — ${rounds} rondas · ${matches} jogos`,
       courtUpdated: 'Nome do campo atualizado',
+      deleted: 'Torneio apagado',
+      shareCopied: 'Torneio copiado para a área de transferência',
+      shareError: 'Não foi possível partilhar',
+      copyError: 'Não foi possível copiar o torneio',
     },
+    share: 'Partilhar',
   },
 
   en: {
@@ -248,7 +253,12 @@ export const translations = {
       close: 'Close',
       generated: (rounds: number, matches: number) => `Tournament generated — ${rounds} rounds · ${matches} matches`,
       courtUpdated: 'Court name updated',
+      deleted: 'Tournament deleted',
+      shareCopied: 'Tournament copied to clipboard',
+      shareError: 'Could not share tournament',
+      copyError: 'Could not copy tournament',
     },
+    share: 'Share',
   },
 }
 

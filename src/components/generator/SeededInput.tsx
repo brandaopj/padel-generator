@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { ClearButton } from '../ui/ClearButton'
+import { useLanguage } from '../../context/LanguageContext'
 
 function parseNames(text: string): string[] {
   return text.split('\n').map(n => n.trim()).filter(Boolean)
@@ -9,10 +10,15 @@ type TableProps = {
   label: string
   players: string[]
   testPrefix: string
+  clearLabel: string
+  modalTitle: string
+  modalDescription: string
+  cancelLabel: string
+  placeholder: string
   onChange: (players: string[]) => void
 }
 
-function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
+function TableTextarea({ label, players, testPrefix, clearLabel, modalTitle, modalDescription, cancelLabel, placeholder, onChange }: TableProps) {
   const [raw, setRaw] = useState(() => players.join('\n'))
   const prevLenRef = useRef(players.length)
   const inputId = `${testPrefix}-textarea`
@@ -35,11 +41,14 @@ function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
           htmlFor={inputId}
           className="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >
-          {label} ({players.length})
+          {label}
         </label>
         {players.length > 0 && (
           <ClearButton
-            label="Apagar"
+            label={clearLabel}
+            modalTitle={modalTitle}
+            modalDescription={modalDescription}
+            cancelLabel={cancelLabel}
             onConfirm={() => { setRaw(''); onChange([]) }}
           />
         )}
@@ -50,7 +59,7 @@ function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
         value={raw}
         onChange={handleChange}
         rows={5}
-        placeholder="Um nome por linha"
+        placeholder={placeholder}
         className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-28 sm:min-h-36 lg:min-h-44"
       />
     </div>
@@ -65,10 +74,32 @@ type Props = {
 }
 
 export function SeededInput({ tableA, tableB, onChangeA, onChangeB }: Props) {
+  const { t } = useLanguage()
+
   return (
     <div className="grid grid-cols-2 gap-3">
-      <TableTextarea label="Tabela A" players={tableA} testPrefix="table-a" onChange={onChangeA} />
-      <TableTextarea label="Tabela B" players={tableB} testPrefix="table-b" onChange={onChangeB} />
+      <TableTextarea
+        label={t.seededInput.tableA(tableA.length)}
+        players={tableA}
+        testPrefix="table-a"
+        clearLabel={t.seededInput.clear}
+        modalTitle={t.confirm.clearTable.title}
+        modalDescription={t.confirm.clearTable.description}
+        cancelLabel={t.confirm.cancel}
+        placeholder={t.seededInput.placeholder}
+        onChange={onChangeA}
+      />
+      <TableTextarea
+        label={t.seededInput.tableB(tableB.length)}
+        players={tableB}
+        testPrefix="table-b"
+        clearLabel={t.seededInput.clear}
+        modalTitle={t.confirm.clearTable.title}
+        modalDescription={t.confirm.clearTable.description}
+        cancelLabel={t.confirm.cancel}
+        placeholder={t.seededInput.placeholder}
+        onChange={onChangeB}
+      />
     </div>
   )
 }

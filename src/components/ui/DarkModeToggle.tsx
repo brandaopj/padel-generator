@@ -1,3 +1,5 @@
+import { useLanguage } from '../../context/LanguageContext'
+
 function SunIcon() {
   return (
     <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -17,12 +19,14 @@ function MoonIcon() {
 type Props = { dark: boolean; onToggle: () => void }
 
 export function DarkModeToggle({ dark, onToggle }: Props) {
+  const { t } = useLanguage()
+
   return (
     <button
       data-testid="dark-mode-toggle"
       type="button"
       onClick={onToggle}
-      aria-label={dark ? 'Activar modo claro' : 'Activar modo escuro'}
+      aria-label={dark ? t.theme.lightMode : t.theme.darkMode}
       className="flex items-center gap-0.5 p-1 bg-gray-100 dark:bg-gray-700 rounded-full cursor-pointer transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
     >
       <span className={`p-1.5 rounded-full transition-all duration-200 ${!dark ? 'bg-white shadow text-amber-500' : 'text-gray-400 dark:text-gray-500'}`}>

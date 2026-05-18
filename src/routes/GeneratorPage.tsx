@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { useToast } from '../context/ToastContext'
+import { useLanguage } from '../context/LanguageContext'
 import { ModeSelector } from '../components/generator/ModeSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
 import { PairInput } from '../components/generator/PairInput'
@@ -21,7 +22,8 @@ export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
   const { save, update } = useHistory()
   const { showToast } = useToast()
-  const { errors, warnings } = validate(state)
+  const { t } = useLanguage()
+  const { errors, warnings } = validate(state, t.validation)
   const [isStale, setIsStale] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const [exampleKey, setExampleKey] = useState(0)
@@ -47,7 +49,7 @@ export function GeneratorPage() {
       courtNames: { ...state.generated.courtNames, [court]: name },
     }
     update(updated)
-    showToast('info', 'Nome do campo atualizado', { duration: 2000 })
+    showToast('info', t.toast.courtUpdated, { duration: 2000 })
   }
 
   function handleLoadExample() {
@@ -77,7 +79,7 @@ export function GeneratorPage() {
           setIsStale(false)
           const roundCount = tournament.rounds.length
           const matchCount = tournament.rounds.reduce((sum, r) => sum + r.matches.length, 0)
-          showToast('success', `Torneio gerado — ${roundCount} rondas · ${matchCount} jogos`)
+          showToast('success', t.toast.generated(roundCount, matchCount))
           setTimeout(() => {
             roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
           }, 50)
@@ -100,7 +102,7 @@ export function GeneratorPage() {
                 htmlFor="club-name"
                 className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >
-                Nome do torneio
+                {t.generator.nameLabel}
               </label>
               <input
                 id="club-name"
@@ -108,7 +110,7 @@ export function GeneratorPage() {
                 type="text"
                 value={state.clubName}
                 onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
-                placeholder="Ex: Torneio de Verão 2026"
+                placeholder={t.generator.namePlaceholder}
                 className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -144,8 +146,7 @@ export function GeneratorPage() {
 
             {hasInputs && (
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Campos calculados automaticamente:{' '}
-                <span className="font-medium text-gray-700 dark:text-gray-300">{state.courts}</span>
+                {t.generator.courtsAuto(state.courts)}
               </p>
             )}
 
@@ -154,7 +155,7 @@ export function GeneratorPage() {
             {isStale && hasInputs && (
               <div className="flex items-start gap-2 rounded-md bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
                 <span aria-hidden="true" className="shrink-0">↻</span>
-                <span>Os resultados podem não refletir as alterações atuais.</span>
+                <span>{t.generator.stale}</span>
               </div>
             )}
 
@@ -170,17 +171,17 @@ export function GeneratorPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  A gerar...
+                  {t.generator.generating}
                 </>
               ) : state.generated ? (
                 <>
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
                   </svg>
-                  Regenerar Torneio
+                  {t.generator.regenerate}
                 </>
               ) : (
-                'Gerar Torneio'
+                t.generator.generate
               )}
             </button>
           </div>
