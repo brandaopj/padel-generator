@@ -1,0 +1,255 @@
+export type Lang = 'pt' | 'en'
+
+export const translations = {
+  pt: {
+    nav: {
+      newTournament: 'Novo Torneio',
+      history: 'Histórico',
+      howItWorks: 'Como Funciona?',
+    },
+    theme: {
+      lightMode: 'Activar modo claro',
+      darkMode: 'Activar modo escuro',
+    },
+    print: 'Imprimir',
+    generator: {
+      nameLabel: 'Nome do torneio',
+      namePlaceholder: 'Ex: Torneio de Verão 2026',
+      courtsAuto: (n: number) => `Campos calculados automaticamente: ${n}`,
+      stale: 'Os resultados podem não refletir as alterações atuais.',
+      generating: 'A gerar...',
+      regenerate: 'Regenerar Torneio',
+      generate: 'Gerar Torneio',
+    },
+    modes: {
+      regular: {
+        label: 'Regular',
+        description: 'Duplas sorteadas aleatoriamente a partir de uma lista de jogadores',
+      },
+      'fixed-pairs': {
+        label: 'Duplas Fixas',
+        description: 'Duplas pré-definidas — os pares não mudam entre rondas',
+      },
+      seeded: {
+        label: 'Cabeças de Série',
+        description: 'Tabela A vs Tabela B — pareados por posição após baralhar cada tabela',
+      },
+    } as Record<string, { label: string; description: string }>,
+    playerInput: {
+      label: (n: number) => `Jogadores (${n})`,
+      placeholder: 'Um nome por linha (ex: João)',
+      clearAll: 'Apagar tudo',
+    },
+    pairInput: {
+      label: (n: number) => `Duplas (${n})`,
+      placeholder: 'Uma dupla por linha (ex: Ana / Bruno)',
+      format: 'Formato: Jogador1 / Jogador2',
+      clearAll: 'Apagar tudo',
+    },
+    seededInput: {
+      tableA: (n: number) => `Tabela A (${n})`,
+      tableB: (n: number) => `Tabela B (${n})`,
+      placeholder: 'Um nome por linha',
+      clear: 'Apagar',
+    },
+    validation: {
+      minCourt: 'É necessário pelo menos 1 campo',
+      minPlayersRegular: 'Modo Regular requer pelo menos 4 jogadores',
+      multipleOf4: 'O número de jogadores deve ser múltiplo de 4 (4, 8, 12…)',
+      minPairsFixed: 'Modo Duplas Fixas requer pelo menos 2 duplas',
+      minTableASeeded: 'A Tabela A requer pelo menos 2 jogadores',
+      minTableBSeeded: 'A Tabela B requer pelo menos 2 jogadores',
+      unequalTables: (a: number, b: number, min: number) =>
+        `As tabelas têm tamanhos diferentes (A: ${a}, B: ${b}). Serão usados ${min} pares.`,
+    },
+    emptyState: {
+      title: 'Os teus jogos vão aparecer aqui',
+      subtitle: 'Preenche o formulário e clica em Gerar Torneio',
+      loadExample: 'Carregar Exemplo (8 Jogadores)',
+    },
+    rounds: {
+      untitled: 'Torneio',
+      round: (n: number) => `Ronda ${n}`,
+      courts: (n: number) => `${n} campo(s)`,
+      pairs: (n: number) => `${n} duplas`,
+      unequalWarning: (n: number) => `Tabelas de tamanhos diferentes — usados ${n} pares.`,
+      courtName: (n: number) => `Campo ${n}`,
+      editCourtName: (name: string) => `Editar nome: ${name}`,
+      editCourtTitle: 'Editar nome do campo',
+      courtNameLabel: 'Nome do campo',
+      scoreTeam1: 'Score da dupla 1',
+      scoreTeam2: 'Score da dupla 2',
+    },
+    history: {
+      title: 'Histórico',
+      back: '← Histórico',
+      notFound: 'Torneio não encontrado.',
+      deleteTooltip: 'Apagar torneio',
+      viewGames: 'Ver Jogos',
+      cancel: 'Cancelar',
+      delete: 'Apagar',
+      courts: (n: number) => `${n} campo(s)`,
+      pairs: (n: number) => `${n} duplas`,
+      autoTitle: {
+        regular: (n: number) => `Torneio Regular — ${n} duplas`,
+        fixedPairs: (n: number) => `Duplas Fixas — ${n} pares`,
+        seeded: (n: number) => `Cabeças de Série — ${n} duplas`,
+      },
+      empty: {
+        title: 'Ainda não tens torneios guardados',
+        subtitle: 'Gera o teu primeiro torneio e ele aparecerá aqui',
+        cta: 'Gerar Novo Torneio',
+      },
+    },
+    confirm: {
+      cancel: 'Cancelar',
+      clearPlayers: { title: 'Apagar todos os jogadores?', description: 'Esta ação não pode ser desfeita.' },
+      clearPairs:   { title: 'Apagar todas as duplas?',   description: 'Esta ação não pode ser desfeita.' },
+      clearTable:   { title: 'Apagar tabela?',             description: 'Esta ação não pode ser desfeita.' },
+    },
+    howItWorks: {
+      title: 'Como Funciona?',
+      modeDescriptions: [
+        'Os jogadores são introduzidos individualmente na lista. O algoritmo sorteia pares completamente aleatórios a cada ronda, garantindo que jogas com parceiros e adversários diferentes ao longo do torneio (formato americano/social).',
+        "Ideal para torneios onde as equipas já estão fechadas. Introduz os nomes no formato 'Jogador 1 / Jogador 2'. O algoritmo gera um calendário Round-Robin onde cada dupla defronta todas as outras duplas exatamente uma vez.",
+        'Para jogos equilibrados por nível. Introduzes duas listas independentes (Tabela A — Avançados; Tabela B — Iniciantes). O sistema faz um shuffle independente e emparelha a posição 1 da Tabela A com a posição 1 da Tabela B, criando duplas equilibradas de forma automática antes de gerar o calendário.',
+      ],
+      tableHeaders: ['Modo', 'Entrada de Dados', 'Ideal Para'],
+      tableInputs: ['1 Jogador por linha', 'Jogador 1 / Jogador 2', 'Duas tabelas (A e B)'],
+      tableIdeal: ['Confraternizações / Sociais', 'Torneios Competitivos', 'Níveis Mistos (Prós + Amadores)'],
+    },
+    toast: {
+      notifications: 'Notificações',
+      close: 'Fechar',
+      generated: (rounds: number, matches: number) => `Torneio gerado — ${rounds} rondas · ${matches} jogos`,
+      courtUpdated: 'Nome do campo atualizado',
+    },
+  },
+
+  en: {
+    nav: {
+      newTournament: 'New Tournament',
+      history: 'History',
+      howItWorks: 'How It Works?',
+    },
+    theme: {
+      lightMode: 'Enable light mode',
+      darkMode: 'Enable dark mode',
+    },
+    print: 'Print',
+    generator: {
+      nameLabel: 'Tournament name',
+      namePlaceholder: 'E.g: Summer Tournament 2026',
+      courtsAuto: (n: number) => `Courts calculated automatically: ${n}`,
+      stale: 'Results may not reflect current changes.',
+      generating: 'Generating...',
+      regenerate: 'Regenerate',
+      generate: 'Generate Tournament',
+    },
+    modes: {
+      regular: {
+        label: 'Regular',
+        description: 'Randomly drawn pairs from a list of individual players',
+      },
+      'fixed-pairs': {
+        label: 'Fixed Pairs',
+        description: 'Pre-defined pairs — partners stay the same across all rounds',
+      },
+      seeded: {
+        label: 'Seeded',
+        description: 'Table A vs Table B — matched by rank after independently shuffling each table',
+      },
+    } as Record<string, { label: string; description: string }>,
+    playerInput: {
+      label: (n: number) => `Players (${n})`,
+      placeholder: 'One name per line (e.g. John)',
+      clearAll: 'Clear all',
+    },
+    pairInput: {
+      label: (n: number) => `Pairs (${n})`,
+      placeholder: 'One pair per line (e.g. Ana / Bruno)',
+      format: 'Format: Player1 / Player2',
+      clearAll: 'Clear all',
+    },
+    seededInput: {
+      tableA: (n: number) => `Table A (${n})`,
+      tableB: (n: number) => `Table B (${n})`,
+      placeholder: 'One name per line',
+      clear: 'Clear',
+    },
+    validation: {
+      minCourt: 'At least 1 court is required',
+      minPlayersRegular: 'Regular mode requires at least 4 players',
+      multipleOf4: 'Number of players must be a multiple of 4 (4, 8, 12…)',
+      minPairsFixed: 'Fixed Pairs mode requires at least 2 pairs',
+      minTableASeeded: 'Table A requires at least 2 players',
+      minTableBSeeded: 'Table B requires at least 2 players',
+      unequalTables: (a: number, b: number, min: number) =>
+        `Tables have different sizes (A: ${a}, B: ${b}). ${min} pairs will be used.`,
+    },
+    emptyState: {
+      title: 'Your matches will appear here',
+      subtitle: 'Fill in the form and click Generate Tournament',
+      loadExample: 'Load Example (8 Players)',
+    },
+    rounds: {
+      untitled: 'Tournament',
+      round: (n: number) => `Round ${n}`,
+      courts: (n: number) => `${n} court(s)`,
+      pairs: (n: number) => `${n} pairs`,
+      unequalWarning: (n: number) => `Unequal table sizes — using ${n} pairs.`,
+      courtName: (n: number) => `Court ${n}`,
+      editCourtName: (name: string) => `Edit name: ${name}`,
+      editCourtTitle: 'Edit court name',
+      courtNameLabel: 'Court name',
+      scoreTeam1: 'Team 1 score',
+      scoreTeam2: 'Team 2 score',
+    },
+    history: {
+      title: 'History',
+      back: '← History',
+      notFound: 'Tournament not found.',
+      deleteTooltip: 'Delete tournament',
+      viewGames: 'View Matches',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      courts: (n: number) => `${n} court(s)`,
+      pairs: (n: number) => `${n} pairs`,
+      autoTitle: {
+        regular: (n: number) => `Regular Tournament — ${n} pairs`,
+        fixedPairs: (n: number) => `Fixed Pairs — ${n} pairs`,
+        seeded: (n: number) => `Seeded — ${n} pairs`,
+      },
+      empty: {
+        title: 'No tournaments saved yet',
+        subtitle: 'Generate your first tournament and it will appear here',
+        cta: 'Generate New Tournament',
+      },
+    },
+    confirm: {
+      cancel: 'Cancel',
+      clearPlayers: { title: 'Delete all players?', description: 'This action cannot be undone.' },
+      clearPairs:   { title: 'Delete all pairs?',   description: 'This action cannot be undone.' },
+      clearTable:   { title: 'Clear table?',         description: 'This action cannot be undone.' },
+    },
+    howItWorks: {
+      title: 'How It Works?',
+      modeDescriptions: [
+        'Players are entered individually. The algorithm draws completely random pairs each round, ensuring you play with different partners and opponents throughout (American/social format).',
+        "Ideal for tournaments where teams are already set. Enter names as 'Player 1 / Player 2'. The algorithm creates a Round-Robin schedule where each pair plays every other pair exactly once.",
+        'For skill-balanced play. Enter two independent lists (Table A — Advanced; Table B — Beginners). The system shuffles each table independently and pairs position 1 of Table A with position 1 of Table B, creating balanced pairs automatically.',
+      ],
+      tableHeaders: ['Mode', 'Input Format', 'Ideal For'],
+      tableInputs: ['1 Player per line', 'Player 1 / Player 2', 'Two tables (A and B)'],
+      tableIdeal: ['Social / Recreational', 'Competitive Tournaments', 'Mixed Levels (Pros + Amateurs)'],
+    },
+    toast: {
+      notifications: 'Notifications',
+      close: 'Close',
+      generated: (rounds: number, matches: number) => `Tournament generated — ${rounds} rounds · ${matches} matches`,
+      courtUpdated: 'Court name updated',
+    },
+  },
+}
+
+export type Translations = typeof translations['pt']

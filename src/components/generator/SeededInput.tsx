@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ClearButton } from '../ui/ClearButton'
 
 function parseNames(text: string): string[] {
@@ -14,7 +14,13 @@ type TableProps = {
 
 function TableTextarea({ label, players, testPrefix, onChange }: TableProps) {
   const [raw, setRaw] = useState(() => players.join('\n'))
+  const prevLenRef = useRef(players.length)
   const inputId = `${testPrefix}-textarea`
+
+  useEffect(() => {
+    if (players.length === 0 && prevLenRef.current > 0) setRaw('')
+    prevLenRef.current = players.length
+  }, [players])
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ClearButton } from '../ui/ClearButton'
 
 type Props = {
@@ -12,6 +12,12 @@ function parseNames(text: string): string[] {
 
 export function PlayerInput({ players, onChange }: Props) {
   const [raw, setRaw] = useState(() => players.join('\n'))
+  const prevLenRef = useRef(players.length)
+
+  useEffect(() => {
+    if (players.length === 0 && prevLenRef.current > 0) setRaw('')
+    prevLenRef.current = players.length
+  }, [players])
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value

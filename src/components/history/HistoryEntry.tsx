@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { GameMode, Tournament } from '../../types'
 import { MODE_LABELS } from '../../utils/modes'
+import { ConfirmModal } from '../ui/ConfirmModal'
+import { ShareButton } from '../ui/ShareButton'
 
 function tournamentTitle(t: Tournament): string {
   if (t.clubName) return t.clubName
@@ -31,40 +33,29 @@ function TrashIcon({ className = 'w-4 h-4' }: { className?: string }) {
 }
 
 function DeleteButton({ onDelete }: { onDelete: () => void }) {
-  const [confirming, setConfirming] = useState(false)
-
-  if (confirming) {
-    return (
-      <span className="flex items-center gap-1 text-xs">
-        <button
-          type="button"
-          onClick={e => { e.stopPropagation(); setConfirming(false) }}
-          className="px-2 py-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded"
-        >
-          Cancelar
-        </button>
-        <button
-          type="button"
-          onClick={e => { e.stopPropagation(); onDelete() }}
-          className="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors rounded"
-        >
-          <TrashIcon className="w-3.5 h-3.5" />
-          Apagar
-        </button>
-      </span>
-    )
-  }
+  const [open, setOpen] = useState(false)
 
   return (
-    <button
-      type="button"
-      onClick={e => { e.stopPropagation(); setConfirming(true) }}
-      aria-label="Apagar torneio"
-      title="Apagar torneio"
-      className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
-    >
-      <TrashIcon />
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={e => { e.stopPropagation(); setOpen(true) }}
+        aria-label="Apagar torneio"
+        title="Apagar torneio"
+        className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
+      >
+        <TrashIcon />
+      </button>
+      {open && (
+        <ConfirmModal
+          title="Apagar torneio?"
+          description="Esta ação não pode ser desfeita."
+          confirmLabel="Apagar"
+          onConfirm={() => { setOpen(false); onDelete() }}
+          onCancel={() => setOpen(false)}
+        />
+      )}
+    </>
   )
 }
 
@@ -105,6 +96,7 @@ export function HistoryEntry({ tournament: t, onDelete }: Props) {
 
         {/* Actions — stopPropagation so clicks here don't trigger card navigation */}
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+          <ShareButton tournament={t} variant="icon" />
           <DeleteButton onDelete={() => onDelete(t.id)} />
           <Link
             to={`/history/${t.id}`}

@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 type Props = {
   title: string
@@ -15,7 +16,7 @@ export function ConfirmModal({ title, description, confirmLabel = 'Confirmar', o
     return () => document.removeEventListener('keydown', handler)
   }, [onCancel])
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={onCancel}
@@ -54,6 +55,7 @@ export function ConfirmModal({ title, description, confirmLabel = 'Confirmar', o
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

@@ -4,6 +4,7 @@ import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
 import { RoundsPanel } from '../components/rounds/RoundsPanel'
 import { PrintButton } from '../components/ui/PrintButton'
+import { ShareButton } from '../components/ui/ShareButton'
 
 export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -33,7 +34,10 @@ export function TournamentDetailPage() {
         >
           ← Histórico
         </Link>
-        <PrintButton />
+        <div className="flex items-center gap-2">
+          <ShareButton tournament={tournament} />
+          <PrintButton />
+        </div>
       </div>
       <RoundsPanel tournament={tournament} />
     </div>

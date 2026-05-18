@@ -6,6 +6,7 @@ import { ToastProvider } from './context/ToastContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { DarkModeToggle } from './components/ui/DarkModeToggle'
 import { PrintButton } from './components/ui/PrintButton'
+import { ShareButton } from './components/ui/ShareButton'
 import { HowItWorksModal } from './components/ui/HowItWorksModal'
 import { useDarkMode } from './hooks/useDarkMode'
 import { GeneratorPage } from './routes/GeneratorPage'
@@ -97,6 +98,7 @@ function Shell() {
           </div>
           <div className="flex items-center gap-3">
             {showPrint && <PrintButton />}
+            {showPrint && state.generated && <ShareButton tournament={state.generated} />}
             <DarkModeToggle dark={dark} onToggle={toggle} />
           </div>
         </div>

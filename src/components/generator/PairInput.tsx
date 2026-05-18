@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Pair } from '../../types'
 import { ClearButton } from '../ui/ClearButton'
 
@@ -22,6 +22,12 @@ function parsePairs(text: string): Pair[] {
 
 export function PairInput({ pairs, onChange }: Props) {
   const [raw, setRaw] = useState(() => pairs.map(p => `${p[0]} / ${p[1]}`).join('\n'))
+  const prevLenRef = useRef(pairs.length)
+
+  useEffect(() => {
+    if (pairs.length === 0 && prevLenRef.current > 0) setRaw('')
+    prevLenRef.current = pairs.length
+  }, [pairs])
 
   function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const text = e.target.value
