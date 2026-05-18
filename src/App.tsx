@@ -10,6 +10,7 @@ import { DarkModeToggle } from './components/ui/DarkModeToggle'
 import { PrintButton } from './components/ui/PrintButton'
 import { ShareButton } from './components/ui/ShareButton'
 import { HowItWorksModal } from './components/ui/HowItWorksModal'
+import { KofiButton } from './components/ui/KofiButton'
 import { useDarkMode } from './hooks/useDarkMode'
 import { GeneratorPage } from './routes/GeneratorPage'
 import { HistoryPage } from './routes/HistoryPage'
@@ -128,6 +129,7 @@ function Shell() {
         </Routes>
       </main>
       {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}
+      <KofiButton />
     </div>
   )
 }
