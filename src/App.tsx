@@ -1,10 +1,11 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { AppContext } from './context/AppContext'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { DarkModeToggle } from './components/ui/DarkModeToggle'
 import { PrintButton } from './components/ui/PrintButton'
+import { HowItWorksModal } from './components/ui/HowItWorksModal'
 import { useDarkMode } from './hooks/useDarkMode'
 import { GeneratorPage } from './routes/GeneratorPage'
 import { HistoryPage } from './routes/HistoryPage'
@@ -30,16 +31,43 @@ function PadelLogo({ onClick }: { onClick?: () => void }) {
   )
 }
 
+function TrophyIcon() {
+  return (
+    <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M10 1a.75.75 0 01.75.75v.5h4.5a.75.75 0 010 1.5h-.5v1.5a5.25 5.25 0 01-4 5.101V12h1.25a.75.75 0 010 1.5H8A.75.75 0 018 12h1.25v-1.649A5.25 5.25 0 015.25 5.25V3.75h-.5a.75.75 0 010-1.5h4.5v-.5A.75.75 0 0110 1zM6.75 3.75v1.5a3.75 3.75 0 007.5 0v-1.5h-7.5zM7 14.25a.75.75 0 000 1.5h6a.75.75 0 000-1.5H7z" clipRule="evenodd" />
+    </svg>
+  )
+}
+
+function HistoryIcon() {
+  return (
+    <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+    </svg>
+  )
+}
+
+function HelpIcon() {
+  return (
+    <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+    </svg>
+  )
+}
+
 function Shell() {
   const { dark, toggle } = useDarkMode()
   const { state, dispatch } = useContext(AppContext)
   const location = useLocation()
+  const [helpOpen, setHelpOpen] = useState(false)
 
   function handleReset() {
     dispatch({ type: 'RESET' })
   }
 
   const showPrint = location.pathname === '/' && state.generated !== null
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-1.5 text-sm transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}`
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
@@ -48,24 +76,22 @@ function Shell() {
           <div className="flex items-center gap-6">
             <PadelLogo onClick={handleReset} />
             <nav className="flex gap-4">
-              <NavLink
-                to="/"
-                end
-                onClick={handleReset}
-                className={({ isActive }) =>
-                  `text-sm transition-colors ${isActive ? 'text-blue-600 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}`
-                }
-              >
-                Novo Torneio
+              <NavLink to="/" end onClick={handleReset} className={navLinkClass}>
+                <TrophyIcon />
+                <span>Novo Torneio</span>
               </NavLink>
-              <NavLink
-                to="/history"
-                className={({ isActive }) =>
-                  `text-sm transition-colors ${isActive ? 'text-blue-600 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}`
-                }
-              >
-                Histórico
+              <NavLink to="/history" className={navLinkClass}>
+                <HistoryIcon />
+                <span>Histórico</span>
               </NavLink>
+              <button
+                type="button"
+                onClick={() => setHelpOpen(true)}
+                className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              >
+                <HelpIcon />
+                <span>Como Funciona?</span>
+              </button>
             </nav>
           </div>
           <div className="flex items-center gap-3">
@@ -81,6 +107,7 @@ function Shell() {
           <Route path="/history/:id" element={<TournamentDetailPage />} />
         </Routes>
       </main>
+      {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}
     </div>
   )
 }

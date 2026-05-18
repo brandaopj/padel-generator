@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import type { GameMode, Tournament } from '../../types'
 import { MODE_LABELS } from '../../utils/modes'
 
@@ -38,14 +38,14 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
       <span className="flex items-center gap-1 text-xs">
         <button
           type="button"
-          onClick={() => setConfirming(false)}
+          onClick={e => { e.stopPropagation(); setConfirming(false) }}
           className="px-2 py-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded"
         >
           Cancelar
         </button>
         <button
           type="button"
-          onClick={onDelete}
+          onClick={e => { e.stopPropagation(); onDelete() }}
           className="flex items-center gap-1 px-2 py-1 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 font-medium transition-colors rounded"
         >
           <TrashIcon className="w-3.5 h-3.5" />
@@ -58,7 +58,7 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
   return (
     <button
       type="button"
-      onClick={() => setConfirming(true)}
+      onClick={e => { e.stopPropagation(); setConfirming(true) }}
       aria-label="Apagar torneio"
       title="Apagar torneio"
       className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
@@ -71,6 +71,7 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
 type Props = { tournament: Tournament; onDelete: (id: string) => void }
 
 export function HistoryEntry({ tournament: t, onDelete }: Props) {
+  const navigate = useNavigate()
   const title = tournamentTitle(t)
   const date = new Date(t.date).toLocaleDateString('pt-PT', {
     day: 'numeric', month: 'long', year: 'numeric',
@@ -79,7 +80,8 @@ export function HistoryEntry({ tournament: t, onDelete }: Props) {
   return (
     <article
       data-testid={`history-entry-${t.id}`}
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all"
+      onClick={() => navigate(`/history/${t.id}`)}
+      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
@@ -101,8 +103,8 @@ export function HistoryEntry({ tournament: t, onDelete }: Props) {
           </span>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1 shrink-0">
+        {/* Actions — stopPropagation so clicks here don't trigger card navigation */}
+        <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
           <DeleteButton onDelete={() => onDelete(t.id)} />
           <Link
             to={`/history/${t.id}`}
