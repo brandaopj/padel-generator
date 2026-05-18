@@ -38,7 +38,7 @@ function PlayerAvatar({ name }: { name: string }) {
 
   if (errored) {
     return (
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none ${palette.fbBg} ${palette.fbText}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none print:hidden ${palette.fbBg} ${palette.fbText}`}>
         {initials}
       </div>
     )
@@ -55,7 +55,7 @@ function PlayerAvatar({ name }: { name: string }) {
       alt={initials}
       width={32}
       height={32}
-      className="w-8 h-8 rounded-full shrink-0"
+      className="w-8 h-8 rounded-full shrink-0 print:hidden"
       style={{ backgroundColor: `#${palette.bg}` }}
       loading="lazy"
       onError={() => setErrored(true)}
@@ -65,11 +65,11 @@ function PlayerAvatar({ name }: { name: string }) {
 
 function PairColumn({ pair }: { pair: Pair }) {
   return (
-    <div className="flex flex-col gap-2 min-w-0">
+    <div className="flex flex-col gap-2 print:gap-1 min-w-0">
       {pair.map((name, i) => (
-        <div key={i} className="flex items-center gap-2 min-w-0">
+        <div key={i} className="flex items-center gap-2 print:gap-0 min-w-0">
           <PlayerAvatar name={name} />
-          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0">{name}</span>
+          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 break-words min-w-0 print:text-xs print:font-semibold">{name}</span>
         </div>
       ))}
     </div>
@@ -103,12 +103,12 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
 
   if (!onEdit) {
     return (
-      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">{name}</div>
+      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2 print:mb-1">{name}</div>
     )
   }
 
   return (
-    <div className="flex items-center gap-1 mb-2">
+    <div className="flex items-center gap-1 mb-2 print:mb-1">
       <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{name}</span>
       <button
         type="button"
@@ -137,14 +137,14 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-4 print:p-5 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
+      className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-4 print:p-2 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
-      <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3 print:gap-1">
         <PairColumn pair={match.pair1} />
         <div className="flex items-center justify-center self-center">
-          <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none">
+          <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
             VS
           </span>
         </div>
@@ -152,19 +152,19 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
       </div>
 
       {/* Score boxes — dashed, one per pair, for hand-written scores */}
-      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 print:border-gray-300">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center">
+      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:mt-2 print:pt-1.5">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-3 print:gap-1 items-center">
           <div className="flex justify-center">
             <div
               aria-label="Score da dupla 1"
-              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 rounded"
+              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>
           <span className="text-sm font-medium text-gray-400 dark:text-gray-500 px-1 text-center">–</span>
           <div className="flex justify-center">
             <div
               aria-label="Score da dupla 2"
-              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 rounded"
+              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>
         </div>
