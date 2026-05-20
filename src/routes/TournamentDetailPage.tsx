@@ -4,6 +4,7 @@ import { useHistory } from '../hooks/useHistory'
 import { useLanguage } from '../context/LanguageContext'
 import { RoundsPanel } from '../components/rounds/RoundsPanel'
 import { ShareButton } from '../components/ui/ShareButton'
+import { PrintButton } from '../components/ui/PrintButton'
 
 export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -22,7 +23,7 @@ export function TournamentDetailPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-4 lg:p-8">
+    <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
       <div className="flex items-center justify-between mb-6 print:hidden">
         <Link
           to="/history"
@@ -31,10 +32,11 @@ export function TournamentDetailPage() {
           {t.history.back}
         </Link>
         <div className="flex items-center gap-2">
+          <PrintButton />
           <ShareButton tournament={tournament} source="detail" />
         </div>
       </div>
-      <RoundsPanel tournament={tournament} />
+      <RoundsPanel tournament={tournament} showPrint={false} />
     </div>
   )
 }
