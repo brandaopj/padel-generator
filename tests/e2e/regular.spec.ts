@@ -1,4 +1,12 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+
+async function navigateToHistory(page: Page) {
+  const openMenuBtn = page.getByLabel('Open menu')
+  if (await openMenuBtn.isVisible()) {
+    await openMenuBtn.click()
+  }
+  await page.getByRole('link', { name: 'Histórico' }).last().click()
+}
 
 test.describe('Regular mode', () => {
   test.beforeEach(async ({ page, context }) => {
@@ -51,7 +59,7 @@ test.describe('Regular mode', () => {
     await page.getByTestId('generate-button').click()
     await expect(page.getByTestId('rounds-panel')).toBeVisible()
 
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
     await expect(page.getByTestId('history-list')).toBeVisible()
     await expect(page.locator('[data-testid^="history-entry-"]').first()).toContainText('Clube Histórico')
   })
@@ -61,7 +69,7 @@ test.describe('Regular mode', () => {
     await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
     await page.getByTestId('generate-button').click()
 
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
     await page.locator('[data-testid^="history-entry-"]').first().click()
 
     await expect(page.getByTestId('rounds-panel')).toBeVisible()

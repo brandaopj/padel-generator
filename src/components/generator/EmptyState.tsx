@@ -11,7 +11,7 @@ export function EmptyState({ onLoadExample }: Props) {
       className="flex flex-col items-center justify-center h-full min-h-[360px] gap-6 py-12 text-center"
     >
       <svg
-        className="w-20 h-20 text-gray-200 dark:text-gray-700"
+        className="w-20 h-20 text-border"
         viewBox="0 0 80 96"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -28,10 +28,10 @@ export function EmptyState({ onLoadExample }: Props) {
       </svg>
 
       <div className="space-y-1">
-        <p className="text-base font-medium text-gray-500 dark:text-gray-400">
+        <p className="text-base font-medium text-fg3">
           {t.emptyState.title}
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-fg3">
           {t.emptyState.subtitle}
         </p>
       </div>
@@ -39,7 +39,7 @@ export function EmptyState({ onLoadExample }: Props) {
       <button
         type="button"
         onClick={onLoadExample}
-        className="px-4 py-2 text-sm text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+        className="px-4 py-2 text-sm text-brand border border-brand/40 rounded-lg hover:bg-brand/10 transition-colors"
       >
         {t.emptyState.loadExample}
       </button>

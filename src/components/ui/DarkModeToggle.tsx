@@ -27,12 +27,12 @@ export function DarkModeToggle({ dark, onToggle }: Props) {
       type="button"
       onClick={onToggle}
       aria-label={dark ? t.theme.lightMode : t.theme.darkMode}
-      className="flex items-center gap-0.5 p-1 bg-gray-100 dark:bg-gray-700 rounded-full cursor-pointer transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
+      className="flex items-center gap-0.5 p-1 bg-surface2 rounded-full cursor-pointer transition-colors hover:bg-surface2"
     >
-      <span className={`p-1.5 rounded-full transition-all duration-200 ${!dark ? 'bg-white shadow text-amber-500' : 'text-gray-400 dark:text-gray-500'}`}>
+      <span className={`p-1.5 rounded-full transition-all duration-200 ${!dark ? 'bg-white shadow text-amber-500' : 'text-fg3'}`}>
         <SunIcon />
       </span>
-      <span className={`p-1.5 rounded-full transition-all duration-200 ${dark ? 'bg-gray-600 shadow text-blue-300' : 'text-gray-400'}`}>
+      <span className={`p-1.5 rounded-full transition-all duration-200 ${dark ? 'bg-surface2 shadow text-brand' : 'text-fg3'}`}>
         <MoonIcon />
       </span>
     </button>

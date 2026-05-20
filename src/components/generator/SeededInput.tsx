@@ -39,7 +39,7 @@ function TableTextarea({ label, players, testPrefix, clearLabel, modalTitle, mod
       <div className="flex items-center justify-between">
         <label
           htmlFor={inputId}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="block text-sm font-medium text-fg2"
         >
           {label}
         </label>
@@ -60,7 +60,7 @@ function TableTextarea({ label, players, testPrefix, clearLabel, modalTitle, mod
         onChange={handleChange}
         rows={5}
         placeholder={placeholder}
-        className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-2 py-2 text-base sm:text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y min-h-28 sm:min-h-36 lg:min-h-44"
+        className="w-full rounded-md border border-bordermd px-2 py-2 text-base sm:text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent resize-y min-h-28 sm:min-h-36 lg:min-h-44"
       />
     </div>
   )

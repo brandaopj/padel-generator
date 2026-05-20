@@ -31,23 +31,23 @@ export function ConfirmModal({ title, description, confirmLabel = 'OK', cancelLa
     >
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
       <div
-        className="relative w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 p-6 animate-scale-in"
+        className="relative w-full max-w-sm bg-surface rounded-xl shadow-2xl border border-border p-6 animate-scale-in"
         onClick={e => e.stopPropagation()}
       >
         <h2
           id="confirm-modal-title"
-          className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-2"
+          className="text-base font-semibold text-fg mb-2"
         >
           {title}
         </h2>
         {description && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">{description}</p>
+          <p className="text-sm text-fg3 mb-5">{description}</p>
         )}
         <div className="flex gap-3 justify-end">
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm font-medium text-fg2 bg-surface2 hover:bg-surface2 rounded-lg transition-colors"
           >
             {resolvedCancelLabel}
           </button>

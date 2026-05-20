@@ -17,7 +17,7 @@ function tournamentTitle(t: Tournament, autoTitle: { regular: (n: number) => str
 }
 
 const MODE_BADGE_CLASS: Record<string, string> = {
-  'regular':     'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+  'regular':     'bg-brand/10 text-brand',
   'fixed-pairs': 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-300',
   'seeded':      'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
 }
@@ -61,7 +61,7 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
       onClick={handleClick}
       title={t.history.useAsTemplate}
       aria-label={t.history.useAsTemplate}
-      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
+      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-fg3 hover:text-brand transition-colors rounded"
     >
       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d={USERS_PATH} />
@@ -79,7 +79,7 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
       onClick={e => { e.stopPropagation(); onDelete() }}
       aria-label={t.history.deleteTooltip}
       title={t.history.deleteTooltip}
-      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
+      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-fg3 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded"
     >
       <TrashIcon />
     </button>
@@ -101,16 +101,16 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
     <article
       data-testid={`history-entry-${tourney.id}`}
       onClick={() => navigate(`/history/${tourney.id}`)}
-      className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md transition-all cursor-pointer"
+      className="bg-surface border border-border rounded-lg p-4 hover:border-brand hover:shadow-md transition-all cursor-pointer"
     >
       <div className="flex flex-col sm:flex-row sm:items-center gap-3">
 
         {/* Title + date */}
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
+          <p className="font-semibold text-fg truncate">
             {title}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{date}</p>
+          <p className="text-xs text-fg3 mt-0.5">{date}</p>
         </div>
 
         {/* Badges */}
@@ -118,7 +118,7 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${MODE_BADGE_CLASS[tourney.mode]}`}>
             {t.modes[tourney.mode].label}
           </span>
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-surface2 text-fg3">
             {t.history.courts(tourney.courts)} · {t.history.pairs(tourney.pairs.length)}
           </span>
         </div>
@@ -130,7 +130,7 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
           <DeleteButton onDelete={() => onDelete(tourney.id)} />
           <Link
             to={`/history/${tourney.id}`}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white rounded-md text-xs font-medium hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand text-brand-on rounded-md text-xs font-medium hover:bg-brand/90 transition-colors"
           >
             {t.history.viewGames}
             <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

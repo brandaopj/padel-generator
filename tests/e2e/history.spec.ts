@@ -7,6 +7,14 @@ async function generateTournament(page: Page, name = 'Torneio Teste') {
   await expect(page.getByTestId('rounds-panel')).toBeVisible()
 }
 
+async function navigateToHistory(page: Page) {
+  const openMenuBtn = page.getByLabel('Open menu')
+  if (await openMenuBtn.isVisible()) {
+    await openMenuBtn.click()
+  }
+  await page.getByRole('link', { name: 'Histórico' }).last().click()
+}
+
 test.describe('History page', () => {
   test.beforeEach(async ({ page, context }) => {
     await context.addInitScript(() => {
@@ -18,7 +26,7 @@ test.describe('History page', () => {
 
   test('shows generated tournament in history list', async ({ page }) => {
     await generateTournament(page, 'Torneio Histórico')
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await expect(page.locator('[data-testid^="history-entry-"]').first()).toContainText('Torneio Histórico')
@@ -31,7 +39,7 @@ test.describe('History page', () => {
 
   test('deletes tournament from history and shows undo toast', async ({ page }) => {
     await generateTournament(page, 'Torneio Apagar')
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(1)
@@ -47,7 +55,7 @@ test.describe('History page', () => {
 
   test('undo delete restores tournament', async ({ page }) => {
     await generateTournament(page, 'Torneio Cancelar')
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.getByRole('button', { name: 'Apagar torneio' }).click()
@@ -61,7 +69,7 @@ test.describe('History page', () => {
 
   test('reuse players loads mode and players into generator', async ({ page }) => {
     await generateTournament(page, 'Torneio Template')
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.getByRole('button', { name: 'Usar jogadores' }).click()
@@ -145,7 +153,7 @@ test.describe('Tournament detail page', () => {
 
   test('shows tournament details and rounds', async ({ page }) => {
     await generateTournament(page, 'Torneio Detalhe')
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.locator('[data-testid^="history-entry-"]').first().click()
 
@@ -156,7 +164,7 @@ test.describe('Tournament detail page', () => {
 
   test('back link navigates to history', async ({ page }) => {
     await generateTournament(page)
-    await page.click('text=Histórico')
+    await navigateToHistory(page)
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.locator('[data-testid^="history-entry-"]').first().click()
 

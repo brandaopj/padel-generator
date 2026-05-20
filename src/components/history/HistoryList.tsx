@@ -12,7 +12,7 @@ function HistoryEmpty() {
       className="flex flex-col items-center justify-center py-20 gap-6 text-center"
     >
       <svg
-        className="w-20 h-20 text-gray-200 dark:text-gray-700"
+        className="w-20 h-20 text-border"
         viewBox="0 0 80 96"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -29,17 +29,17 @@ function HistoryEmpty() {
       </svg>
 
       <div className="space-y-1">
-        <p className="text-base font-medium text-gray-600 dark:text-gray-400">
+        <p className="text-base font-medium text-fg2">
           {t.history.empty.title}
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-fg3">
           {t.history.empty.subtitle}
         </p>
       </div>
 
       <Link
         to="/"
-        className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors"
+        className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand text-brand-on rounded-lg text-sm font-semibold hover:bg-brand/90 transition-colors"
       >
         {t.history.empty.cta}
         <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

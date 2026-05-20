@@ -39,7 +39,7 @@ export function ShareButton({ tournament, variant = 'button', className, source 
         onClick={handleShare}
         title={t.share}
         aria-label={t.share}
-        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
+        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-fg3 hover:text-brand transition-colors rounded"
       >
         <ShareIcon />
       </button>
@@ -52,7 +52,7 @@ export function ShareButton({ tournament, variant = 'button', className, source 
       onClick={handleShare}
       title={t.share}
       aria-label={t.share}
-      className={`flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors ${className ?? ''}`}
+      className={`flex items-center gap-1.5 px-3 py-1.5 bg-surface2 text-fg2 rounded-md text-sm hover:bg-surface2 transition-colors ${className ?? ''}`}
     >
       <ShareIcon />
       {t.share}
