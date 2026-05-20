@@ -153,6 +153,25 @@ jobs:
             echo "No open ci-failure issue found — nothing to close"
           fi
 
+  deploy:
+    needs: [unit-tests, e2e-tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: team_BltyTKiCo95ymDu8zrWcKm3y
+          VERCEL_PROJECT_ID: prj_4JxNKxvg21mH41MxktVdKkzK4vpu
+
   publish-report:
     needs: [unit-tests, e2e-tests]
     if: always() && github.event_name == 'push'
