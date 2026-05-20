@@ -39,7 +39,7 @@ export function ShareButton({ tournament, variant = 'button', className, source 
         onClick={handleShare}
         title={t.share}
         aria-label={t.share}
-        className="p-1.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
+        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
       >
         <ShareIcon />
       </button>

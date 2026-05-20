@@ -59,7 +59,7 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
       onClick={handleClick}
       title={t.history.useAsTemplate}
       aria-label={t.history.useAsTemplate}
-      className="p-1.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
+      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
     >
       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path d={USERS_PATH} />
@@ -79,7 +79,7 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
         onClick={e => { e.stopPropagation(); setOpen(true) }}
         aria-label={t.history.deleteTooltip}
         title={t.history.deleteTooltip}
-        className="p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
+        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
       >
         <TrashIcon />
       </button>
