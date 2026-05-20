@@ -86,7 +86,7 @@ export const translations = {
     emptyState: {
       title: 'Os teus jogos vão aparecer aqui',
       subtitle: 'Preenche o formulário e clica em Gerar Torneio',
-      loadExample: 'Carregar Exemplo (8 Jogadores)',
+      loadExample: 'Carregar Exemplo',
     },
     rounds: {
       untitled: 'Torneio',
@@ -254,7 +254,7 @@ export const translations = {
     emptyState: {
       title: 'Your matches will appear here',
       subtitle: 'Fill in the form and click Generate Tournament',
-      loadExample: 'Load Example (8 Players)',
+      loadExample: 'Load Example',
     },
     rounds: {
       untitled: 'Tournament',

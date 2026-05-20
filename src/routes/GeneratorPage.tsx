@@ -17,10 +17,16 @@ import { generateTournament } from '../utils/gameLogic'
 import { useHistory } from '../hooks/useHistory'
 import { analytics } from '../analytics'
 
-const EXAMPLE_PLAYERS = [
-  'Ana Costa', 'Bruno Silva', 'Carlos Mota', 'Diana Ferreira',
-  'Eduardo Pinto', 'Filipa Santos', 'Gonçalo Lima', 'Helena Cruz',
+const NAME_POOL = [
+  'Ana', 'Bruno', 'Carlos', 'Diana', 'Eduardo', 'Filipa',
+  'Gonçalo', 'Helena', 'Inês', 'João', 'Katia', 'Luís',
+  'Marta', 'Nuno', 'Olga', 'Pedro', 'Rita', 'Sérgio',
+  'Teresa', 'Vasco',
 ]
+
+function pickRandom(arr: string[], n: number): string[] {
+  return [...arr].sort(() => Math.random() - 0.5).slice(0, n)
+}
 
 export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
@@ -116,8 +122,22 @@ export function GeneratorPage() {
   })
 
   function handleLoadExample() {
-    dispatch({ type: 'SET_MODE', payload: 'regular' })
-    dispatch({ type: 'SET_PLAYERS', payload: EXAMPLE_PLAYERS })
+    if (state.mode === 'regular') {
+      dispatch({ type: 'SET_PLAYERS', payload: pickRandom(NAME_POOL, 8) })
+    } else if (state.mode === 'fixed-pairs') {
+      const names = pickRandom(NAME_POOL, 8)
+      const pairs: [string, string][] = [
+        [names[0], names[1]],
+        [names[2], names[3]],
+        [names[4], names[5]],
+        [names[6], names[7]],
+      ]
+      dispatch({ type: 'SET_PAIRS', payload: pairs })
+    } else {
+      const all = pickRandom(NAME_POOL, 8)
+      dispatch({ type: 'SET_TABLE_A', payload: all.slice(0, 4) })
+      dispatch({ type: 'SET_TABLE_B', payload: all.slice(4) })
+    }
     setExampleKey(k => k + 1)
     analytics.exampleLoaded()
   }
@@ -286,7 +306,7 @@ export function GeneratorPage() {
     <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8 print:max-w-none print:p-0 pb-[120px] md:pb-8">
 
       {/* Single layout — CSS show/hide controls mobile tab switching; md+ is always 2-col */}
-      <div className="md:grid md:grid-cols-[340px,1fr] md:gap-6 lg:gap-8 md:items-start">
+      <div className="md:grid md:grid-cols-[340px_1fr] md:gap-6 lg:gap-8 md:items-start">
 
         {/* Form sidebar — hidden on mobile when viewing torneio tab */}
         <aside
