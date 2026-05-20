@@ -193,53 +193,53 @@ export function GeneratorPage() {
       )}
 
       {hasInputs && totalPossibleRounds > 1 && (
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label htmlFor="max-rounds" className="text-sm font-medium text-fg2">
-              {t.generator.maxRoundsLabel}
-            </label>
-            <span className="text-sm text-fg3 tabular-nums">
-              <span className="font-medium text-fg2">{state.maxRounds ?? totalPossibleRounds}</span>
-              {' '}
-              {state.maxRounds == null || state.maxRounds >= totalPossibleRounds
-                ? t.generator.allRounds
-                : t.generator.maxRoundsOf(totalPossibleRounds)}
-            </span>
+            <label className="text-sm font-medium text-fg2">{t.generator.maxRoundsLabel}</label>
+            <span className="text-xs text-fg3">≈ {(state.maxRounds ?? totalPossibleRounds) * 15} min</span>
           </div>
-          <input
-            id="max-rounds"
-            type="range"
-            min={1}
-            max={totalPossibleRounds}
-            value={state.maxRounds ?? totalPossibleRounds}
-            onChange={e => {
-              const v = parseInt(e.target.value, 10)
-              dispatch({ type: 'SET_MAX_ROUNDS', payload: v >= totalPossibleRounds ? null : v })
-            }}
-            className="w-full accent-brand"
-          />
+          <div className="flex border border-border rounded-lg overflow-hidden">
+            {Array.from({ length: totalPossibleRounds }, (_, i) => i + 1).map(n => {
+              const isAll = n === totalPossibleRounds
+              const isSelected = isAll ? state.maxRounds == null : state.maxRounds === n
+              return (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => dispatch({ type: 'SET_MAX_ROUNDS', payload: isAll ? null : n })}
+                  className={`flex-1 py-1.5 text-xs font-semibold transition-colors border-r border-border last:border-r-0 ${
+                    isSelected ? 'bg-brand text-brand-on' : 'bg-surface text-fg3 hover:bg-surface2 hover:text-fg'
+                  }`}
+                >
+                  {isAll ? t.generator.allRounds : n}
+                </button>
+              )
+            })}
+          </div>
         </div>
       )}
 
-      {/* Tournament name — optional, at bottom (F-01) */}
-      <div>
-        <label
-          htmlFor="club-name"
-          className="block text-sm font-medium text-fg2 mb-1"
-        >
-          {t.generator.nameLabel}{' '}
-          <span className="text-fg3 font-normal">{t.generator.nameOptional}</span>
-        </label>
-        <input
-          id="club-name"
-          data-testid="club-name-input"
-          type="text"
-          value={state.clubName}
-          onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
-          placeholder={t.generator.namePlaceholder}
-          className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
-        />
-      </div>
+      {/* Tournament name — optional, disclosed at bottom (P1-D) */}
+      <details className="group" open={state.clubName.length > 0 || undefined}>
+        <summary className="text-xs font-semibold text-fg3 cursor-pointer list-none flex items-center gap-1.5 hover:text-fg2 transition-colors select-none">
+          <svg className="w-2.5 h-2.5 transition-transform group-open:rotate-90 shrink-0" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+            <path d="M3 2l4 3-4 3V2z" />
+          </svg>
+          {t.generator.nameLabel}
+          <span className="font-normal opacity-60">{t.generator.nameOptional}</span>
+        </summary>
+        <div className="mt-2">
+          <input
+            id="club-name"
+            data-testid="club-name-input"
+            type="text"
+            value={state.clubName}
+            onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
+            placeholder={t.generator.namePlaceholder}
+            className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
+          />
+        </div>
+      </details>
 
       {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
 

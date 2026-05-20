@@ -72,7 +72,7 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
 
   return (
     <div
-      className="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 print:hidden"
+      className="fixed bottom-[76px] right-3 z-[100] flex flex-col gap-2 print:hidden md:bottom-4 md:right-4"
       role="region"
       aria-label={t.toast.notifications}
     >

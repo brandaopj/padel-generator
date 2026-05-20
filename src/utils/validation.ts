@@ -12,8 +12,13 @@ export function validate(state: AppState, tv: Translations['validation']): Valid
 
   if (state.courts < 1) errors.push(tv.minCourt)
   if (state.mode === 'regular') {
-    if (state.players.length < 4) errors.push(tv.minPlayersRegular)
-    else if (state.players.length % 4 !== 0) errors.push(tv.multipleOf4)
+    if (state.players.length < 4) {
+      errors.push(tv.minPlayersRegular(state.players.length))
+    } else if (state.players.length % 4 !== 0) {
+      const excess = state.players.length % 4
+      const needed = 4 - excess
+      errors.push(tv.multipleOf4(state.players.length, needed, excess))
+    }
   }
   if (state.mode === 'fixed-pairs') {
     if (state.pairs.length < 2) errors.push(tv.minPairsFixed)

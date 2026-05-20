@@ -73,8 +73,10 @@ export const translations = {
     },
     validation: {
       minCourt: 'É necessário pelo menos 1 campo',
-      minPlayersRegular: 'Modo Regular requer pelo menos 4 jogadores',
-      multipleOf4: 'O número de jogadores deve ser múltiplo de 4 (4, 8, 12…)',
+      minPlayersRegular: (n: number) =>
+        `Tens ${n} jogador${n !== 1 ? 'es' : ''} — precisas de pelo menos 4.`,
+      multipleOf4: (n: number, needed: number, excess: number) =>
+        `Tens ${n} jogadores — adiciona ${needed} ou remove ${excess} para completar os pares.`,
       minPairsFixed: 'Modo Duplas Fixas requer pelo menos 2 duplas',
       minTableASeeded: 'A Tabela A requer pelo menos 2 jogadores',
       minTableBSeeded: 'A Tabela B requer pelo menos 2 jogadores',
@@ -237,8 +239,10 @@ export const translations = {
     },
     validation: {
       minCourt: 'At least 1 court is required',
-      minPlayersRegular: 'Regular mode requires at least 4 players',
-      multipleOf4: 'Number of players must be a multiple of 4 (4, 8, 12…)',
+      minPlayersRegular: (n: number) =>
+        `You have ${n} player${n !== 1 ? 's' : ''} — add at least ${4 - n} more.`,
+      multipleOf4: (n: number, needed: number, excess: number) =>
+        `You have ${n} players — add ${needed} or remove ${excess} to complete the pairs.`,
       minPairsFixed: 'Fixed Pairs mode requires at least 2 pairs',
       minTableASeeded: 'Table A requires at least 2 players',
       minTableBSeeded: 'Table B requires at least 2 players',

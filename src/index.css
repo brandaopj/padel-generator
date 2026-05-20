@@ -13,22 +13,23 @@
   --font-mono:    'JetBrains Mono', monospace;
 
   /* Colours — light mode defaults */
-  --color-canvas:   #EEF3F8;   /* page background   */
+  --color-canvas:   #EEF5F5;   /* page background   */
   --color-surface:  #FFFFFF;   /* card / input bg    */
-  --color-surface2: #E8EFF6;   /* elevated surface   */
-  --color-brand:    #2563EB;   /* primary action     */
+  --color-surface2: #E0EEEE;   /* elevated surface   */
+  --color-brand:    #0D6E6E;   /* primary action     */
   --color-brand-on: #FFFFFF;   /* text on brand bg   */
-  --color-fg:       #050D18;   /* primary text       */
-  --color-fg2:      #4A6E8A;   /* secondary text     */
-  --color-fg3:      #9BAFC0;   /* muted text         */
-  --color-border:   #D4DCE6;   /* subtle border      */
-  --color-bordermd: #B0BECF;   /* stronger border    */
+  --color-accent:   #FBB040;   /* amber accent       */
+  --color-fg:       #051A1A;   /* primary text       */
+  --color-fg2:      #2B5C5C;   /* secondary text     */
+  --color-fg3:      #5F9090;   /* muted text         */
+  --color-border:   #C8DCDC;   /* subtle border      */
+  --color-bordermd: #A8C8C8;   /* stronger border    */
 
   /* Court accent palette (match cards) */
-  --color-court1:   #4A9EFF;
-  --color-court2:   #FF6B4A;
-  --color-court3:   #5B9CF6;
-  --color-court4:   #B975F5;
+  --color-court1:   #0D6E6E;
+  --color-court2:   #F46B3C;
+  --color-court3:   #7B61FF;
+  --color-court4:   #F5A623;
   --color-court5:   #F5C344;
   --color-court6:   #3DE8E0;
 }
@@ -36,15 +37,16 @@
 /* Dark-mode overrides — variables change, utilities update automatically */
 .dark {
   --color-canvas:   #0A1818;
-  --color-surface:  #071220;
-  --color-surface2: #0C1A2C;
-  --color-brand:    #4A9EFF;
+  --color-surface:  #112222;
+  --color-surface2: #172E2E;
+  --color-brand:    #2DBFBF;
   --color-brand-on: #FFFFFF;
-  --color-fg:       #DCE8F5;
-  --color-fg2:      #5A85A8;
-  --color-fg3:      #7A9BB8;
-  --color-border:   #111E2E;
-  --color-bordermd: #1A2D42;
+  --color-accent:   #FBB040;
+  --color-fg:       #C8E4E4;
+  --color-fg2:      #5AA0A0;
+  --color-fg3:      #6A9B9B;
+  --color-border:   #1A3333;
+  --color-bordermd: #224040;
 }
 
 @keyframes fade-in-up {

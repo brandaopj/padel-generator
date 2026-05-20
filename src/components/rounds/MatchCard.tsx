@@ -28,7 +28,6 @@ function avatarPalette(name: string) {
 }
 
 function PlayerAvatar({ name }: { name: string }) {
-  const [errored, setErrored] = useState(false)
   const palette = avatarPalette(name)
   const initials = name
     .split(' ')
@@ -37,30 +36,13 @@ function PlayerAvatar({ name }: { name: string }) {
     .slice(0, 2)
     .toUpperCase()
 
-  if (errored) {
-    return (
-      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none ${palette.fbBg} ${palette.fbText}`}>
-        {initials}
-      </div>
-    )
-  }
-
-  const url =
-    `https://api.dicebear.com/7.x/initials/svg` +
-    `?seed=${encodeURIComponent(name)}` +
-    `&backgroundColor=${palette.bg}&textColor=${palette.fg}&fontSize=40&bold=true`
-
   return (
-    <img
-      src={url}
-      alt={initials}
-      width={32}
-      height={32}
-      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0"
-      style={{ backgroundColor: `#${palette.bg}` }}
-      loading="lazy"
-      onError={() => setErrored(true)}
-    />
+    <div
+      className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none ${palette.fbBg} ${palette.fbText}`}
+      aria-hidden="true"
+    >
+      {initials}
+    </div>
   )
 }
 
@@ -135,7 +117,7 @@ function CourtLabel({ name, court, onEdit }: { name: string; court: number; onEd
         style={{ background: `var(--color-court${courtIndex})` }}
       >
         {name}
-        <svg className="w-2.5 h-2.5 opacity-0 group-hover/court:opacity-100 transition-opacity print:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <svg className="w-2.5 h-2.5 opacity-40 group-hover/court:opacity-100 transition-opacity print:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
         </svg>
       </button>
@@ -178,9 +160,9 @@ export function MatchCard({ match, courtName, onEditCourtName, onScoreChange }: 
           <span
             className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black select-none print:w-6 print:h-6 print:text-[10px]"
             style={{
-              background: '#a3e635',
+              background: 'var(--color-accent)',
               color: '#1a2e00',
-              boxShadow: '0 0 0 3px var(--color-surface), 0 0 0 5px rgba(163,230,53,0.4)',
+              boxShadow: '0 0 0 3px var(--color-surface), 0 0 0 5px color-mix(in oklab, var(--color-accent) 40%, transparent)',
             }}
           >
             VS
@@ -198,10 +180,10 @@ export function MatchCard({ match, courtName, onEditCourtName, onScoreChange }: 
             value={scores[0] ?? ''}
             onChange={e => handleScore(0, e.target.value)}
             aria-label={t.rounds.scoreTeam1}
-            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-dashed print:border-bordermd print:bg-transparent"
+            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-solid print:border-gray-800 print:bg-transparent print:py-4"
             placeholder="–"
           />
-          <span className="text-sm font-medium text-fg3 text-center select-none">–</span>
+          <span className="text-sm font-medium text-fg3 text-center select-none print:text-lg print:font-bold print:text-gray-800">–</span>
           <input
             type="number"
             min="0"
@@ -209,7 +191,7 @@ export function MatchCard({ match, courtName, onEditCourtName, onScoreChange }: 
             value={scores[1] ?? ''}
             onChange={e => handleScore(1, e.target.value)}
             aria-label={t.rounds.scoreTeam2}
-            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-dashed print:border-bordermd print:bg-transparent"
+            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-solid print:border-gray-800 print:bg-transparent print:py-4"
             placeholder="–"
           />
         </div>

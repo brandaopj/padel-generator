@@ -113,15 +113,22 @@ export function ChipInput({
       {/* Header row */}
       <div className="flex items-center justify-between mb-1.5">
         <label className="text-sm font-medium text-fg2">{label}</label>
-        {items.length > 0 && (
-          <ClearButton
-            label={clearLabel}
-            modalTitle={clearModalTitle}
-            modalDescription={clearModalDescription}
-            cancelLabel={cancelLabel}
-            onConfirm={() => onChange([])}
-          />
-        )}
+        <div className="flex items-center gap-1.5">
+          {items.length > 0 && (
+            <span className="text-[10px] font-bold text-brand bg-brand/10 px-2 py-0.5 rounded-full tabular-nums">
+              {items.length} ✓
+            </span>
+          )}
+          {items.length > 0 && (
+            <ClearButton
+              label={clearLabel}
+              modalTitle={clearModalTitle}
+              modalDescription={clearModalDescription}
+              cancelLabel={cancelLabel}
+              onConfirm={() => onChange([])}
+            />
+          )}
+        </div>
       </div>
 
       {/* Chip container */}

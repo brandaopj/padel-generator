@@ -24,7 +24,7 @@ describe('validate — Regular mode', () => {
 
   it('errors when player count is not a multiple of 4', () => {
     const { errors } = validate({ ...base, players: ['A', 'B', 'C', 'D', 'E', 'F'] }, tv)
-    expect(errors.some(e => e.includes('múltiplo'))).toBe(true)
+    expect(errors.some(e => e.includes('6'))).toBe(true)
   })
 
   it('no errors for 4 players with 1 court', () => {

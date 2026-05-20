@@ -23,13 +23,13 @@ function PadelLogo({ onClick }: { onClick?: () => void }) {
   return (
     <Link to="/" onClick={onClick} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
       <span
-        className="w-[22px] h-[22px] rounded-full bg-lime-400 flex items-center justify-center shrink-0"
+        className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0"
         aria-hidden="true"
-        style={{ boxShadow: '0 0 0 2px var(--color-surface)' }}
+        style={{ background: 'var(--color-accent)', boxShadow: '0 0 0 2px var(--color-surface)' }}
       >
         <svg className="w-3.5 h-3.5" viewBox="0 0 10 10" fill="none">
-          <path d="M1.5 5 Q5 1.5 8.5 5" stroke="#1a2e00" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M1.5 5 Q5 8.5 8.5 5" stroke="#1a2e00" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M1.5 5 Q5 1.5 8.5 5" stroke="rgba(0,0,0,0.25)" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M1.5 5 Q5 8.5 8.5 5" stroke="rgba(0,0,0,0.25)" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
       </span>
       <span className="font-display font-black text-fg tracking-tight text-lg leading-none select-none" style={{ letterSpacing: '-0.025em' }}>
@@ -78,7 +78,7 @@ function Shell() {
 
   const showPrint = location.pathname === '/' && state.generated !== null
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-1.5 text-sm transition-colors ${isActive ? 'text-brand font-medium' : 'text-fg2 hover:text-fg'}`
+    `flex items-center gap-1.5 text-sm transition-colors border-b-2 pb-0.5 ${isActive ? 'text-brand font-semibold border-brand' : 'text-fg2 hover:text-fg border-transparent'}`
 
   const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
     `flex items-center gap-2 w-full px-3 py-3 rounded-md text-sm transition-colors ${isActive ? 'text-brand font-medium bg-brand/10' : 'text-fg hover:bg-surface2'}`
@@ -117,12 +117,12 @@ function Shell() {
           <div className="flex items-center gap-2">
             {/* Print + Share: desktop only (lg+) — below lg they live in the drawer */}
             {showPrint && (
-              <div className="hidden lg:flex">
+              <div className="hidden md:flex">
                 <PrintButton />
               </div>
             )}
             {showPrint && state.generated && (
-              <div className="hidden lg:flex">
+              <div className="hidden md:flex">
                 <ShareButton tournament={state.generated} source="header" />
               </div>
             )}
