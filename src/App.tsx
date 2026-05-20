@@ -131,8 +131,17 @@ function Shell() {
             </nav>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            {showPrint && <PrintButton />}
-            {showPrint && state.generated && <ShareButton tournament={state.generated} />}
+            {/* Print + Share: desktop only — on mobile they live in the drawer */}
+            {showPrint && (
+              <div className="hidden sm:flex">
+                <PrintButton />
+              </div>
+            )}
+            {showPrint && state.generated && (
+              <div className="hidden sm:flex">
+                <ShareButton tournament={state.generated} />
+              </div>
+            )}
             {/* Ko-fi — hidden on mobile */}
             <div className="hidden sm:flex">
               <KofiButton />
@@ -185,6 +194,12 @@ function Shell() {
                 <HelpIcon />
                 <span>{t.nav.howItWorks}</span>
               </button>
+              {showPrint && (
+                <div className="pt-2 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-1">
+                  <PrintButton className="w-full justify-start" />
+                  {state.generated && <ShareButton tournament={state.generated} className="w-full justify-start" />}
+                </div>
+              )}
               <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
                 <KofiButton />
               </div>

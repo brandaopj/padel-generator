@@ -1,13 +1,13 @@
 import { useLanguage } from '../../context/LanguageContext'
 
-export function PrintButton() {
+export function PrintButton({ className }: { className?: string }) {
   const { t } = useLanguage()
 
   return (
     <button
       data-testid="print-button"
       onClick={() => window.print()}
-      className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded-md text-sm hover:bg-gray-700 dark:hover:bg-gray-300 print:hidden transition-colors"
+      className={`flex items-center gap-1.5 px-3 py-1.5 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-800 rounded-md text-sm hover:bg-gray-700 dark:hover:bg-gray-300 print:hidden transition-colors ${className ?? ''}`}
     >
       <svg className="w-4 h-4 shrink-0" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
         <path
@@ -16,7 +16,7 @@ export function PrintButton() {
           clipRule="evenodd"
         />
       </svg>
-      <span className="hidden sm:inline">{t.print}</span>
+      {t.print}
     </button>
   )
 }

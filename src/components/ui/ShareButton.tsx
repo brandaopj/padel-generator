@@ -14,9 +14,10 @@ function ShareIcon() {
 type Props = {
   tournament: Tournament
   variant?: 'button' | 'icon'
+  className?: string
 }
 
-export function ShareButton({ tournament, variant = 'button' }: Props) {
+export function ShareButton({ tournament, variant = 'button', className }: Props) {
   const { showToast } = useToast()
   const { t } = useLanguage()
 
@@ -48,10 +49,10 @@ export function ShareButton({ tournament, variant = 'button' }: Props) {
       onClick={handleShare}
       title={t.share}
       aria-label={t.share}
-      className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+      className={`flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors ${className ?? ''}`}
     >
       <ShareIcon />
-      <span className="hidden sm:inline">{t.share}</span>
+      {t.share}
     </button>
   )
 }
