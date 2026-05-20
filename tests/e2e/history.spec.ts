@@ -42,7 +42,7 @@ test.describe('History page', () => {
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(0)
     await expect(page.getByTestId('history-empty')).toBeVisible()
     // Undo toast appears
-    await expect(page.getByRole('alert')).toContainText('Desfazer')
+    await expect(page.getByRole('alert').filter({ hasText: 'Desfazer' })).toBeVisible()
   })
 
   test('undo delete restores tournament', async ({ page }) => {
@@ -72,7 +72,7 @@ test.describe('History page', () => {
     await expect(page.getByTestId('player-input')).toContainText('Ana')
     await expect(page.getByTestId('player-input')).toContainText('Bruno')
     // Toast appears
-    await expect(page.getByRole('alert')).toContainText('Jogadores carregados')
+    await expect(page.getByRole('alert').filter({ hasText: 'Jogadores carregados' })).toBeVisible()
   })
 })
 
