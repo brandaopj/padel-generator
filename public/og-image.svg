@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#111827"/>
+  <!-- padel ball -->
+  <circle cx="210" cy="315" r="150" fill="#a3e635"/>
+  <path d="M60 315 Q210 165 360 315" stroke="#3f6212" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <path d="M60 315 Q210 465 360 315" stroke="#3f6212" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <!-- text -->
+  <text x="420" y="300" font-family="system-ui,-apple-system,sans-serif" font-weight="900" font-size="88" fill="#ffffff" letter-spacing="-3">PADEL</text>
+  <text x="424" y="370" font-family="system-ui,-apple-system,sans-serif" font-weight="300" font-size="44" fill="#6b7280" letter-spacing="14">GENERATOR</text>
+  <text x="422" y="460" font-family="system-ui,-apple-system,sans-serif" font-size="30" fill="#4b5563">Gerador gratuito de torneios de padel</text>
+</svg>

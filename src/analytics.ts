@@ -7,7 +7,7 @@ export function initPostHog() {
     api_host: 'https://eu.i.posthog.com',
     capture_pageview: true,
     capture_pageleave: true,
-    persistence: 'localStorage',
+persistence: 'localStorage',
   })
 }
 

@@ -1,13 +1,15 @@
 import type { Tournament } from '../../types'
 import { RoundCard } from './RoundCard'
 import { useLanguage } from '../../context/LanguageContext'
+import { ShareButton } from '../ui/ShareButton'
 
 type Props = {
   tournament: Tournament | null
   onEditCourtName?: (court: number, name: string) => void
+  showShare?: boolean
 }
 
-export function RoundsPanel({ tournament, onEditCourtName }: Props) {
+export function RoundsPanel({ tournament, onEditCourtName, showShare = false }: Props) {
   const { lang, t } = useLanguage()
 
   if (!tournament) return null
@@ -17,9 +19,16 @@ export function RoundsPanel({ tournament, onEditCourtName }: Props) {
   return (
     <div data-testid="rounds-panel" className="space-y-12 print:space-y-4 animate-fade-in-up">
       <div className="print:pt-1">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 print:text-lg print:mb-0">
-          {tournament.clubName || t.rounds.untitled}
-        </h2>
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 print:text-lg print:mb-0">
+            {tournament.clubName || t.rounds.untitled}
+          </h2>
+          {showShare && (
+            <div className="print:hidden shrink-0">
+              <ShareButton tournament={tournament} source="rounds-panel" />
+            </div>
+          )}
+        </div>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
           {new Date(tournament.date).toLocaleDateString(dateLocale)}
           <span className="print:hidden"> · {t.rounds.courts(tournament.courts)} · {t.rounds.pairs(tournament.pairs.length)}</span>

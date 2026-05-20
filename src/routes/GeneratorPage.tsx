@@ -197,7 +197,7 @@ export function GeneratorPage() {
         {/* Rounds panel — always visible */}
         <div ref={roundsPanelRef} className="flex-1 min-w-0 w-full">
           {state.generated
-            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} />
+            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} showShare />
             : <EmptyState onLoadExample={handleLoadExample} />
           }
         </div>
