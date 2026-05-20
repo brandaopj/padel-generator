@@ -17,13 +17,22 @@ import { generateTournament } from '../utils/gameLogic'
 import { useHistory } from '../hooks/useHistory'
 import { analytics } from '../analytics'
 
-const NAME_POOL = [
-  'Ana Costa', 'Bruno Silva', 'Carlos Mota', 'Diana Ferreira',
-  'Eduardo Pinto', 'Filipa Santos', 'Gonçalo Lima', 'Helena Cruz',
-  'Inês Rocha', 'João Sousa', 'Katia Lopes', 'Luís Faria',
-  'Marta Neves', 'Nuno Carvalho', 'Olga Martins', 'Pedro Ribeiro',
-  'Rita Gomes', 'Sérgio Teixeira', 'Teresa Alves', 'Vasco Cunha',
-]
+const NAME_POOLS: Record<string, string[]> = {
+  pt: [
+    'Ana Costa', 'Bruno Silva', 'Carlos Mota', 'Diana Ferreira',
+    'Eduardo Pinto', 'Filipa Santos', 'Gonçalo Lima', 'Helena Cruz',
+    'Inês Rocha', 'João Sousa', 'Katia Lopes', 'Luís Faria',
+    'Marta Neves', 'Nuno Carvalho', 'Olga Martins', 'Pedro Ribeiro',
+    'Rita Gomes', 'Sérgio Teixeira', 'Teresa Alves', 'Vasco Cunha',
+  ],
+  en: [
+    'Alice Brown', 'Bob Smith', 'Charlie Davis', 'Diana Evans',
+    'Edward Wilson', 'Fiona Clark', 'George Hall', 'Hannah Lewis',
+    'Ian Walker', 'Julia Moore', 'Kevin Taylor', 'Laura Anderson',
+    'Michael Thomas', 'Nina Jackson', 'Oliver White', 'Paula Harris',
+    'Quinn Martin', 'Rachel Thompson', 'Samuel Garcia', 'Tina Martinez',
+  ],
+}
 
 function pickRandom(arr: string[], n: number): string[] {
   return [...arr].sort(() => Math.random() - 0.5).slice(0, n)
@@ -33,7 +42,7 @@ export function GeneratorPage() {
   const { state, dispatch } = useContext(AppContext)
   const { save, update } = useHistory()
   const { showToast } = useToast()
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
   const { errors, warnings } = validate(state, t.validation)
   const [isStale, setIsStale] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -123,10 +132,11 @@ export function GeneratorPage() {
   })
 
   function handleLoadExample() {
+    const pool = NAME_POOLS[lang] ?? NAME_POOLS.pt
     if (state.mode === 'regular') {
-      dispatch({ type: 'SET_PLAYERS', payload: pickRandom(NAME_POOL, 8) })
+      dispatch({ type: 'SET_PLAYERS', payload: pickRandom(pool, 8) })
     } else if (state.mode === 'fixed-pairs') {
-      const names = pickRandom(NAME_POOL, 8)
+      const names = pickRandom(pool, 8)
       const pairs: [string, string][] = [
         [names[0], names[1]],
         [names[2], names[3]],
@@ -135,7 +145,7 @@ export function GeneratorPage() {
       ]
       dispatch({ type: 'SET_PAIRS', payload: pairs })
     } else {
-      const all = pickRandom(NAME_POOL, 8)
+      const all = pickRandom(pool, 8)
       dispatch({ type: 'SET_TABLE_A', payload: all.slice(0, 4) })
       dispatch({ type: 'SET_TABLE_B', payload: all.slice(4) })
     }
