@@ -819,6 +819,35 @@
       align-items: center;
       transition: color .3s;
     }
+
+    /* ─────────────────────────────────────
+       COURT BACKGROUND
+    ───────────────────────────────────── */
+    .court-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .court-bg svg {
+      width: min(92vw, 1020px);
+      flex-shrink: 0;
+    }
+
+    .court-bg .cl-outer  { stroke: var(--primary); stroke-opacity: .09; transition: stroke .3s; }
+    .court-bg .cl-net    { stroke: var(--primary); stroke-opacity: .09; transition: stroke .3s; }
+    .court-bg .cl-inner  { stroke: var(--primary); stroke-opacity: .06; transition: stroke .3s; }
+    .court-bg .cl-zone   { fill:   var(--primary); fill-opacity:   .03; transition: fill .3s; }
+
+    [data-theme="light"] .court-bg .cl-outer  { stroke-opacity: .07; }
+    [data-theme="light"] .court-bg .cl-net    { stroke-opacity: .07; }
+    [data-theme="light"] .court-bg .cl-inner  { stroke-opacity: .045; }
+    [data-theme="light"] .court-bg .cl-zone   { fill-opacity:   .025; }
   </style>
 </head>
 <body>
@@ -831,6 +860,32 @@
       <feComposite in="blend" in2="SourceGraphic" operator="in"/>
     </filter>
   </svg>
+  <!-- Padel court background -->
+  <div class="court-bg">
+    <svg viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+      <!-- Back-wall glass zones (shaded) -->
+      <rect class="cl-zone" x="0"     y="0" width="30.5" height="100"/>
+      <rect class="cl-zone" x="169.5" y="0" width="30.5" height="100"/>
+
+      <!-- Outer boundary -->
+      <rect class="cl-outer" x="0" y="0" width="200" height="100" stroke-width="1.6"/>
+
+      <!-- Net (centre) -->
+      <line class="cl-net" x1="100" y1="0" x2="100" y2="100" stroke-width="1.6"/>
+
+      <!-- Service lines (parallel to net) -->
+      <line class="cl-inner" x1="30.5" y1="0"   x2="30.5" y2="100" stroke-width=".9"/>
+      <line class="cl-inner" x1="169.5" y1="0"  x2="169.5" y2="100" stroke-width=".9"/>
+
+      <!-- Centre service line — left half -->
+      <line class="cl-inner" x1="30.5" y1="50"  x2="100"   y2="50" stroke-width=".9"/>
+      <!-- Centre service line — right half -->
+      <line class="cl-inner" x1="100"  y1="50"  x2="169.5" y2="50" stroke-width=".9"/>
+
+    </svg>
+  </div>
+
   <div class="grain" style="filter:url(#grain-f);opacity:.018;background:#fff;mix-blend-mode:overlay;"></div>
 
   <div class="app">
