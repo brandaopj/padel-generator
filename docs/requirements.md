@@ -262,6 +262,7 @@ After generating a tournament, the name of each court must be editable inline in
 | RNF-07 | Unit test coverage must be ≥ 90% of lines and functions, ≥ 80% of branches, in the `src/utils/` and `src/hooks/useHistory.ts` layers (51 tests) |
 | RNF-08 | The CI pipeline must run unit and E2E tests on every push to `main` and on every pull request |
 | RNF-09 | The production deployment (Vercel) must be automatic on every push to `main` |
+| RNF-10 | The application must send usage events to PostHog (when `VITE_POSTHOG_KEY` is configured) and page view / Web Vitals data to Vercel Analytics (when enabled in the Vercel dashboard). Both integrations must be no-ops when their configuration is absent — the app must work normally without them. The following custom PostHog events must be tracked: `tournament_generated` (properties: `mode`, `rounds`, `matches`, `courts`), `mode_selected` (`mode`), `share_clicked` (`source`: `header` / `drawer` / `history` / `detail`), `example_loaded`, `tournament_deleted`, and `language_changed` (`lang`). |
 
 ---
 

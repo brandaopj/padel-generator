@@ -94,6 +94,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | State | Context + useReducer (no external library) |
 | Styles | Tailwind CSS v4 |
 | Monitoring | Sentry v8 (`@sentry/react`) |
+| Analytics | PostHog `posthog-js` + Vercel Analytics `@vercel/analytics` |
 | Unit tests | Vitest 4 + jsdom |
 | E2E tests | Playwright + Chromium |
 | Test reports | Allure (unit + e2e) |
@@ -160,9 +161,10 @@ npm install
 ```bash
 # .env.local
 VITE_SENTRY_DSN=https://<key>@sentry.io/<project>
+VITE_POSTHOG_KEY=phc_<your-posthog-project-key>
 ```
 
-Without this variable, Sentry is silently disabled — the app works normally.
+Without these variables the respective integrations are silently disabled — the app works normally.
 
 ### Commands
 
@@ -258,13 +260,49 @@ When tests fail on `main`, the pipeline automatically opens a GitHub issue label
 
 Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validates them automatically before merge.
 
-### Required secret
+### Required secrets
 
 | Name | Description |
 |------|-------------|
 | `VITE_SENTRY_DSN` | Sentry project DSN (optional — build succeeds without it) |
+| `VITE_POSTHOG_KEY` | PostHog project API key, starts with `phc_` (optional — analytics disabled without it) |
 
-Set it at: **GitHub → Settings → Secrets and variables → Actions**
+Set them at: **GitHub → Settings → Secrets and variables → Actions**
+
+---
+
+## Analytics
+
+Two analytics tools run in production. Both are no-ops when their configuration is absent, so the app works normally in local development without any setup.
+
+### Vercel Analytics
+
+Tracks page views and Web Vitals automatically. No environment variable is required — enable it once in the Vercel dashboard under **Project → Analytics**.
+
+The `<Analytics />` component is mounted in `App.tsx` via `@vercel/analytics/react`.
+
+### PostHog
+
+Tracks custom usage events for product insights. Initialised in `src/main.tsx` via `initPostHog()` from `src/analytics.ts`.
+
+- **EU host** (`https://eu.i.posthog.com`) for GDPR compliance.
+- Silently disabled when `VITE_POSTHOG_KEY` is not set.
+
+#### Enabling PostHog
+
+1. Set `VITE_POSTHOG_KEY=phc_<key>` in Vercel environment variables (Production scope).
+2. Add the app domain (`padel-generator-three.vercel.app`) in PostHog → **Project Settings → Toolbar & Authorized URLs**.
+
+#### Custom events
+
+| Event | Properties |
+|-------|------------|
+| `tournament_generated` | `mode`, `rounds`, `matches`, `courts` |
+| `mode_selected` | `mode` |
+| `share_clicked` | `source`: `header` / `drawer` / `history` / `detail` |
+| `example_loaded` | — |
+| `tournament_deleted` | — |
+| `language_changed` | `lang` |
 
 ---
 
