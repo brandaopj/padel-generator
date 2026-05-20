@@ -80,8 +80,13 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Appearance
 
-- Dark mode with `localStorage` persistence; pill toggle with sun/moon icons
-- Print view: form and header hidden, A4 layout (`@page { size: A4; margin: 2cm }`), single-column match cards with score area
+- **Night Game design system** — Tailwind v4 `@theme` block defines semantic CSS custom property tokens (`bg-canvas`, `bg-surface`, `text-fg`, `text-brand`, `border-border`, etc.) for light and dark modes. The `.dark` class swaps token values; no `dark:` prefix is needed on token-based utilities
+- **Typography** — display headings use Bricolage Grotesque (variable grotesque), body text uses Manrope (humanist sans), data labels use JetBrains Mono
+- **Icons** — Lucide React throughout the UI (nav: Trophy, Clock, HelpCircle, Menu/X; editor: Pencil; actions: Share, Printer, etc.)
+- **Backgrounds** — subtle padel court SVG diagram (net, service lines, back-wall zones) fixed behind page content; radial gradient orbs in dark mode
+- **Cards** — rounded corners, per-court accent colour on the top border (`--color-court1` through `--color-court6`), frosted glass header (`backdrop-blur-sm bg-surface/90`)
+- Dark mode toggle persisted to `localStorage`; pill toggle with sun/moon icons
+- Print view: form and header hidden, A4 layout (`@page { size: A4; margin: 1.5cm }`), 2-column match cards with score area
 - Build date footer at the bottom of every page — date is injected at build time via Vite `define` and respects the active language (`pt-PT` / `en-GB`)
 
 ### PWA
@@ -104,7 +109,8 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | Build | Vite 8 |
 | Routing | React Router v7 |
 | State | Context + useReducer (no external library) |
-| Styles | Tailwind CSS v4 |
+| Styles | Tailwind CSS v4 + semantic design token system |
+| Icons | Lucide React |
 | PWA | `vite-plugin-pwa` + Workbox |
 | Monitoring | Sentry v8 (`@sentry/react`) |
 | Analytics | PostHog `posthog-js` + Vercel Analytics `@vercel/analytics` |
@@ -227,10 +233,9 @@ Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced 
 | Functions | 90% |
 | Branches | 80% |
 
-### E2E — 21 tests (Playwright)
+### E2E — 21 scenarios × 3 browsers = 63 test runs (Playwright)
 
 ```bash
-npm run build
 npm run test:e2e
 ```
 
@@ -241,7 +246,9 @@ Tests run across three browser projects: `Desktop Chrome`, `Mobile Chrome` (Pixe
 | `regular.spec.ts` | Generate with 8 players, validation, history save, detail page |
 | `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
 | `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
-| `history.spec.ts` | History list, empty state, undo delete, reuse players, detail view, back navigation, not-found |
+| `history.spec.ts` | History list, empty state, delete + undo, reuse players, count badge filter, detail view, back link, not-found |
+
+Mobile navigation: tests that navigate to `/history` use a `navigateToHistory()` helper that opens the hamburger drawer on mobile viewports before clicking the link — preserving `localStorage` state via SPA navigation rather than a full page reload.
 
 Screenshots and traces are captured on failure and uploaded as CI artifacts.
 

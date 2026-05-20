@@ -25,7 +25,7 @@ src/
   main.tsx              Entry point — initialises PostHog and Sentry, mounts React
   App.tsx               Router definition (createBrowserRouter + RouterProvider)
   analytics.ts          PostHog wrapper + web vitals reporting
-  index.css             Tailwind base styles
+  index.css             Tailwind base + @theme token layer (design system)
   components/
     generator/          Form inputs (mode selector, player/pair/seeded inputs, etc.)
     history/            History list and individual history entry card
@@ -48,6 +48,26 @@ src/
   utils/
     gameLogic.ts        Pure scheduling algorithms (see Game modes below)
 ```
+
+## Design system
+
+All colours, typography, and surface styles are defined as semantic CSS custom property tokens in `src/index.css` under a Tailwind v4 `@theme` block. Use these token classes everywhere — never hardcode `gray-*` or `blue-*` Tailwind defaults.
+
+| Token class | Meaning |
+|-------------|---------|
+| `bg-canvas` | Page background |
+| `bg-surface` | Card / input background |
+| `bg-surface2` | Elevated surface (hover states, table headers) |
+| `bg-brand` / `text-brand` | Primary action colour |
+| `text-fg` / `text-fg2` / `text-fg3` | Primary / secondary / muted text |
+| `border-border` / `border-bordermd` | Subtle / stronger border |
+| `bg-court1`…`bg-court6` | Court accent palette |
+
+Dark mode is handled by the `.dark` class on `<html>`. Token values swap automatically — no `dark:` prefix needed on token utilities.
+
+Typography: `font-display` (Bricolage Grotesque), `font-body` (Manrope), `font-mono` (JetBrains Mono).
+
+Icons: import from `lucide-react`. Use `className="w-4 h-4 shrink-0"` for nav/button icons.
 
 ## State management
 
@@ -112,7 +132,7 @@ Written with Playwright. Tests run against the built app served by `vite preview
 npm run test:e2e
 ```
 
-Note: use `page.click()` to navigate between in-app routes rather than `page.goto()`, to preserve localStorage state across navigations.
+**Navigation in tests:** use in-app SPA navigation (not `page.goto()`) to preserve `localStorage` across route changes — `page.goto()` triggers `addInitScript`, which clears localStorage. For links that live in the hamburger drawer on mobile, use the `navigateToHistory()` helper pattern (open the drawer first, then click the link).
 
 ## CI/CD
 

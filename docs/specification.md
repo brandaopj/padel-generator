@@ -327,7 +327,7 @@ Sticky header with:
 | ID | Requirement |
 |----|-------------|
 | RNF-04 | Tournament generation must be instantaneous (< 100ms) — pure logic with no I/O |
-| RNF-05 | The gzipped JS bundle must not exceed 200KB |
+| RNF-05 | The gzipped JS bundle must not exceed 300 kB |
 
 ### 5.3 Usability
 
@@ -594,6 +594,7 @@ All interactive elements and output containers use `data-testid`. CSS classes ar
 
 **Configuration:**
 - `context.addInitScript(() => localStorage.clear())` in each `beforeEach` for isolation
+- Tests navigate between routes via SPA navigation (not `page.goto()`) to preserve `localStorage` state; a `navigateToHistory()` helper opens the hamburger drawer on mobile viewports before clicking history links
 - Screenshots on failure, traces on first retry
 - Artifacts published as GitHub Actions artifacts
 
@@ -615,10 +616,11 @@ All interactive elements and output containers use `data-testid`. CSS classes ar
 | Build | Vite | 8 |
 | Routing | React Router | v7 |
 | State | Context + useReducer | (no external library) |
-| Styles | Tailwind CSS | v4 |
+| Styles | Tailwind CSS + semantic token system | v4 |
+| Icons | Lucide React | — |
 | Monitoring | Sentry (`@sentry/react`) | v8 |
 | Unit tests | Vitest + jsdom | 4 |
-| E2E tests | Playwright + Chromium | — |
+| E2E tests | Playwright (Desktop Chrome, Mobile Chrome, Mobile Safari) | — |
 | Reports | Allure | — |
 | CI/CD | GitHub Actions + Vercel | — |
 
@@ -681,11 +683,10 @@ The following requirements are explicitly out of the current scope:
 
 - Authentication or user accounts
 - Backend or remote database
-- Editing or deleting tournaments from history
+- Editing tournaments in history (court names are the only editable field post-generation)
 - Export to PDF, CSV, or other formats
-- Sharing tournaments between devices
+- Sharing tournaments between devices (share copies text to clipboard / Web Share API; no server sync)
 - Recording match results within the application
 - Player management (persistent database)
-- Notifications or real-time features
-- Offline support (PWA / service worker)
-- Internationalisation (the app UI is in Portuguese)
+- Real-time or collaborative features
+- Additional languages beyond Portuguese and English
