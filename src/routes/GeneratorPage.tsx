@@ -92,14 +92,12 @@ export function GeneratorPage() {
   }
 
   function handleCopyPlayers() {
-    let text = ''
-    if (state.mode === 'regular') {
-      text = state.players.join('\n')
-    } else if (state.mode === 'fixed-pairs') {
-      text = state.pairs.map(([a, b]) => `${a} / ${b}`).join('\n')
-    } else {
-      text = [...state.tableA, ...state.tableB].join('\n')
-    }
+    const text =
+      state.mode === 'regular'
+        ? state.players.join('\n')
+        : state.mode === 'fixed-pairs'
+          ? state.pairs.map(([a, b]) => `${a} / ${b}`).join('\n')
+          : [...state.tableA, ...state.tableB].join('\n')
     navigator.clipboard.writeText(text).then(() => {
       showToast('info', t.generator.shortcuts.copyToast, { duration: 2000 })
     })
