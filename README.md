@@ -271,6 +271,16 @@ Set them at: **GitHub → Settings → Secrets and variables → Actions**
 
 ---
 
+## SEO
+
+- `index.html` includes a descriptive `<title>`, `<meta name="description">`, `<meta name="keywords">`, `<meta name="robots" content="index, follow">`, and a `<link rel="canonical">` pointing to the production URL.
+- Open Graph tags (`og:type`, `og:url`, `og:title`, `og:description`, `og:locale`, `og:locale:alternate`, `og:site_name`) enable rich social previews when the link is shared.
+- Twitter Card tags (`twitter:card`, `twitter:title`, `twitter:description`) enable preview cards on X / Twitter.
+- `public/sitemap.xml` lists the homepage with `changefreq: weekly` and `priority: 1.0`.
+- `public/robots.txt` allows all crawlers and points to the sitemap. Google Search Console ownership is verified via a meta tag in `index.html`.
+
+---
+
 ## Analytics
 
 Two analytics tools run in production. Both are no-ops when their configuration is absent, so the app works normally in local development without any setup.

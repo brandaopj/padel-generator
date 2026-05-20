@@ -263,6 +263,7 @@ After generating a tournament, the name of each court must be editable inline in
 | RNF-08 | The CI pipeline must run unit and E2E tests on every push to `main` and on every pull request |
 | RNF-09 | The production deployment (Vercel) must be automatic on every push to `main` |
 | RNF-10 | The application must send usage events to PostHog (when `VITE_POSTHOG_KEY` is configured) and page view / Web Vitals data to Vercel Analytics (when enabled in the Vercel dashboard). Both integrations must be no-ops when their configuration is absent — the app must work normally without them. The following custom PostHog events must be tracked: `tournament_generated` (properties: `mode`, `rounds`, `matches`, `courts`), `mode_selected` (`mode`), `share_clicked` (`source`: `header` / `drawer` / `history` / `detail`), `example_loaded`, `tournament_deleted`, and `language_changed` (`lang`). |
+| RNF-11 | The application must be discoverable by search engines. `index.html` must include a descriptive `<title>`, `<meta name="description">` with relevant keywords, Open Graph tags for social previews (`og:type`, `og:url`, `og:title`, `og:description`, `og:locale`, `og:site_name`), and a `<link rel="canonical">` pointing to the production URL. `public/sitemap.xml` must list the homepage. `public/robots.txt` must allow all crawlers and reference the sitemap. Google Search Console ownership must be verified via a meta tag in `index.html`. |
 
 ---
 
