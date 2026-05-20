@@ -62,7 +62,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Share
 
-- **Share button** in the generator header, on each history entry, and on the tournament detail page
+- **Share button** in the rounds panel header, in the generator header, on each history entry, and on the tournament detail page
 - Uses the native Web Share API on mobile; falls back to clipboard copy on desktop
 - Formats the full schedule as emoji-rich text ready to paste into WhatsApp
 
@@ -77,6 +77,13 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 - Dark mode with `localStorage` persistence; pill toggle with sun/moon icons
 - Print view: form and header hidden, A4 layout (`@page { size: A4; margin: 2cm }`), single-column match cards with score area
+- Build date footer at the bottom of every page — date is injected at build time via Vite `define` and respects the active language (`pt-PT` / `en-GB`)
+
+### PWA
+
+- Installable as a Progressive Web App via `vite-plugin-pwa` (`registerType: 'autoUpdate'`)
+- Workbox precaches all static assets; Dicebear avatar API uses `CacheFirst` (30-day expiry, max 100 entries)
+- Standalone display, `#2563eb` theme colour, SVG icon
 
 ### Support
 
@@ -93,6 +100,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | Routing | React Router v7 |
 | State | Context + useReducer (no external library) |
 | Styles | Tailwind CSS v4 |
+| PWA | `vite-plugin-pwa` + Workbox |
 | Monitoring | Sentry v8 (`@sentry/react`) |
 | Analytics | PostHog `posthog-js` + Vercel Analytics `@vercel/analytics` |
 | Unit tests | Vitest 4 + jsdom |
@@ -136,7 +144,7 @@ src/
     └── TournamentDetailPage.tsx # /history/:id — tournament detail
 tests/
 ├── unit/           # 51 tests (gameLogic, validation, history, shareTournament)
-└── e2e/            # 12 Playwright tests (regular, fixed-pairs, seeded)
+└── e2e/            # 19 Playwright tests (regular, fixed-pairs, seeded, history)
 ```
 
 ---
@@ -222,6 +230,7 @@ npm run test:e2e
 | `regular.spec.ts` | Generate with 8 players, validation, history save, detail page |
 | `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
 | `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
+| `history.spec.ts` | History list, empty state, delete with confirm, cancel delete, detail view, back navigation, not-found |
 
 Screenshots and traces are captured on failure and uploaded as CI artifacts.
 
@@ -246,7 +255,7 @@ push → unit-tests ──┬──→ report-failure (if any failed)
 | `report-failure` | Opens a GitHub issue if any test job fails; comments on the existing issue if already open |
 | `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
 
-Vercel deployment is automatic via Git integration — every push to `main` triggers a new production deploy.
+Vercel deployment is automatic via Git integration — every push to `main` triggers a new production deploy. `vercel.json` explicitly sets `buildCommand` and `outputDirectory` to prevent stale build-cache deployments.
 
 ### Branch protection
 
@@ -274,8 +283,8 @@ Set them at: **GitHub → Settings → Secrets and variables → Actions**
 ## SEO
 
 - `index.html` includes a descriptive `<title>`, `<meta name="description">`, `<meta name="keywords">`, `<meta name="robots" content="index, follow">`, and a `<link rel="canonical">` pointing to the production URL.
-- Open Graph tags (`og:type`, `og:url`, `og:title`, `og:description`, `og:locale`, `og:locale:alternate`, `og:site_name`) enable rich social previews when the link is shared.
-- Twitter Card tags (`twitter:card`, `twitter:title`, `twitter:description`) enable preview cards on X / Twitter.
+- Open Graph tags (`og:type`, `og:url`, `og:title`, `og:description`, `og:locale`, `og:locale:alternate`, `og:site_name`, `og:image`) enable rich social previews when the link is shared. The OG image is `public/og-image.svg` (1200×630).
+- Twitter Card tags (`twitter:card`, `twitter:title`, `twitter:description`, `twitter:image`) enable preview cards on X / Twitter.
 - `public/sitemap.xml` lists the homepage with `changefreq: weekly` and `priority: 1.0`.
 - `public/robots.txt` allows all crawlers and points to the sitemap. Google Search Console ownership is verified via a meta tag in `index.html`.
 
@@ -309,7 +318,7 @@ Tracks custom usage events for product insights. Initialised in `src/main.tsx` v
 |-------|------------|
 | `tournament_generated` | `mode`, `rounds`, `matches`, `courts` |
 | `mode_selected` | `mode` |
-| `share_clicked` | `source`: `header` / `drawer` / `history` / `detail` |
+| `share_clicked` | `source`: `rounds-panel` / `header` / `drawer` / `history` / `detail` |
 | `example_loaded` | — |
 | `tournament_deleted` | — |
 | `language_changed` | `lang` |
