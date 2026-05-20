@@ -24,10 +24,10 @@
       --surface-2:   #0C1A2C;
       --border:      rgba(255,255,255,0.07);
       --border-mid:  rgba(255,255,255,0.13);
-      --primary:     #00FF87;
-      --primary-dim: rgba(0,255,135,0.10);
-      --primary-glow:rgba(0,255,135,0.22);
-      --primary-on:  #030F08;
+      --primary:     #4A9EFF;
+      --primary-dim: rgba(74,158,255,0.10);
+      --primary-glow:rgba(74,158,255,0.22);
+      --primary-on:  #FFFFFF;
       --text:        #DCE8F5;
       --text-2:      #5A85A8;
       --text-3:      #2B4460;
@@ -41,9 +41,9 @@
       --surface-2:   #E8EFF6;
       --border:      rgba(0,0,0,0.07);
       --border-mid:  rgba(0,0,0,0.13);
-      --primary:     #00965A;
-      --primary-dim: rgba(0,150,90,0.09);
-      --primary-glow:rgba(0,150,90,0.18);
+      --primary:     #2563EB;
+      --primary-dim: rgba(37,99,235,0.09);
+      --primary-glow:rgba(37,99,235,0.18);
       --primary-on:  #FFFFFF;
       --text:        #050D18;
       --text-2:      #4A6E8A;
@@ -55,7 +55,7 @@
     /* ─────────────────────────────────────
        CARD ACCENT SYSTEM
     ───────────────────────────────────── */
-    .c1 { --ca:#00FF87; --cb:rgba(0,255,135,.18); --cg:rgba(0,255,135,.07); }
+    .c1 { --ca:#4A9EFF; --cb:rgba(74,158,255,.18); --cg:rgba(74,158,255,.07); }
     .c2 { --ca:#FF6B4A; --cb:rgba(255,107,74,.18);--cg:rgba(255,107,74,.07);}
     .c3 { --ca:#5B9CF6; --cb:rgba(91,156,246,.18);--cg:rgba(91,156,246,.07);}
     .c4 { --ca:#B975F5; --cb:rgba(185,117,245,.18);--cg:rgba(185,117,245,.07);}
@@ -66,7 +66,7 @@
        AVATAR PALETTE
     ───────────────────────────────────── */
     .av { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:10px;letter-spacing:.03em;flex-shrink:0; }
-    .av-1{background:rgba(0,255,135,.14);color:#00FF87;}
+    .av-1{background:rgba(74,158,255,.14);color:#4A9EFF;}
     .av-2{background:rgba(255,107,74,.14);color:#FF8566;}
     .av-3{background:rgba(91,156,246,.14);color:#7AAEFF;}
     .av-4{background:rgba(185,117,245,.14);color:#CC8FFF;}
@@ -75,7 +75,7 @@
     .av-7{background:rgba(255,80,128,.14);color:#FF6EA0;}
     .av-8{background:rgba(255,175,50,.14);color:#FFB838;}
 
-    [data-theme="light"] .av-1{background:#CCFCE8;color:#00774A;}
+    [data-theme="light"] .av-1{background:#DDEEFF;color:#1A4ECC;}
     [data-theme="light"] .av-2{background:#FFE5DE;color:#C0370E;}
     [data-theme="light"] .av-3{background:#DDEAFF;color:#2055CC;}
     [data-theme="light"] .av-4{background:#EEE0FF;color:#7B30CC;}
@@ -111,8 +111,8 @@
       pointer-events: none;
       z-index: 0;
       background:
-        radial-gradient(ellipse 80% 55% at 20% -5%,  rgba(0,255,135,.06)  0%, transparent 65%),
-        radial-gradient(ellipse 60% 50% at 90% 105%, rgba(91,156,246,.05) 0%, transparent 60%);
+        radial-gradient(ellipse 80% 55% at 20% -5%,  rgba(74,158,255,.07) 0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 90% 105%, rgba(37,99,235,.05)  0%, transparent 60%);
       transition: opacity .3s;
     }
 
