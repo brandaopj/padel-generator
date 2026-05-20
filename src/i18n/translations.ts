@@ -29,6 +29,14 @@ export const translations = {
       leaveGuardDescription: 'O torneio atual tem alterações não geradas. Se sair agora, essas alterações serão perdidas.',
       leaveGuardConfirm: 'Sair',
       leaveGuardCancel: 'Ficar',
+      shortcuts: {
+        title: 'ATALHOS',
+        exportImage: 'Exportar como imagem',
+        shuffleRounds: 'Apenas baralhar rondas',
+        copyPlayers: 'Copiar lista de jogadores',
+        shuffleToast: 'Rondas baralhadas',
+        copyToast: 'Jogadores copiados',
+      },
     },
     modes: {
       regular: {
@@ -81,6 +89,8 @@ export const translations = {
       round: (n: number) => `Ronda ${n}`,
       courts: (n: number) => `${n} campo(s)`,
       pairs: (n: number) => `${n} duplas`,
+      matchCount: (n: number) => `${n} JOGO${n !== 1 ? 'S' : ''}`,
+      roundsCount: (n: number) => `${n} ronda${n !== 1 ? 's' : ''}`,
       unequalWarning: (n: number) => `Tabelas de tamanhos diferentes — usados ${n} pares.`,
       courtName: (n: number) => `Campo ${n}`,
       editCourtName: (name: string) => `Editar nome: ${name}`,
@@ -100,6 +110,7 @@ export const translations = {
       delete: 'Apagar',
       courts: (n: number) => `${n} campo(s)`,
       pairs: (n: number) => `${n} duplas`,
+      players: (n: number) => `${n} jogador${n !== 1 ? 'es' : ''}`,
       autoTitle: {
         regular: (n: number) => `Torneio Regular — ${n} duplas`,
         fixedPairs: (n: number) => `Duplas Fixas — ${n} pares`,
@@ -180,6 +191,14 @@ export const translations = {
       leaveGuardDescription: 'The current tournament has unsaved changes. If you leave now, those changes will be lost.',
       leaveGuardConfirm: 'Leave',
       leaveGuardCancel: 'Stay',
+      shortcuts: {
+        title: 'SHORTCUTS',
+        exportImage: 'Export as image',
+        shuffleRounds: 'Shuffle rounds only',
+        copyPlayers: 'Copy player list',
+        shuffleToast: 'Rounds shuffled',
+        copyToast: 'Players copied',
+      },
     },
     modes: {
       regular: {
@@ -232,6 +251,8 @@ export const translations = {
       round: (n: number) => `Round ${n}`,
       courts: (n: number) => `${n} court(s)`,
       pairs: (n: number) => `${n} pairs`,
+      matchCount: (n: number) => `${n} MATCH${n !== 1 ? 'ES' : ''}`,
+      roundsCount: (n: number) => `${n} round${n !== 1 ? 's' : ''}`,
       unequalWarning: (n: number) => `Unequal table sizes — using ${n} pairs.`,
       courtName: (n: number) => `Court ${n}`,
       editCourtName: (name: string) => `Edit name: ${name}`,
@@ -251,6 +272,7 @@ export const translations = {
       delete: 'Delete',
       courts: (n: number) => `${n} court(s)`,
       pairs: (n: number) => `${n} pairs`,
+      players: (n: number) => `${n} player${n !== 1 ? 's' : ''}`,
       autoTitle: {
         regular: (n: number) => `Regular Tournament — ${n} pairs`,
         fixedPairs: (n: number) => `Fixed Pairs — ${n} pairs`,

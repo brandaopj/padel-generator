@@ -70,6 +70,53 @@ export function GeneratorPage() {
     showToast('info', t.toast.courtUpdated, { duration: 2000 })
   }
 
+  function handleScoreChange(roundIdx: number, matchIdx: number, scores: [number | null, number | null]) {
+    if (!state.generated) return
+    const rounds = state.generated.rounds.map((round, ri) =>
+      ri !== roundIdx ? round : {
+        ...round,
+        matches: round.matches.map((match, mi) =>
+          mi !== matchIdx ? match : { ...match, scores }
+        ),
+      }
+    )
+    const updated = { ...state.generated, rounds }
+    dispatch({ type: 'SET_GENERATED', payload: updated })
+    update(updated)
+  }
+
+  function handleShuffleRounds() {
+    if (errors.length > 0 || isGenerating) return
+    handleGenerate()
+    showToast('info', t.generator.shortcuts.shuffleToast, { duration: 2000 })
+  }
+
+  function handleCopyPlayers() {
+    let text = ''
+    if (state.mode === 'regular') {
+      text = state.players.join('\n')
+    } else if (state.mode === 'fixed-pairs') {
+      text = state.pairs.map(([a, b]) => `${a} / ${b}`).join('\n')
+    } else {
+      text = [...state.tableA, ...state.tableB].join('\n')
+    }
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('info', t.generator.shortcuts.copyToast, { duration: 2000 })
+    })
+  }
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (!e.metaKey && !e.ctrlKey) return
+      if (!e.shiftKey) return
+      if (e.key === 'E' || e.key === 'e') { e.preventDefault(); window.print() }
+      if (e.key === 'R' || e.key === 'r') { e.preventDefault(); handleShuffleRounds() }
+      if (e.key === 'C' || e.key === 'c') { e.preventDefault(); handleCopyPlayers() }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  })
+
   function handleLoadExample() {
     dispatch({ type: 'SET_MODE', payload: 'regular' })
     dispatch({ type: 'SET_PLAYERS', payload: EXAMPLE_PLAYERS })
@@ -250,6 +297,36 @@ export function GeneratorPage() {
           <div className={`sticky z-[15] -mx-4 px-4 pb-2 bg-canvas md:static md:mx-0 md:px-0 md:pb-0 md:bg-transparent ${state.generated ? 'bottom-[60px]' : 'bottom-0'}`}>
             {generateButton}
           </div>
+
+          {/* ATALHOS — desktop only */}
+          {state.generated && (
+            <div className="hidden md:block pt-1 space-y-1">
+              <p className="text-[10px] font-bold tracking-widest uppercase text-fg3 mb-2 px-1">
+                {t.generator.shortcuts.title}
+              </p>
+              {[
+                { label: t.generator.shortcuts.exportImage, keys: ['⌘', '⇧', 'E'], action: () => window.print() },
+                { label: t.generator.shortcuts.shuffleRounds, keys: ['⌘', '⇧', 'R'], action: handleShuffleRounds },
+                { label: t.generator.shortcuts.copyPlayers, keys: ['⌘', '⇧', 'C'], action: handleCopyPlayers },
+              ].map(({ label, keys, action }) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={action}
+                  className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-sm text-fg2 hover:bg-surface2 hover:text-fg transition-colors text-left"
+                >
+                  <span>{label}</span>
+                  <span className="flex items-center gap-0.5 shrink-0">
+                    {keys.map(k => (
+                      <kbd key={k} className="inline-flex items-center justify-center min-w-[20px] h-5 px-1 rounded bg-surface2 border border-border text-[10px] font-mono text-fg3">
+                        {k}
+                      </kbd>
+                    ))}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
         </aside>
 
         {/* Rounds panel — hidden on mobile when viewing config tab */}
@@ -258,7 +335,7 @@ export function GeneratorPage() {
           className={`min-w-0 ${!state.generated || mobileTab === 'config' ? 'hidden md:block' : 'block'}`}
         >
           {state.generated
-            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} showShare />
+            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} onScoreChange={handleScoreChange} showShare />
             : <EmptyState onLoadExample={handleLoadExample} />
           }
         </div>

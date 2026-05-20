@@ -7,6 +7,7 @@ export type Match = {
   pair1: Pair
   pair2: Pair
   court: number
+  scores?: [number | null, number | null]
 }
 
 export type Round = {

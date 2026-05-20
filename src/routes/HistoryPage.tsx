@@ -61,42 +61,32 @@ export function HistoryPage() {
     { value: 'seeded', label: t.modes.seeded.label },
   ]
 
-  const selectClass = 'w-full sm:w-auto rounded-md border border-border bg-surface text-fg2 text-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand'
+  const selectClass = 'rounded-md border border-border bg-surface text-fg2 text-sm px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-brand'
 
   return (
     <div className="max-w-2xl mx-auto p-4 lg:p-8">
-      <div className="flex items-center gap-3 mb-6">
+      {/* Header row with filters inline */}
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
         <h1 className="text-2xl font-bold text-fg font-display">{t.history.title}</h1>
         {tournaments.length > 0 && (
           <span className="min-w-[24px] h-6 px-1.5 rounded-full bg-brand/10 text-brand text-xs font-bold flex items-center justify-center leading-none">
             {filtered.length}
           </span>
         )}
+        {tournaments.length > 0 && (
+          <div className="ml-auto flex gap-2">
+            <select value={sortOrder} onChange={e => setSortOrder(e.target.value as SortOrder)} aria-label={t.history.sortNewest} className={selectClass}>
+              <option value="newest">{t.history.sortNewest}</option>
+              <option value="oldest">{t.history.sortOldest}</option>
+            </select>
+            <select value={modeFilter} onChange={e => setModeFilter(e.target.value as ModeFilter)} aria-label={t.history.filterAll} className={selectClass}>
+              {modeOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
-
-      {tournaments.length > 0 && (
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
-          <select
-            value={sortOrder}
-            onChange={e => setSortOrder(e.target.value as SortOrder)}
-            aria-label={t.history.sortNewest}
-            className={selectClass}
-          >
-            <option value="newest">{t.history.sortNewest}</option>
-            <option value="oldest">{t.history.sortOldest}</option>
-          </select>
-          <select
-            value={modeFilter}
-            onChange={e => setModeFilter(e.target.value as ModeFilter)}
-            aria-label={t.history.filterAll}
-            className={selectClass}
-          >
-            {modeOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-      )}
 
       {filtered.length === 0 && tournaments.length > 0 ? (
         <p className="text-sm text-fg3 py-12 text-center">{t.history.noResults}</p>

@@ -84,10 +84,11 @@ function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }
   )
 }
 
-function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) => void }) {
+function CourtLabel({ name, court, onEdit }: { name: string; court: number; onEdit?: (name: string) => void }) {
   const { t } = useLanguage()
   const [editing, setEditing] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const courtIndex = (court - 1) % 6 + 1
 
   if (editing) {
     return (
@@ -112,13 +113,17 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
 
   if (!onEdit) {
     return (
-      <div className="text-xs font-medium text-fg2 mb-3 print:mb-2">{name}</div>
+      <div className="flex items-center gap-1.5 mb-3 print:mb-2">
+        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `var(--color-court${courtIndex})` }} />
+        <span className="text-xs font-semibold tracking-widest uppercase text-fg2">{name}</span>
+      </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-1 mb-3 print:mb-2">
-      <span className="text-xs font-medium text-fg2">{name}</span>
+    <div className="flex items-center gap-1.5 mb-3 print:mb-2">
+      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `var(--color-court${courtIndex})` }} />
+      <span className="text-xs font-semibold tracking-widest uppercase text-fg2">{name}</span>
       <button
         type="button"
         onClick={() => setEditing(true)}
@@ -138,18 +143,30 @@ type Props = {
   match: Match
   courtName: string
   onEditCourtName?: (name: string) => void
+  onScoreChange?: (scores: [number | null, number | null]) => void
 }
 
-export function MatchCard({ match, courtName, onEditCourtName }: Props) {
+export function MatchCard({ match, courtName, onEditCourtName, onScoreChange }: Props) {
   const { t } = useLanguage()
   const accentClass = COURT_ACCENTS[(match.court - 1) % COURT_ACCENTS.length]
+
+  const [scores, setScores] = useState<[number | null, number | null]>(
+    match.scores ?? [null, null]
+  )
+
+  function handleScore(idx: 0 | 1, raw: string) {
+    const val = raw === '' ? null : Math.max(0, parseInt(raw, 10))
+    const next: [number | null, number | null] = idx === 0 ? [val, scores[1]] : [scores[0], val]
+    setScores(next)
+    onScoreChange?.(next)
+  }
 
   return (
     <div
       data-testid="match-card"
       className={`flex flex-col bg-surface border border-border border-t-4 ${accentClass} rounded-xl p-3 sm:p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
-      <CourtLabel name={courtName} onEdit={onEditCourtName} />
+      <CourtLabel name={courtName} court={match.court} onEdit={onEditCourtName} />
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full pb-5 print:pb-3">
         <PairColumn pair={match.pair1} reverse />
@@ -161,22 +178,29 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
         <PairColumn pair={match.pair2} />
       </div>
 
-      {/* Score boxes — dashed, one per pair, for hand-written scores */}
-      <div className="mt-auto pt-4 border-t border-border print:border-gray-300 print:pt-3 print:mt-3">
-        <div className="grid grid-cols-[1fr_auto_1fr] gap-3 print:gap-1 items-center">
-          <div className="flex justify-center">
-            <div
-              aria-label={t.rounds.scoreTeam1}
-              className="w-12 h-10 border-2 border-dashed border-bordermd print:border-gray-400 print:w-10 print:h-7 rounded"
-            />
-          </div>
-          <span className="text-sm font-medium text-fg3 px-1 text-center">–</span>
-          <div className="flex justify-center">
-            <div
-              aria-label={t.rounds.scoreTeam2}
-              className="w-12 h-10 border-2 border-dashed border-bordermd print:border-gray-400 print:w-10 print:h-7 rounded"
-            />
-          </div>
+      <div className="mt-auto pt-3 border-t border-border">
+        <div className="grid grid-cols-[1fr_auto_1fr] gap-2 items-center">
+          <input
+            type="number"
+            min="0"
+            max="99"
+            value={scores[0] ?? ''}
+            onChange={e => handleScore(0, e.target.value)}
+            aria-label={t.rounds.scoreTeam1}
+            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-dashed print:border-bordermd print:bg-transparent"
+            placeholder="–"
+          />
+          <span className="text-sm font-medium text-fg3 text-center select-none">–</span>
+          <input
+            type="number"
+            min="0"
+            max="99"
+            value={scores[1] ?? ''}
+            onChange={e => handleScore(1, e.target.value)}
+            aria-label={t.rounds.scoreTeam2}
+            className="w-full text-center text-lg font-bold bg-surface2 border border-border rounded-lg py-2 text-fg focus:outline-none focus:ring-2 focus:ring-brand print:border-dashed print:border-bordermd print:bg-transparent"
+            placeholder="–"
+          />
         </div>
       </div>
     </div>
