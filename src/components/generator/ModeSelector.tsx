@@ -11,7 +11,7 @@ export function ModeSelector({ value, onChange }: Props) {
   return (
     <div>
       <div
-        className="flex rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+        className="flex rounded-lg border border-border overflow-hidden"
         role="tablist"
       >
         {MODES.map(mode => (
@@ -23,8 +23,8 @@ export function ModeSelector({ value, onChange }: Props) {
             onClick={() => onChange(mode.value)}
             className={`flex-1 min-h-[44px] py-2 px-2 text-xs sm:text-sm font-medium transition-colors ${
               value === mode.value
-                ? 'bg-blue-600 text-white'
-                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                ? 'bg-brand text-brand-on'
+                : 'bg-surface text-fg2 hover:bg-surface2'
             }`}
           >
             <span className="flex flex-col items-center gap-1">
@@ -45,7 +45,7 @@ export function ModeSelector({ value, onChange }: Props) {
         ))}
       </div>
       {selected && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 leading-snug">
+        <p className="text-sm text-fg3 mt-2 leading-snug">
           {t.modes[selected.value].description}
         </p>
       )}

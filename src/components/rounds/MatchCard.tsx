@@ -14,12 +14,12 @@ const AVATAR_PALETTE = [
 ]
 
 const COURT_ACCENTS = [
-  'border-t-blue-500',
-  'border-t-emerald-500',
-  'border-t-violet-500',
-  'border-t-amber-500',
-  'border-t-rose-500',
-  'border-t-cyan-500',
+  '[border-top-color:var(--color-court1)]',
+  '[border-top-color:var(--color-court2)]',
+  '[border-top-color:var(--color-court3)]',
+  '[border-top-color:var(--color-court4)]',
+  '[border-top-color:var(--color-court5)]',
+  '[border-top-color:var(--color-court6)]',
 ]
 
 function avatarPalette(name: string) {
@@ -69,7 +69,7 @@ function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }
     <div className="flex flex-col gap-2 sm:gap-3 print:gap-2 min-w-0">
       {pair.map((name, i) => {
         const nameEl = (
-          <span className={`flex-1 min-w-0 break-words text-sm font-medium leading-snug text-gray-800 dark:text-gray-100 print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
+          <span className={`flex-1 min-w-0 break-words text-sm font-medium leading-snug text-fg print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
             {name}
           </span>
         )
@@ -96,7 +96,7 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
         defaultValue={name}
         autoFocus
         aria-label={t.rounds.courtNameLabel}
-        className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-b border-blue-500 outline-none w-full max-w-[160px] mb-2"
+        className="text-xs font-medium text-fg2 bg-transparent border-b border-brand outline-none w-full max-w-[160px] mb-2"
         onBlur={e => {
           const val = e.target.value.trim()
           onEdit?.(val || name)
@@ -112,19 +112,19 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
 
   if (!onEdit) {
     return (
-      <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-3 print:mb-2">{name}</div>
+      <div className="text-xs font-medium text-fg2 mb-3 print:mb-2">{name}</div>
     )
   }
 
   return (
     <div className="flex items-center gap-1 mb-3 print:mb-2">
-      <span className="text-xs font-medium text-gray-600 dark:text-gray-400">{name}</span>
+      <span className="text-xs font-medium text-fg2">{name}</span>
       <button
         type="button"
         onClick={() => setEditing(true)}
         aria-label={t.rounds.editCourtName(name)}
         title={t.rounds.editCourtTitle}
-        className="print:hidden text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+        className="print:hidden text-fg3 hover:text-brand transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
       >
         <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
@@ -147,14 +147,14 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-3 sm:p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
+      className={`flex flex-col bg-surface border border-border border-t-4 ${accentClass} rounded-xl p-3 sm:p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full pb-5 print:pb-3">
         <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
-          <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-xs font-black text-gray-400 dark:text-gray-500 select-none print:w-6 print:h-6 print:text-[10px]">
+          <span className="w-8 h-8 rounded-full bg-surface2 flex items-center justify-center text-xs font-black text-fg3 select-none print:w-6 print:h-6 print:text-[10px]">
             VS
           </span>
         </div>
@@ -162,19 +162,19 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
       </div>
 
       {/* Score boxes — dashed, one per pair, for hand-written scores */}
-      <div className="mt-auto pt-4 border-t border-gray-100 dark:border-gray-700 print:border-gray-300 print:pt-3 print:mt-3">
+      <div className="mt-auto pt-4 border-t border-border print:border-gray-300 print:pt-3 print:mt-3">
         <div className="grid grid-cols-[1fr_auto_1fr] gap-3 print:gap-1 items-center">
           <div className="flex justify-center">
             <div
               aria-label={t.rounds.scoreTeam1}
-              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
+              className="w-12 h-10 border-2 border-dashed border-bordermd print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>
-          <span className="text-sm font-medium text-gray-400 dark:text-gray-500 px-1 text-center">–</span>
+          <span className="text-sm font-medium text-fg3 px-1 text-center">–</span>
           <div className="flex justify-center">
             <div
               aria-label={t.rounds.scoreTeam2}
-              className="w-12 h-10 border-2 border-dashed border-gray-300 dark:border-gray-600 print:border-gray-400 print:w-10 print:h-7 rounded"
+              className="w-12 h-10 border-2 border-dashed border-bordermd print:border-gray-400 print:w-10 print:h-7 rounded"
             />
           </div>
         </div>

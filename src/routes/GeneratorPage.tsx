@@ -119,7 +119,7 @@ export function GeneratorPage() {
             <div>
               <label
                 htmlFor="club-name"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                className="block text-sm font-medium text-fg2 mb-1"
               >
                 {t.generator.nameLabel}
               </label>
@@ -130,7 +130,7 @@ export function GeneratorPage() {
                 value={state.clubName}
                 onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
                 placeholder={t.generator.namePlaceholder}
-                className="w-full rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
               />
             </div>
 
@@ -164,7 +164,7 @@ export function GeneratorPage() {
             )}
 
             {hasInputs && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-fg3">
                 {t.generator.courtsAuto(state.courts)}
               </p>
             )}
@@ -172,11 +172,11 @@ export function GeneratorPage() {
             {hasInputs && totalPossibleRounds > 1 && (
               <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                  <label htmlFor="max-rounds" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <label htmlFor="max-rounds" className="text-sm font-medium text-fg2">
                     {t.generator.maxRoundsLabel}
                   </label>
-                  <span className="text-sm text-gray-500 dark:text-gray-400 tabular-nums">
-                    <span className="font-medium text-gray-700 dark:text-gray-300">{state.maxRounds ?? totalPossibleRounds}</span>
+                  <span className="text-sm text-fg3 tabular-nums">
+                    <span className="font-medium text-fg2">{state.maxRounds ?? totalPossibleRounds}</span>
                     {' '}
                     {state.maxRounds == null || state.maxRounds >= totalPossibleRounds
                       ? t.generator.allRounds
@@ -193,7 +193,7 @@ export function GeneratorPage() {
                     const v = parseInt(e.target.value, 10)
                     dispatch({ type: 'SET_MAX_ROUNDS', payload: v >= totalPossibleRounds ? null : v })
                   }}
-                  className="w-full accent-blue-600"
+                  className="w-full accent-brand"
                 />
               </div>
             )}
@@ -208,12 +208,12 @@ export function GeneratorPage() {
             )}
 
             {/* Generate button — sticky at bottom on mobile/tablet */}
-            <div className="sticky bottom-16 lg:static z-[15] lg:z-auto -mx-4 lg:mx-0 px-4 lg:px-0 pb-2 lg:pb-0 bg-gray-50 dark:bg-gray-900 lg:bg-transparent">
+            <div className="sticky bottom-16 lg:static z-[15] lg:z-auto -mx-4 lg:mx-0 px-4 lg:px-0 pb-2 lg:pb-0 bg-canvas lg:bg-transparent">
               <button
                 data-testid="generate-button"
                 onClick={handleGenerate}
                 disabled={errors.length > 0 || isGenerating}
-                className="w-full py-3 px-6 bg-blue-600 text-white rounded-lg text-sm font-semibold tracking-wide hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                className="w-full py-3 px-6 bg-brand text-brand-on rounded-lg text-sm font-semibold tracking-wide hover:bg-brand/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
               >
                 {isGenerating ? (
                   <>
@@ -260,23 +260,23 @@ export function GeneratorPage() {
       )}
 
       {/* Fixed bottom nav bar — mobile and tablet only */}
-      <div className="fixed bottom-0 left-0 right-0 z-10 lg:hidden print:hidden border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm">
+      <div className="fixed bottom-0 left-0 right-0 z-10 lg:hidden print:hidden border-t border-border bg-surface/95 backdrop-blur-sm">
         <div className="flex">
           <button
             type="button"
             onClick={() => formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-            className="flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium text-fg2 hover:text-brand transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
             </svg>
             {t.generator.configTab}
           </button>
-          <div className="w-px bg-gray-200 dark:bg-gray-700" aria-hidden="true" />
+          <div className="w-px bg-border" aria-hidden="true" />
           <button
             type="button"
             onClick={() => roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-            className="flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex-1 flex flex-col items-center gap-1 py-3 text-xs font-medium text-fg2 hover:text-brand transition-colors"
           >
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path fillRule="evenodd" d="M10 1a.75.75 0 01.75.75v.5h4.5a.75.75 0 010 1.5h-.5v1.5a5.25 5.25 0 01-4 5.101V12h1.25a.75.75 0 010 1.5H8A.75.75 0 018 12h1.25v-1.649A5.25 5.25 0 015.25 5.25V3.75h-.5a.75.75 0 010-1.5h4.5v-.5A.75.75 0 0110 1zM6.75 3.75v1.5a3.75 3.75 0 007.5 0v-1.5h-7.5zM7 14.25a.75.75 0 000 1.5h6a.75.75 0 000-1.5H7z" clipRule="evenodd" />

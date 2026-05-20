@@ -1,5 +1,52 @@
 @import "tailwindcss";
 
+/* ─── Design Tokens ─────────────────────────────────────────────────────────
+   Semantic CSS variables used by all components. Tailwind v4 picks these up
+   via @theme so they become utility classes (bg-canvas, text-brand, etc.).
+   Dark-mode overrides live in the .dark block — no dark: prefix needed for
+   token-based colours since the variable value changes automatically.
+───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body:    'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Colours — light mode defaults */
+  --color-canvas:   #EEF3F8;   /* page background   */
+  --color-surface:  #FFFFFF;   /* card / input bg    */
+  --color-surface2: #E8EFF6;   /* elevated surface   */
+  --color-brand:    #2563EB;   /* primary action     */
+  --color-brand-on: #FFFFFF;   /* text on brand bg   */
+  --color-fg:       #050D18;   /* primary text       */
+  --color-fg2:      #4A6E8A;   /* secondary text     */
+  --color-fg3:      #9BAFC0;   /* muted text         */
+  --color-border:   #D4DCE6;   /* subtle border      */
+  --color-bordermd: #B0BECF;   /* stronger border    */
+
+  /* Court accent palette (match cards) */
+  --color-court1:   #4A9EFF;
+  --color-court2:   #FF6B4A;
+  --color-court3:   #5B9CF6;
+  --color-court4:   #B975F5;
+  --color-court5:   #F5C344;
+  --color-court6:   #3DE8E0;
+}
+
+/* Dark-mode overrides — variables change, utilities update automatically */
+.dark {
+  --color-canvas:   #040B14;
+  --color-surface:  #071220;
+  --color-surface2: #0C1A2C;
+  --color-brand:    #4A9EFF;
+  --color-brand-on: #FFFFFF;
+  --color-fg:       #DCE8F5;
+  --color-fg2:      #5A85A8;
+  --color-fg3:      #2B4460;
+  --color-border:   #111E2E;
+  --color-bordermd: #1A2D42;
+}
+
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }

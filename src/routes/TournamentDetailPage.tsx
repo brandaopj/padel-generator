@@ -15,7 +15,7 @@ export function TournamentDetailPage() {
   if (!tournament) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p data-testid="tournament-not-found" className="text-gray-500 dark:text-gray-400">
+        <p data-testid="tournament-not-found" className="text-fg3">
           {t.history.notFound}
         </p>
       </div>
@@ -27,7 +27,7 @@ export function TournamentDetailPage() {
       <div className="flex items-center justify-between mb-6 print:hidden">
         <Link
           to="/history"
-          className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+          className="text-sm text-brand hover:text-brand/80 hover:underline"
         >
           {t.history.back}
         </Link>

@@ -20,7 +20,7 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false }: 
     <div data-testid="rounds-panel" className="space-y-12 print:space-y-4 animate-fade-in-up">
       <div className="print:pt-1">
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 print:text-lg print:mb-0">
+          <h2 className="text-xl font-bold text-fg font-display print:text-lg print:mb-0">
             {tournament.clubName || t.rounds.untitled}
           </h2>
           {showShare && (
@@ -29,7 +29,7 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false }: 
             </div>
           )}
         </div>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
+        <p className="text-sm text-fg2 mt-0.5">
           {new Date(tournament.date).toLocaleDateString(dateLocale)}
           <span className="print:hidden"> · {t.rounds.courts(tournament.courts)} · {t.rounds.pairs(tournament.pairs.length)}</span>
         </p>
