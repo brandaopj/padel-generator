@@ -109,7 +109,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | Monitoring | Sentry v8 (`@sentry/react`) |
 | Analytics | PostHog `posthog-js` + Vercel Analytics `@vercel/analytics` |
 | Unit tests | Vitest 4 + jsdom |
-| E2E tests | Playwright + Chromium |
+| E2E tests | Playwright (Desktop Chrome, Pixel 5, iPhone 12) |
 | Test reports | Allure (unit + e2e) |
 | CI/CD | GitHub Actions → Vercel (deploy) + GitHub Pages (Allure Report) |
 
@@ -140,16 +140,17 @@ src/
 │   │                       # ValidationBanner, EmptyState
 │   ├── rounds/             # RoundsPanel, RoundCard, MatchCard
 │   ├── history/            # HistoryList, HistoryEntry
-│   └── ui/                 # ErrorBoundary, DarkModeToggle, PrintButton,
-│                           # ShareButton, ClearButton, ConfirmModal,
-│                           # HowItWorksModal, KofiButton
+│   ├── ui/                 # ErrorBoundary, DarkModeToggle, PrintButton,
+│   │                       # ShareButton, ClearButton, ConfirmModal,
+│   │                       # HowItWorksModal, KofiButton
+│   └── __tests__/          # Component unit tests (PlayerInput, ConfirmModal, Toast)
 └── routes/
     ├── GeneratorPage.tsx        # / — form + rounds panel
     ├── HistoryPage.tsx          # /history — saved tournament list
     └── TournamentDetailPage.tsx # /history/:id — tournament detail
 tests/
-├── unit/           # 51 tests (gameLogic, validation, history, shareTournament)
-└── e2e/            # 19 Playwright tests (regular, fixed-pairs, seeded, history)
+├── unit/           # utility tests (gameLogic, validation, history, shareTournament)
+└── e2e/            # Playwright tests (regular, fixed-pairs, seeded, history)
 ```
 
 ---
@@ -196,18 +197,21 @@ npm test                # Unit + E2E
 
 ## Tests
 
-### Unit — 51 tests
+### Unit — 83 tests
 
 ```bash
 npm run test:unit
 ```
 
-Cover pure functions in `src/utils/` and the `useHistory` module:
+Cover pure functions in `src/utils/`, the `useHistory` module, and React components in `src/components/__tests__/`:
 
 - `gameLogic`: shuffle, makePairs, makeSeededPairs, roundRobin, distribute, generateTournament, generateId
 - `validation`: all modes, error and warning cases
 - `history`: getAll, save, getById, corrupted data handling
 - `shareTournament`: formatTournamentText, Web Share API path, clipboard fallback, abort and error branches
+- `PlayerInput`: clear button visibility, confirmation modal, onChange callback
+- `ConfirmModal`: rendering, confirm/cancel callbacks, portal behaviour
+- `Toast`: variants (success, error, info), accessibility roles, dismiss and action buttons
 
 ### Coverage
 
@@ -223,12 +227,14 @@ Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced 
 | Functions | 90% |
 | Branches | 80% |
 
-### E2E — 15 tests (Playwright + Chromium)
+### E2E — 21 tests (Playwright)
 
 ```bash
 npm run build
 npm run test:e2e
 ```
+
+Tests run across three browser projects: `Desktop Chrome`, `Mobile Chrome` (Pixel 5), and `Mobile Safari` (iPhone 12).
 
 | File | Scenarios |
 |------|-----------|
@@ -246,17 +252,18 @@ Screenshots and traces are captured on failure and uploaded as CI artifacts.
 The GitHub Actions pipeline runs on every push to `main`:
 
 ```
-push → unit-tests ──┬──→ deploy (Vercel, push to main only)
-       e2e-tests ───┘──→ report-failure (if any failed)
-                    └──→ resolve-failure (if all passed)
-                    └──→ publish-report (GitHub Pages)
+push → lint ────────┬──→ unit-tests ──┬──→ deploy (Vercel, push to main only)
+                    └──→ e2e-tests ───┘──→ report-failure (if any failed)
+                                        └──→ resolve-failure (if all passed)
+                                        └──→ publish-report (GitHub Pages)
 ```
 
 | Job | What it does |
 |-----|--------------|
+| `lint` | `npm run lint` — gates all downstream jobs |
 | `unit-tests` | Vitest with coverage thresholds + Allure and coverage artifacts |
-| `e2e-tests` | Build → preview server → Playwright → Allure and playwright-report artifacts |
-| `deploy` | Runs `npx vercel --prod` after both test jobs pass (push to `main` only) |
+| `e2e-tests` | Build → bundle size check (300 kB gzip limit) → preview server → Playwright (Desktop Chrome, Pixel 5, iPhone 12) → Allure and playwright-report artifacts |
+| `deploy` | Runs `npx vercel --prod` after lint and both test jobs pass (push to `main` only) |
 | `publish-report` | Merges both Allure result sets → deploys to GitHub Pages (push to `main` only) |
 | `report-failure` | Opens a GitHub issue if any test job fails; comments on the existing issue if already open |
 | `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
@@ -265,7 +272,7 @@ Vercel's GitHub auto-deploy is disabled (`"github": { "enabled": false }` in `ve
 
 ### Branch protection
 
-The `main` branch requires `unit-tests` and `e2e-tests` to pass before any merge. Direct pushes to `main` are blocked.
+The `main` branch requires `lint`, `unit-tests`, and `e2e-tests` to pass before any merge. Direct pushes to `main` are blocked.
 
 ### Failure tracking
 
@@ -325,7 +332,7 @@ The `<Analytics />` component is mounted in `App.tsx` via `@vercel/analytics/rea
 
 ### PostHog
 
-Tracks custom usage events for product insights. Initialised in `src/main.tsx` via `initPostHog()` from `src/analytics.ts`.
+Tracks custom usage events and Web Vitals (CLS, INP, LCP, TTFB, FCP) for product insights. Initialised lazily at runtime via `initPostHog()` from `src/analytics.ts`.
 
 - **EU host** (`https://eu.i.posthog.com`) for GDPR compliance.
 - Silently disabled when `VITE_POSTHOG_KEY` is not set.
