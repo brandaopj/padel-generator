@@ -46,6 +46,7 @@ test.describe('History page', () => {
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(1)
 
     await page.getByRole('button', { name: 'Apagar torneio' }).click()
+    await page.getByRole('button', { name: 'Apagar' }).click()
 
     // Entry disappears immediately (optimistic)
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(0)
@@ -60,6 +61,7 @@ test.describe('History page', () => {
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.getByRole('button', { name: 'Apagar torneio' }).click()
+    await page.getByRole('button', { name: 'Apagar' }).click()
     // Entry removed, undo button visible
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(0)
     await page.getByRole('alert').getByRole('button', { name: 'Desfazer' }).click()
