@@ -221,7 +221,7 @@ export function GeneratorPage() {
 
       {/* Tournament name — optional, disclosed at bottom (P1-D) */}
       <details className="group" open={state.clubName.length > 0 || undefined}>
-        <summary className="text-xs font-semibold text-fg3 cursor-pointer list-none flex items-center gap-1.5 hover:text-fg2 transition-colors select-none">
+        <summary data-testid="club-name-toggle" className="text-xs font-semibold text-fg3 cursor-pointer list-none flex items-center gap-1.5 hover:text-fg2 transition-colors select-none">
           <svg className="w-2.5 h-2.5 transition-transform group-open:rotate-90 shrink-0" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
             <path d="M3 2l4 3-4 3V2z" />
           </svg>

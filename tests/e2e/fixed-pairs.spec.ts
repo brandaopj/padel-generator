@@ -11,6 +11,7 @@ test.describe('Duplas Fixas mode', () => {
   })
 
   test('generates rounds for 4 fixed pairs', async ({ page }) => {
+    await page.getByTestId('club-name-toggle').click()
     await page.getByTestId('club-name-input').fill('Club Fixas')
 
     const pairs = [['Ana', 'Bruno'], ['Carlos', 'Diana'], ['Eva', 'Filipe'], ['Gina', 'Hugo']]
