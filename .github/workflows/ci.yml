@@ -76,6 +76,7 @@ jobs:
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium webkit
+        # chromium = Desktop Chrome, webkit = Mobile Safari (dropped redundant Mobile Chrome)
 
       - name: Build app
         run: npm run build

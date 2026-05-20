@@ -4,6 +4,8 @@ const isCI = !!process.env.CI
 
 export default defineConfig({
   testDir: './tests/e2e',
+  fullyParallel: true,
+  workers: isCI ? 4 : undefined,
   reporter: isCI
     ? [['list'], ['allure-playwright', { resultsDir: 'allure-results-e2e' }]]
     : [['html', { open: 'never' }]],
@@ -19,13 +21,6 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
-    },
-    {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
-    },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
   ],
 })
