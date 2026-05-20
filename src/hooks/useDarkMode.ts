@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 
 export function useDarkMode() {
   const [dark, setDark] = useState<boolean>(() => {
-    return localStorage.getItem('padel-theme') === 'dark'
+    try { return localStorage.getItem('padel-theme') === 'dark' } catch { return false }
   })
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
-    localStorage.setItem('padel-theme', dark ? 'dark' : 'light')
+    try { localStorage.setItem('padel-theme', dark ? 'dark' : 'light') } catch { /* quota or restricted */ }
   }, [dark])
 
   return { dark, toggle: () => setDark(d => !d) }

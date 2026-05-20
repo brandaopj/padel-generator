@@ -13,7 +13,7 @@ export function useHistory() {
 
   function save(tournament: Tournament): void {
     const all = getAll()
-    localStorage.setItem(KEY, JSON.stringify([tournament, ...all]))
+    try { localStorage.setItem(KEY, JSON.stringify([tournament, ...all])) } catch { /* quota exceeded */ }
     window.dispatchEvent(new CustomEvent('padel-history-change'))
   }
 
@@ -26,11 +26,11 @@ export function useHistory() {
     const idx = all.findIndex(t => t.id === tournament.id)
     if (idx === -1) return
     all[idx] = tournament
-    localStorage.setItem(KEY, JSON.stringify(all))
+    try { localStorage.setItem(KEY, JSON.stringify(all)) } catch { /* quota exceeded */ }
   }
 
   function remove(id: string): void {
-    localStorage.setItem(KEY, JSON.stringify(getAll().filter(t => t.id !== id)))
+    try { localStorage.setItem(KEY, JSON.stringify(getAll().filter(t => t.id !== id))) } catch { /* quota exceeded */ }
     window.dispatchEvent(new CustomEvent('padel-history-change'))
   }
 
