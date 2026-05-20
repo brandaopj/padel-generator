@@ -42,7 +42,7 @@ export function GeneratorPage() {
     (state.mode === 'seeded' && (state.tableA.length > 0 || state.tableB.length > 0))
 
   const totalPossibleRounds = useMemo(() => {
-    let pairCount = 0
+    let pairCount: number
     if (state.mode === 'regular') pairCount = Math.floor(state.players.length / 2)
     else if (state.mode === 'fixed-pairs') pairCount = state.pairs.length
     else pairCount = Math.min(state.tableA.length, state.tableB.length)

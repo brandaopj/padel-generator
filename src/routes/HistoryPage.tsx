@@ -69,7 +69,7 @@ export function HistoryPage() {
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{t.history.title}</h1>
         {tournaments.length > 0 && (
           <span className="min-w-[24px] h-6 px-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center leading-none">
-            {tournaments.length}
+            {filtered.length}
           </span>
         )}
       </div>

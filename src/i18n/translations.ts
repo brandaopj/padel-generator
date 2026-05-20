@@ -144,6 +144,11 @@ export const translations = {
       shareError: 'Não foi possível partilhar',
       copyError: 'Não foi possível copiar o torneio',
     },
+    errorBoundary: {
+      title: 'Algo correu mal',
+      message: 'Ocorreu um erro inesperado. Tenta recarregar a página.',
+      reload: 'Tentar novamente',
+    },
     share: 'Partilhar',
   },
 
@@ -289,6 +294,11 @@ export const translations = {
       shareCopied: 'Tournament copied to clipboard',
       shareError: 'Could not share tournament',
       copyError: 'Could not copy tournament',
+    },
+    errorBoundary: {
+      title: 'Something went wrong',
+      message: 'An unexpected error occurred. Please try reloading the page.',
+      reload: 'Try again',
     },
     share: 'Share',
   },

@@ -10,7 +10,23 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
   unit-tests:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +58,7 @@ jobs:
           if-no-files-found: warn
 
   e2e-tests:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -60,6 +77,16 @@ jobs:
         run: npm run build
         env:
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
+
+      - name: Check bundle size
+        run: |
+          FILE=$(ls dist/assets/index-*.js | head -1)
+          SIZE=$(gzip -c "$FILE" | wc -c)
+          echo "Bundle size: ${SIZE} bytes gzipped"
+          if [ "$SIZE" -gt 307200 ]; then
+            echo "Bundle too large: ${SIZE} bytes (limit: 307200)"
+            exit 1
+          fi
 
       - name: Run e2e tests against preview server
         run: npm run test:e2e
@@ -81,11 +108,11 @@ jobs:
           if-no-files-found: warn
 
   report-failure:
-    needs: [unit-tests, e2e-tests]
+    needs: [lint, unit-tests, e2e-tests]
     if: |
       always() &&
       github.event_name == 'push' &&
-      (needs.unit-tests.result == 'failure' || needs.e2e-tests.result == 'failure')
+      (needs.lint.result == 'failure' || needs.unit-tests.result == 'failure' || needs.e2e-tests.result == 'failure')
     runs-on: ubuntu-latest
     permissions:
       issues: write
@@ -102,6 +129,7 @@ jobs:
           SHORT_SHA="${COMMIT:0:7}"
 
           FAILED=""
+          [ "${{ needs.lint.result }}" = "failure" ] && FAILED="${FAILED}- Lint\n"
           [ "${{ needs.unit-tests.result }}" = "failure" ] && FAILED="${FAILED}- Unit tests\n"
           [ "${{ needs.e2e-tests.result }}" = "failure" ] && FAILED="${FAILED}- E2E tests\n"
 
@@ -126,10 +154,11 @@ jobs:
           fi
 
   resolve-failure:
-    needs: [unit-tests, e2e-tests]
+    needs: [lint, unit-tests, e2e-tests]
     if: |
       always() &&
       github.event_name == 'push' &&
+      needs.lint.result == 'success' &&
       needs.unit-tests.result == 'success' &&
       needs.e2e-tests.result == 'success'
     runs-on: ubuntu-latest
@@ -157,7 +186,7 @@ jobs:
           fi
 
   deploy:
-    needs: [unit-tests, e2e-tests]
+    needs: [lint, unit-tests, e2e-tests]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
@@ -176,7 +205,7 @@ jobs:
           VERCEL_PROJECT_ID: prj_4JxNKxvg21mH41MxktVdKkzK4vpu
 
   publish-report:
-    needs: [unit-tests, e2e-tests]
+    needs: [lint, unit-tests, e2e-tests]
     if: always() && github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:

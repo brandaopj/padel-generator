@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
 import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
 import { useLanguage } from '../context/LanguageContext'
@@ -11,11 +10,7 @@ export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { getById } = useHistory()
   const { t } = useLanguage()
-  const [tournament, setTournament] = useState<Tournament | null>(null)
-
-  useEffect(() => {
-    if (id) setTournament(getById(id) ?? null)
-  }, [id])
+  const tournament: Tournament | null = id ? (getById(id) ?? null) : null
 
   if (!tournament) {
     return (

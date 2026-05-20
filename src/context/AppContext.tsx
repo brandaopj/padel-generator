@@ -7,6 +7,7 @@ type AppContextType = {
   dispatch: React.Dispatch<Action>
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AppContext = createContext<AppContextType>({
   state: initialState,
   dispatch: () => {},

@@ -85,7 +85,11 @@ function Shell() {
   const location = useLocation()
   const [helpOpen, setHelpOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+  const [lastPathname, setLastPathname] = useState(location.pathname)
+  if (lastPathname !== location.pathname) {
+    setLastPathname(location.pathname)
+    if (menuOpen) setMenuOpen(false)
+  }
 
   useEffect(() => {
     if (!menuOpen) return

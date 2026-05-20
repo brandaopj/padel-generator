@@ -1,6 +1,6 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
-async function generateTournament(page: any, name = 'Torneio Teste') {
+async function generateTournament(page: Page, name = 'Torneio Teste') {
   await page.getByTestId('club-name-input').fill(name)
   await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
   await page.getByTestId('generate-button').click()
@@ -73,6 +73,64 @@ test.describe('History page', () => {
     await expect(page.getByTestId('player-input')).toContainText('Bruno')
     // Toast appears
     await expect(page.getByRole('alert').filter({ hasText: 'Jogadores carregados' })).toBeVisible()
+  })
+})
+
+test.describe('History page count badge', () => {
+  test.beforeEach(async ({ page, context }) => {
+    await context.addInitScript(() => {
+      localStorage.clear()
+      localStorage.setItem('padel-lang', 'pt')
+      const tournaments = [
+        {
+          id: 'test-1',
+          date: '2025-01-01T10:00:00.000Z',
+          clubName: 'Torneio Regular',
+          mode: 'regular',
+          courts: 1,
+          players: ['Ana', 'Bruno', 'Carlos', 'Diana'],
+          pairs: [['Ana', 'Bruno'], ['Carlos', 'Diana']],
+          rounds: [],
+        },
+        {
+          id: 'test-2',
+          date: '2025-01-02T10:00:00.000Z',
+          clubName: 'Torneio Pares',
+          mode: 'fixed-pairs',
+          courts: 1,
+          players: [],
+          pairs: [['Eva', 'Filipe'], ['Gina', 'Hugo']],
+          rounds: [],
+        },
+        {
+          id: 'test-3',
+          date: '2025-01-03T10:00:00.000Z',
+          clubName: 'Torneio Regular 2',
+          mode: 'regular',
+          courts: 1,
+          players: ['Ana', 'Bruno', 'Carlos', 'Diana'],
+          pairs: [['Ana', 'Bruno'], ['Carlos', 'Diana']],
+          rounds: [],
+        },
+      ]
+      localStorage.setItem('padel-history', JSON.stringify(tournaments))
+    })
+    await page.goto('/history')
+  })
+
+  test('count badge updates when filter is applied', async ({ page }) => {
+    // Badge should show total count (3)
+    const badge = page.locator('h1 + span')
+    await expect(badge).toHaveText('3')
+
+    // Apply mode filter to "Pares fixos" (fixed-pairs) — only 1 match
+    const modeSelect = page.getByRole('combobox', { name: 'Todos' })
+    await modeSelect.selectOption('fixed-pairs')
+    await expect(badge).toHaveText('1')
+
+    // Clear the filter back to "all"
+    await modeSelect.selectOption('all')
+    await expect(badge).toHaveText('3')
   })
 })
 

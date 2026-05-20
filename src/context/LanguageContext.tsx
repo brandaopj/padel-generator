@@ -9,7 +9,7 @@ function detectLang(): Lang {
   try {
     const saved = localStorage.getItem(STORAGE_KEY)
     if (saved === 'pt' || saved === 'en') return saved
-  } catch {}
+  } catch { /* localStorage may be unavailable (private browsing, quota exceeded, etc.) */ }
   return navigator.language.toLowerCase().startsWith('en') ? 'en' : 'pt'
 }
 
@@ -30,7 +30,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l)
-    try { localStorage.setItem(STORAGE_KEY, l) } catch {}
+    try { localStorage.setItem(STORAGE_KEY, l) } catch { /* localStorage may be unavailable (private browsing, quota exceeded, etc.) */ }
   }, [])
 
   const t = useMemo(() => translations[lang], [lang])
@@ -42,4 +42,5 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLanguage = () => useContext(LanguageContext)
