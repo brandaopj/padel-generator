@@ -16,7 +16,7 @@ export function PrintButton() {
           clipRule="evenodd"
         />
       </svg>
-      {t.print}
+      <span className="hidden sm:inline">{t.print}</span>
     </button>
   )
 }

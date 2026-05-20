@@ -51,7 +51,7 @@ export function ShareButton({ tournament, variant = 'button' }: Props) {
       className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
     >
       <ShareIcon />
-      {t.share}
+      <span className="hidden sm:inline">{t.share}</span>
     </button>
   )
 }
