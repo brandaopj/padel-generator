@@ -10,6 +10,7 @@ export type Action =
   | { type: 'SET_TABLE_B'; payload: string[] }
   | { type: 'SET_GENERATED'; payload: Tournament | null }
   | { type: 'SET_COURT_NAME'; payload: { court: number; name: string } }
+  | { type: 'SET_MAX_ROUNDS'; payload: number | null }
   | { type: 'RESET' }
 
 export const initialState: AppState = {
@@ -21,6 +22,7 @@ export const initialState: AppState = {
   tableA: [],
   tableB: [],
   generated: null,
+  maxRounds: null,
 }
 
 function autoCourts(numPairs: number): number {
@@ -63,6 +65,8 @@ export function reducer(state: AppState, action: Action): AppState {
       const courtNames = { ...state.generated.courtNames, [court]: name }
       return { ...state, generated: { ...state.generated, courtNames } }
     }
+    case 'SET_MAX_ROUNDS':
+      return { ...state, maxRounds: action.payload }
     case 'RESET':
       return initialState
     default:

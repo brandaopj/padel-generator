@@ -14,6 +14,7 @@ export function useHistory() {
   function save(tournament: Tournament): void {
     const all = getAll()
     localStorage.setItem(KEY, JSON.stringify([tournament, ...all]))
+    window.dispatchEvent(new CustomEvent('padel-history-change'))
   }
 
   function getById(id: string): Tournament | undefined {
@@ -30,6 +31,7 @@ export function useHistory() {
 
   function remove(id: string): void {
     localStorage.setItem(KEY, JSON.stringify(getAll().filter(t => t.id !== id)))
+    window.dispatchEvent(new CustomEvent('padel-history-change'))
   }
 
   return { getAll, save, getById, update, remove }

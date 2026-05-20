@@ -1,7 +1,9 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useBlocker } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { useToast } from '../context/ToastContext'
 import { useLanguage } from '../context/LanguageContext'
+import { ConfirmModal } from '../components/ui/ConfirmModal'
 import { ModeSelector } from '../components/generator/ModeSelector'
 import { PlayerInput } from '../components/generator/PlayerInput'
 import { PairInput } from '../components/generator/PairInput'
@@ -32,10 +34,22 @@ export function GeneratorPage() {
   const formRef = useRef<HTMLDivElement>(null)
   const roundsPanelRef = useRef<HTMLDivElement>(null)
 
+  const blocker = useBlocker(isStale && state.generated !== null)
+
   const hasInputs =
     (state.mode === 'regular' && state.players.length > 0) ||
     (state.mode === 'fixed-pairs' && state.pairs.length > 0) ||
     (state.mode === 'seeded' && (state.tableA.length > 0 || state.tableB.length > 0))
+
+  const totalPossibleRounds = useMemo(() => {
+    let pairCount = 0
+    if (state.mode === 'regular') pairCount = Math.floor(state.players.length / 2)
+    else if (state.mode === 'fixed-pairs') pairCount = state.pairs.length
+    else pairCount = Math.min(state.tableA.length, state.tableB.length)
+    if (pairCount < 2) return 0
+    const n = pairCount % 2 === 0 ? pairCount : pairCount + 1
+    return n - 1
+  }, [state.mode, state.players.length, state.pairs.length, state.tableA.length, state.tableB.length])
 
   useEffect(() => {
     if (hasGeneratedRef.current) {
@@ -75,6 +89,7 @@ export function GeneratorPage() {
             pairs: state.pairs,
             tableA: state.tableA,
             tableB: state.tableB,
+            maxRounds: state.maxRounds,
           })
           dispatch({ type: 'SET_GENERATED', payload: tournament })
           save(tournament)
@@ -154,6 +169,35 @@ export function GeneratorPage() {
               </p>
             )}
 
+            {hasInputs && totalPossibleRounds > 1 && (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <label htmlFor="max-rounds" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {t.generator.maxRoundsLabel}
+                  </label>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 tabular-nums">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">{state.maxRounds ?? totalPossibleRounds}</span>
+                    {' '}
+                    {state.maxRounds == null || state.maxRounds >= totalPossibleRounds
+                      ? t.generator.allRounds
+                      : t.generator.maxRoundsOf(totalPossibleRounds)}
+                  </span>
+                </div>
+                <input
+                  id="max-rounds"
+                  type="range"
+                  min={1}
+                  max={totalPossibleRounds}
+                  value={state.maxRounds ?? totalPossibleRounds}
+                  onChange={e => {
+                    const v = parseInt(e.target.value, 10)
+                    dispatch({ type: 'SET_MAX_ROUNDS', payload: v >= totalPossibleRounds ? null : v })
+                  }}
+                  className="w-full accent-blue-600"
+                />
+              </div>
+            )}
+
             {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
 
             {isStale && hasInputs && (
@@ -203,6 +247,17 @@ export function GeneratorPage() {
         </div>
 
       </div>
+
+      {blocker.state === 'blocked' && (
+        <ConfirmModal
+          title={t.generator.leaveGuardTitle}
+          description={t.generator.leaveGuardDescription}
+          confirmLabel={t.generator.leaveGuardConfirm}
+          cancelLabel={t.generator.leaveGuardCancel}
+          onConfirm={() => blocker.proceed()}
+          onCancel={() => blocker.reset()}
+        />
+      )}
 
       {/* Fixed bottom nav bar — mobile and tablet only */}
       <div className="fixed bottom-0 left-0 right-0 z-10 lg:hidden print:hidden border-t border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm">

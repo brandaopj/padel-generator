@@ -96,7 +96,7 @@ function CourtLabel({ name, onEdit }: { name: string; onEdit?: (name: string) =>
         defaultValue={name}
         autoFocus
         aria-label={t.rounds.courtNameLabel}
-        className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-b border-blue-500 outline-none w-40 mb-2"
+        className="text-xs font-medium text-gray-600 dark:text-gray-400 bg-transparent border-b border-blue-500 outline-none w-full max-w-[160px] mb-2"
         onBlur={e => {
           const val = e.target.value.trim()
           onEdit?.(val || name)

@@ -29,7 +29,7 @@ test.describe('History page', () => {
     await expect(page.getByTestId('history-empty')).toBeVisible()
   })
 
-  test('deletes tournament from history with confirmation', async ({ page }) => {
+  test('deletes tournament from history and shows undo toast', async ({ page }) => {
     await generateTournament(page, 'Torneio Apagar')
     await page.click('text=Histórico')
 
@@ -37,22 +37,42 @@ test.describe('History page', () => {
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(1)
 
     await page.getByRole('button', { name: 'Apagar torneio' }).click()
-    await expect(page.getByRole('button', { name: 'Apagar', exact: true })).toBeVisible()
-    await page.getByRole('button', { name: 'Apagar', exact: true }).click()
 
+    // Entry disappears immediately (optimistic)
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(0)
     await expect(page.getByTestId('history-empty')).toBeVisible()
+    // Undo toast appears
+    await expect(page.getByRole('alert')).toContainText('Desfazer')
   })
 
-  test('cancelling delete keeps tournament in history', async ({ page }) => {
+  test('undo delete restores tournament', async ({ page }) => {
     await generateTournament(page, 'Torneio Cancelar')
     await page.click('text=Histórico')
 
     await expect(page.getByTestId('history-list')).toBeVisible()
     await page.getByRole('button', { name: 'Apagar torneio' }).click()
-    await page.getByRole('button', { name: 'Cancelar' }).click()
+    // Entry removed, undo button visible
+    await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(0)
+    await page.getByRole('alert').getByRole('button', { name: 'Desfazer' }).click()
 
+    // Entry restored
     await expect(page.locator('[data-testid^="history-entry-"]')).toHaveCount(1)
+  })
+
+  test('reuse players loads mode and players into generator', async ({ page }) => {
+    await generateTournament(page, 'Torneio Template')
+    await page.click('text=Histórico')
+
+    await expect(page.getByTestId('history-list')).toBeVisible()
+    await page.getByRole('button', { name: 'Usar jogadores' }).click()
+
+    // Navigated back to generator
+    await expect(page).toHaveURL('/')
+    // Players are pre-filled (the textarea should contain the names we set)
+    await expect(page.getByTestId('player-input')).toContainText('Ana')
+    await expect(page.getByTestId('player-input')).toContainText('Bruno')
+    // Toast appears
+    await expect(page.getByRole('alert')).toContainText('Jogadores carregados')
   })
 })
 

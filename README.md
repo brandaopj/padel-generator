@@ -29,6 +29,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Validation errors shown inline; generate button disabled while errors exist
 - Loading spinner on the generate button during generation
 - Regenerate button shown after a tournament has already been generated
+- **Round count cap** — range slider to limit the number of rounds (e.g. for time-constrained sessions); shows "All" when all rounds are selected
 - On mobile/tablet, the generate button is sticky (`sticky bottom-16`) so it remains visible while scrolling the form
 
 ### Match cards
@@ -49,8 +50,11 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 - Tournament history stored in `localStorage`
 - Each entry shows: name, mode badge, courts, pairs, date
-- **Reuse players** — people-icon button on each history entry loads that tournament's mode + players/pairs/tables back into the generator and navigates to `/`; works for all three modes
-- Delete tournament from history with confirmation and toast feedback
+- **Reuse players** — people-icon button on each history entry loads that tournament's mode + players/pairs/tables back into the generator and navigates to `/`; shows a success toast; works for all three modes
+- **Undo delete** — deleting a tournament removes it from the UI immediately (optimistic) with a 5-second undo toast; the `localStorage` write is deferred so the action can be reversed without a confirm modal
+- **Sort & filter** — history list can be sorted newest/oldest and filtered by game mode; full-width selects on mobile, inline on tablet+
+- **Tournament count badge** — History nav link shows a live count badge (desktop + mobile drawer); updated via a custom `padel-history-change` DOM event dispatched on save/remove
+- **Navigation guard** — navigating away from the generator while results are stale (form edited after generation) prompts for confirmation via a `useBlocker` modal (requires the data router via `createBrowserRouter`)
 - Auto-scroll to results after generation (scrolls to the top of the results panel)
 
 #### Mobile / responsive
@@ -219,7 +223,7 @@ Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced 
 | Functions | 90% |
 | Branches | 80% |
 
-### E2E — 12 tests (Playwright + Chromium)
+### E2E — 15 tests (Playwright + Chromium)
 
 ```bash
 npm run build
@@ -231,7 +235,7 @@ npm run test:e2e
 | `regular.spec.ts` | Generate with 8 players, validation, history save, detail page |
 | `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
 | `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
-| `history.spec.ts` | History list, empty state, delete with confirm, cancel delete, detail view, back navigation, not-found |
+| `history.spec.ts` | History list, empty state, undo delete, reuse players, detail view, back navigation, not-found |
 
 Screenshots and traces are captured on failure and uploaded as CI artifacts.
 
@@ -280,6 +284,22 @@ Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validate
 | `VITE_POSTHOG_KEY` | No | PostHog project API key, starts with `phc_` (analytics disabled without it) |
 
 Set them at: **GitHub → Settings → Secrets and variables → Actions**
+
+---
+
+## Security
+
+HTTP response headers are set in `vercel.json` for all routes:
+
+| Header | Value |
+|--------|-------|
+| `X-Content-Type-Options` | `nosniff` |
+| `X-Frame-Options` | `DENY` |
+| `X-XSS-Protection` | `1; mode=block` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
+
+Static assets under `/assets/` are served with `Cache-Control: public, max-age=31536000, immutable` (Vite content-hashed filenames guarantee safe long-term caching).
 
 ---
 

@@ -1,5 +1,5 @@
-import { lazy, Suspense, useContext, useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
+import { lazy, Suspense, useCallback, useContext, useEffect, useState } from 'react'
+import { createBrowserRouter, RouterProvider, Outlet, Link, NavLink, useLocation } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import { analytics } from './analytics'
 import { AppProvider } from './context/AppContext'
@@ -85,6 +85,18 @@ function Shell() {
   const location = useLocation()
   const [helpOpen, setHelpOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [historyCount, setHistoryCount] = useState(() => {
+    try { return (JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length } catch { return 0 }
+  })
+
+  const refreshCount = useCallback(() => {
+    try { setHistoryCount((JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length) } catch { setHistoryCount(0) }
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('padel-history-change', refreshCount)
+    return () => window.removeEventListener('padel-history-change', refreshCount)
+  }, [refreshCount])
 
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
@@ -121,6 +133,11 @@ function Shell() {
               <NavLink to="/history" className={navLinkClass}>
                 <HistoryIcon />
                 <span>{t.nav.history}</span>
+                {historyCount > 0 && (
+                  <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold flex items-center justify-center leading-none">
+                    {historyCount}
+                  </span>
+                )}
               </NavLink>
               <button
                 type="button"
@@ -187,6 +204,11 @@ function Shell() {
               <NavLink to="/history" onClick={() => setMenuOpen(false)} className={mobileNavLinkClass}>
                 <HistoryIcon />
                 <span>{t.nav.history}</span>
+                {historyCount > 0 && (
+                  <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center leading-none">
+                    {historyCount}
+                  </span>
+                )}
               </NavLink>
               <button
                 type="button"
@@ -221,11 +243,7 @@ function Shell() {
 
       <main>
         <Suspense fallback={<div className="flex justify-center items-center h-48"><div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>}>
-          <Routes>
-            <Route path="/" element={<GeneratorPage />} />
-            <Route path="/history" element={<HistoryPage />} />
-            <Route path="/history/:id" element={<TournamentDetailPage />} />
-          </Routes>
+          <Outlet />
         </Suspense>
       </main>
       <footer className="text-center text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-800 py-3 pb-20 lg:pb-3 mt-4 print:hidden">
@@ -237,18 +255,31 @@ function Shell() {
   )
 }
 
-export default function App() {
+function AppProviders() {
   return (
     <ErrorBoundary>
       <LanguageProvider>
         <AppProvider>
           <ToastProvider>
-            <BrowserRouter>
-              <Shell />
-            </BrowserRouter>
+            <Shell />
           </ToastProvider>
         </AppProvider>
       </LanguageProvider>
     </ErrorBoundary>
   )
+}
+
+const router = createBrowserRouter([
+  {
+    element: <AppProviders />,
+    children: [
+      { index: true, element: <GeneratorPage /> },
+      { path: 'history', element: <HistoryPage /> },
+      { path: 'history/:id', element: <TournamentDetailPage /> },
+    ],
+  },
+])
+
+export default function App() {
+  return <RouterProvider router={router} />
 }

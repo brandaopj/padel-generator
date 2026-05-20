@@ -38,4 +38,5 @@ export type AppState = {
   tableA: string[]
   tableB: string[]
   generated: Tournament | null
+  maxRounds: number | null
 }

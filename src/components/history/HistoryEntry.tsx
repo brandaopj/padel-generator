@@ -1,9 +1,9 @@
-import { useContext, useState } from 'react'
+import { useContext } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { Tournament } from '../../types'
 import { AppContext } from '../../context/AppContext'
 import { useLanguage } from '../../context/LanguageContext'
-import { ConfirmModal } from '../ui/ConfirmModal'
+import { useToast } from '../../context/ToastContext'
 import { ShareButton } from '../ui/ShareButton'
 
 function tournamentTitle(t: Tournament, autoTitle: { regular: (n: number) => string; fixedPairs: (n: number) => string; seeded: (n: number) => string }): string {
@@ -37,6 +37,7 @@ function TrashIcon({ className = 'w-4 h-4' }: { className?: string }) {
 function UseTemplateButton({ tournament }: { tournament: Tournament }) {
   const { dispatch } = useContext(AppContext)
   const { t } = useLanguage()
+  const { showToast } = useToast()
   const navigate = useNavigate()
 
   function handleClick(e: React.MouseEvent) {
@@ -50,6 +51,7 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
       dispatch({ type: 'SET_TABLE_A', payload: tournament.tableA ?? [] })
       dispatch({ type: 'SET_TABLE_B', payload: tournament.tableB ?? [] })
     }
+    showToast('success', t.toast.playersLoaded)
     navigate('/')
   }
 
@@ -70,30 +72,17 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
 
 function DeleteButton({ onDelete }: { onDelete: () => void }) {
   const { t } = useLanguage()
-  const [open, setOpen] = useState(false)
 
   return (
-    <>
-      <button
-        type="button"
-        onClick={e => { e.stopPropagation(); setOpen(true) }}
-        aria-label={t.history.deleteTooltip}
-        title={t.history.deleteTooltip}
-        className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
-      >
-        <TrashIcon />
-      </button>
-      {open && (
-        <ConfirmModal
-          title={`${t.history.deleteTooltip}?`}
-          description={t.confirm.clearPlayers.description}
-          confirmLabel={t.history.delete}
-          cancelLabel={t.confirm.cancel}
-          onConfirm={() => { setOpen(false); onDelete() }}
-          onCancel={() => setOpen(false)}
-        />
-      )}
-    </>
+    <button
+      type="button"
+      onClick={e => { e.stopPropagation(); onDelete() }}
+      aria-label={t.history.deleteTooltip}
+      title={t.history.deleteTooltip}
+      className="p-1.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 transition-colors rounded"
+    >
+      <TrashIcon />
+    </button>
   )
 }
 

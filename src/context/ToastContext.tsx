@@ -4,16 +4,22 @@ import { useLanguage } from './LanguageContext'
 
 export type ToastVariant = 'success' | 'error' | 'info'
 
+interface ToastAction {
+  label: string
+  onClick: () => void
+}
+
 interface ToastItem {
   id: string
   variant: ToastVariant
   message: string
   persistent: boolean
   leaving: boolean
+  action?: ToastAction
 }
 
 interface ToastContextValue {
-  showToast: (variant: ToastVariant, message: string, options?: { duration?: number; persistent?: boolean }) => void
+  showToast: (variant: ToastVariant, message: string, options?: { duration?: number; persistent?: boolean; action?: ToastAction }) => void
 }
 
 const ToastContext = createContext<ToastContextValue>({ showToast: () => {} })
@@ -77,10 +83,19 @@ function ToastContainer({ toasts, onDismiss }: { toasts: ToastItem[]; onDismiss:
             key={toast.id}
             role="alert"
             aria-live="polite"
-            className={`flex items-center gap-2.5 pl-3.5 pr-3 py-3 rounded-lg border shadow-lg min-w-72 max-w-sm text-sm font-medium whitespace-nowrap ${container} ${toast.leaving ? 'animate-toast-out' : 'animate-toast-in'}`}
+            className={`flex items-center gap-2.5 pl-3.5 pr-3 py-3 rounded-lg border shadow-lg min-w-72 max-w-sm text-sm font-medium ${container} ${toast.leaving ? 'animate-toast-out' : 'animate-toast-in'}`}
           >
             <IconComponent />
-            <span className="shrink-0">{toast.message}</span>
+            <span className="flex-1">{toast.message}</span>
+            {toast.action && (
+              <button
+                type="button"
+                onClick={() => { toast.action!.onClick(); onDismiss(toast.id) }}
+                className="shrink-0 underline underline-offset-2 opacity-80 hover:opacity-100 transition-opacity text-sm font-semibold"
+              >
+                {toast.action.label}
+              </button>
+            )}
             {toast.persistent && (
               <button
                 type="button"
@@ -111,14 +126,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const showToast = useCallback((
     variant: ToastVariant,
     message: string,
-    options: { duration?: number; persistent?: boolean } = {}
+    options: { duration?: number; persistent?: boolean; action?: ToastAction } = {}
   ) => {
     const id = crypto.randomUUID()
     const defaultDuration = variant === 'success' ? 4000 : variant === 'info' ? 2000 : undefined
     const duration = options.duration ?? defaultDuration
     const persistent = options.persistent ?? variant === 'error'
 
-    setToasts(prev => [...prev, { id, variant, message, persistent, leaving: false }])
+    setToasts(prev => [...prev, { id, variant, message, persistent, leaving: false, action: options.action }])
     if (!persistent && duration) setTimeout(() => dismiss(id), duration)
   }, [dismiss])
 

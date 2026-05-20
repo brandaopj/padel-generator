@@ -73,8 +73,9 @@ export function generateTournament(inputs: {
   pairs: Pair[]
   tableA: string[]
   tableB: string[]
+  maxRounds?: number | null
 }): Tournament {
-  const { mode, clubName, courts, players, pairs: inputPairs, tableA, tableB } = inputs
+  const { mode, clubName, courts, players, pairs: inputPairs, tableA, tableB, maxRounds } = inputs
 
   let finalPairs: Pair[]
   if (mode === 'regular') {
@@ -85,7 +86,8 @@ export function generateTournament(inputs: {
     finalPairs = makeSeededPairs(tableA, tableB)
   }
 
-  const rounds = distribute(roundRobin(finalPairs), courts)
+  const allRounds = distribute(roundRobin(finalPairs), courts)
+  const rounds = maxRounds != null ? allRounds.slice(0, maxRounds) : allRounds
   const seededWarning = mode === 'seeded' && tableA.length !== tableB.length
 
   return {
