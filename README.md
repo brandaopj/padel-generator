@@ -49,6 +49,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 - Tournament history stored in `localStorage`
 - Each entry shows: name, mode badge, courts, pairs, date
+- **Reuse players** — people-icon button on each history entry loads that tournament's mode + players/pairs/tables back into the generator and navigates to `/`; works for all three modes
 - Delete tournament from history with confirmation and toast feedback
 - Auto-scroll to results after generation (scrolls to the top of the results panel)
 
@@ -241,21 +242,22 @@ Screenshots and traces are captured on failure and uploaded as CI artifacts.
 The GitHub Actions pipeline runs on every push to `main`:
 
 ```
-push → unit-tests ──┬──→ report-failure (if any failed)
-       e2e-tests ───┘──→ resolve-failure (if all passed)
+push → unit-tests ──┬──→ deploy (Vercel, push to main only)
+       e2e-tests ───┘──→ report-failure (if any failed)
+                    └──→ resolve-failure (if all passed)
                     └──→ publish-report (GitHub Pages)
-                    └──→ auto-deploy (Vercel)
 ```
 
 | Job | What it does |
 |-----|--------------|
 | `unit-tests` | Vitest with coverage thresholds + Allure and coverage artifacts |
 | `e2e-tests` | Build → preview server → Playwright → Allure and playwright-report artifacts |
+| `deploy` | Runs `npx vercel --prod` after both test jobs pass (push to `main` only) |
 | `publish-report` | Merges both Allure result sets → deploys to GitHub Pages (push to `main` only) |
 | `report-failure` | Opens a GitHub issue if any test job fails; comments on the existing issue if already open |
 | `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
 
-Vercel deployment is automatic via Git integration — every push to `main` triggers a new production deploy. `vercel.json` explicitly sets `buildCommand` and `outputDirectory` to prevent stale build-cache deployments.
+Vercel's GitHub auto-deploy is disabled (`"github": { "enabled": false }` in `vercel.json`). Deployment is handled exclusively by the `deploy` CI job, which ensures every production deploy is a fresh build from green tests.
 
 ### Branch protection
 
@@ -271,10 +273,11 @@ Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validate
 
 ### Required secrets
 
-| Name | Description |
-|------|-------------|
-| `VITE_SENTRY_DSN` | Sentry project DSN (optional — build succeeds without it) |
-| `VITE_POSTHOG_KEY` | PostHog project API key, starts with `phc_` (optional — analytics disabled without it) |
+| Name | Required | Description |
+|------|----------|-------------|
+| `VERCEL_TOKEN` | **Yes** | Vercel access token — create at vercel.com/account/tokens |
+| `VITE_SENTRY_DSN` | No | Sentry project DSN (build succeeds without it) |
+| `VITE_POSTHOG_KEY` | No | PostHog project API key, starts with `phc_` (analytics disabled without it) |
 
 Set them at: **GitHub → Settings → Secrets and variables → Actions**
 
