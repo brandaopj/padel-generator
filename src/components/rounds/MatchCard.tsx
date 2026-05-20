@@ -39,7 +39,7 @@ function PlayerAvatar({ name }: { name: string }) {
 
   if (errored) {
     return (
-      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none print:hidden ${palette.fbBg} ${palette.fbText}`}>
+      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none print:hidden ${palette.fbBg} ${palette.fbText}`}>
         {initials}
       </div>
     )
@@ -56,7 +56,7 @@ function PlayerAvatar({ name }: { name: string }) {
       alt={initials}
       width={32}
       height={32}
-      className="w-8 h-8 rounded-full shrink-0 print:hidden"
+      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0 print:hidden"
       style={{ backgroundColor: `#${palette.bg}` }}
       loading="lazy"
       onError={() => setErrored(true)}
@@ -66,7 +66,7 @@ function PlayerAvatar({ name }: { name: string }) {
 
 function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }) {
   return (
-    <div className="flex flex-col gap-3 print:gap-2 min-w-0">
+    <div className="flex flex-col gap-2 sm:gap-3 print:gap-2 min-w-0">
       {pair.map((name, i) => {
         const nameEl = (
           <span className={`flex-1 min-w-0 break-words text-sm font-medium leading-snug text-gray-800 dark:text-gray-100 print:text-xs print:font-semibold ${reverse ? 'text-right' : ''}`}>
@@ -75,7 +75,7 @@ function PairColumn({ pair, reverse = false }: { pair: Pair; reverse?: boolean }
         )
         const avatarEl = <PlayerAvatar name={name} />
         return (
-          <div key={i} className={`flex items-center gap-3 print:gap-2 w-full min-w-0 ${reverse ? 'justify-end' : ''}`}>
+          <div key={i} className={`flex items-center gap-2 sm:gap-3 print:gap-2 w-full min-w-0 ${reverse ? 'justify-end' : ''}`}>
             {reverse ? <>{nameEl}{avatarEl}</> : <>{avatarEl}{nameEl}</>}
           </div>
         )
@@ -147,7 +147,7 @@ export function MatchCard({ match, courtName, onEditCourtName }: Props) {
   return (
     <div
       data-testid="match-card"
-      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
+      className={`flex flex-col bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 border-t-4 ${accentClass} rounded-lg p-3 sm:p-5 print:p-3 print:pb-4 print:border-gray-400 print:break-inside-avoid break-inside-avoid group`}
     >
       <CourtLabel name={courtName} onEdit={onEditCourtName} />
 

@@ -20,6 +20,8 @@ export const translations = {
       generating: 'A gerar...',
       regenerate: 'Regenerar Torneio',
       generate: 'Gerar Torneio',
+      configTab: 'Config',
+      resultsTab: 'Torneio',
     },
     modes: {
       regular: {
@@ -150,6 +152,8 @@ export const translations = {
       generating: 'Generating...',
       regenerate: 'Regenerate',
       generate: 'Generate Tournament',
+      configTab: 'Config',
+      resultsTab: 'Results',
     },
     modes: {
       regular: {

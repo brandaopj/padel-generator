@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import { AppContext } from './context/AppContext'
@@ -60,12 +60,38 @@ function HelpIcon() {
   )
 }
 
+function MenuIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  )
+}
+
+function CloseIcon() {
+  return (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  )
+}
+
 function Shell() {
   const { dark, toggle } = useDarkMode()
   const { state, dispatch } = useContext(AppContext)
   const { lang, setLang, t } = useLanguage()
   const location = useLocation()
   const [helpOpen, setHelpOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => { setMenuOpen(false) }, [location.pathname])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
 
   function handleReset() {
     dispatch({ type: 'RESET' })
@@ -75,13 +101,17 @@ function Shell() {
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     `flex items-center gap-1.5 text-sm transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'}`
 
+  const mobileNavLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-2 w-full px-3 py-3 rounded-md text-sm transition-colors ${isActive ? 'text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/20' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}`
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 print:hidden sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+      <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 print:hidden sticky top-0 z-30 relative">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <PadelLogo onClick={handleReset} />
-            <nav className="flex gap-4">
+            {/* Desktop nav — hidden on mobile */}
+            <nav className="hidden sm:flex gap-4">
               <NavLink to="/" end onClick={handleReset} className={navLinkClass}>
                 <TrophyIcon />
                 <span>{t.nav.newTournament}</span>
@@ -100,10 +130,13 @@ function Shell() {
               </button>
             </nav>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {showPrint && <PrintButton />}
             {showPrint && state.generated && <ShareButton tournament={state.generated} />}
-            <KofiButton />
+            {/* Ko-fi — hidden on mobile */}
+            <div className="hidden sm:flex">
+              <KofiButton />
+            </div>
             <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden text-xs font-medium">
               <button
                 onClick={() => setLang('pt')}
@@ -119,9 +152,56 @@ function Shell() {
               </button>
             </div>
             <DarkModeToggle dark={dark} onToggle={toggle} />
+            {/* Hamburger — mobile only */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              className="sm:hidden p-1.5 -mr-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            >
+              {menuOpen ? <CloseIcon /> : <MenuIcon />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div className="absolute top-full left-0 right-0 sm:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
+            <nav className="px-4 py-3 space-y-1">
+              <NavLink to="/" end onClick={() => { setMenuOpen(false); handleReset() }} className={mobileNavLinkClass}>
+                <TrophyIcon />
+                <span>{t.nav.newTournament}</span>
+              </NavLink>
+              <NavLink to="/history" onClick={() => setMenuOpen(false)} className={mobileNavLinkClass}>
+                <HistoryIcon />
+                <span>{t.nav.history}</span>
+              </NavLink>
+              <button
+                type="button"
+                onClick={() => { setMenuOpen(false); setHelpOpen(true) }}
+                className="flex items-center gap-2 w-full px-3 py-3 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <HelpIcon />
+                <span>{t.nav.howItWorks}</span>
+              </button>
+              <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
+                <KofiButton />
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
+
+      {/* Backdrop for mobile menu — below header (z-30) but above page content */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 z-20 sm:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <main>
         <Routes>
           <Route path="/" element={<GeneratorPage />} />
