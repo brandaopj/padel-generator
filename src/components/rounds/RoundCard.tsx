@@ -19,9 +19,11 @@ export function RoundCard({ round, courtNames, onEditCourtName, onScoreChange }:
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-brand/10 flex items-center justify-center shrink-0">
-            <span className="text-sm font-black text-brand leading-none">{round.number}</span>
-          </div>
+          <svg width="22" height="22" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="shrink-0">
+            <circle cx="7" cy="7" r="6.5" fill="#F5C344"/>
+            <path d="M1.5 7 Q7 2 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
+            <path d="M1.5 7 Q7 12 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
+          </svg>
           <span className="text-lg font-bold text-fg font-display print:text-sm">
             {t.rounds.round(round.number)}
           </span>

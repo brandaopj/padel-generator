@@ -37,6 +37,8 @@ export const translations = {
         shuffleToast: 'Rondas baralhadas',
         copyToast: 'Jogadores copiados',
       },
+      nameOptional: '(opcional)',
+      chipHint: 'Enter para adicionar · cola uma lista do WhatsApp para adicionar de uma vez',
     },
     modes: {
       regular: {
@@ -199,6 +201,8 @@ export const translations = {
         shuffleToast: 'Rounds shuffled',
         copyToast: 'Players copied',
       },
+      nameOptional: '(optional)',
+      chipHint: 'Enter to add · paste a WhatsApp list to add everyone at once',
     },
     modes: {
       regular: {

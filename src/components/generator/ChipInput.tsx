@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { ClearButton } from '../ui/ClearButton'
+import { useLanguage } from '../../context/LanguageContext'
 
 const COURT_COLORS = [
   '--color-court1',
@@ -55,6 +56,7 @@ export function ChipInput({
   parse,
 }: ChipInputProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const { t } = useLanguage()
 
   function removeItem(item: string) {
     const idx = items.indexOf(item)
@@ -171,6 +173,9 @@ export function ChipInput({
           onPaste={handleInputPaste}
         />
       </div>
+
+      {/* Hint text */}
+      <p className="text-[10px] text-fg3">{t.generator.chipHint}</p>
 
       {/* Hidden textarea bridge for e2e tests */}
       <textarea

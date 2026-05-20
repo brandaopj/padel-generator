@@ -35,7 +35,7 @@
 
 /* Dark-mode overrides — variables change, utilities update automatically */
 .dark {
-  --color-canvas:   #040B14;
+  --color-canvas:   #0A1818;
   --color-surface:  #071220;
   --color-surface2: #0C1A2C;
   --color-brand:    #4A9EFF;

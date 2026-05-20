@@ -39,7 +39,7 @@ function PlayerAvatar({ name }: { name: string }) {
 
   if (errored) {
     return (
-      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none print:hidden ${palette.fbBg} ${palette.fbText}`}>
+      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold select-none ${palette.fbBg} ${palette.fbText}`}>
         {initials}
       </div>
     )
@@ -56,7 +56,7 @@ function PlayerAvatar({ name }: { name: string }) {
       alt={initials}
       width={32}
       height={32}
-      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0 print:hidden"
+      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full shrink-0"
       style={{ backgroundColor: `#${palette.bg}` }}
       loading="lazy"
       onError={() => setErrored(true)}
@@ -113,25 +113,29 @@ function CourtLabel({ name, court, onEdit }: { name: string; court: number; onEd
 
   if (!onEdit) {
     return (
-      <div className="flex items-center gap-1.5 mb-3 print:mb-2">
-        <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `var(--color-court${courtIndex})` }} />
-        <span className="text-xs font-semibold tracking-widest uppercase text-fg2">{name}</span>
+      <div className="mb-3 print:mb-2">
+        <span
+          className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase text-white"
+          style={{ background: `var(--color-court${courtIndex})` }}
+        >
+          {name}
+        </span>
       </div>
     )
   }
 
   return (
-    <div className="flex items-center gap-1.5 mb-3 print:mb-2">
-      <span className="w-2 h-2 rounded-full shrink-0" style={{ background: `var(--color-court${courtIndex})` }} />
-      <span className="text-xs font-semibold tracking-widest uppercase text-fg2">{name}</span>
+    <div className="mb-3 print:mb-2">
       <button
         type="button"
         onClick={() => setEditing(true)}
         aria-label={t.rounds.editCourtName(name)}
         title={t.rounds.editCourtTitle}
-        className="print:hidden text-fg3 hover:text-brand transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+        className="group/court inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold tracking-widest uppercase text-white hover:opacity-80 transition-opacity print:pointer-events-none"
+        style={{ background: `var(--color-court${courtIndex})` }}
       >
-        <svg className="w-3 h-3" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        {name}
+        <svg className="w-2.5 h-2.5 opacity-0 group-hover/court:opacity-100 transition-opacity print:hidden" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
         </svg>
       </button>
@@ -171,7 +175,14 @@ export function MatchCard({ match, courtName, onEditCourtName, onScoreChange }: 
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-x-4 md:gap-x-5 w-full pb-5 print:pb-3">
         <PairColumn pair={match.pair1} reverse />
         <div className="flex items-center justify-center self-center">
-          <span className="w-8 h-8 rounded-full bg-surface2 flex items-center justify-center text-xs font-black text-fg3 select-none print:w-6 print:h-6 print:text-[10px]">
+          <span
+            className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-black select-none print:w-6 print:h-6 print:text-[10px]"
+            style={{
+              background: '#a3e635',
+              color: '#1a2e00',
+              boxShadow: '0 0 0 3px var(--color-surface), 0 0 0 5px rgba(163,230,53,0.4)',
+            }}
+          >
             VS
           </span>
         </div>

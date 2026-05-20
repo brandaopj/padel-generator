@@ -21,19 +21,19 @@ const TournamentDetailPage = lazy(() => import('./routes/TournamentDetailPage').
 
 function PadelLogo({ onClick }: { onClick?: () => void }) {
   return (
-    <Link to="/" onClick={onClick} className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-      <span className="font-display font-black text-fg tracking-tight text-lg leading-none select-none">
-        PADEL
-      </span>
-      {/* Padel ball */}
-      <span className="w-[18px] h-[18px] rounded-full bg-lime-400 flex items-center justify-center shrink-0" aria-hidden="true">
-        <svg className="w-3 h-3 text-lime-700" viewBox="0 0 10 10" fill="none">
-          <path d="M1.5 5 Q5 1.5 8.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-          <path d="M1.5 5 Q5 8.5 8.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    <Link to="/" onClick={onClick} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+      <span
+        className="w-[22px] h-[22px] rounded-full bg-lime-400 flex items-center justify-center shrink-0"
+        aria-hidden="true"
+        style={{ boxShadow: '0 0 0 2px var(--color-surface)' }}
+      >
+        <svg className="w-3.5 h-3.5" viewBox="0 0 10 10" fill="none">
+          <path d="M1.5 5 Q5 1.5 8.5 5" stroke="#1a2e00" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M1.5 5 Q5 8.5 8.5 5" stroke="#1a2e00" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
       </span>
-      <span className="font-body font-light text-fg3 tracking-widest text-sm leading-none select-none">
-        GENERATOR
+      <span className="font-display font-black text-fg tracking-tight text-lg leading-none select-none" style={{ letterSpacing: '-0.025em' }}>
+        padel.
       </span>
     </Link>
   )

@@ -157,24 +157,6 @@ export function GeneratorPage() {
   // Shared form fields (used in both mobile and sidebar)
   const formFields = (
     <>
-      <div>
-        <label
-          htmlFor="club-name"
-          className="block text-sm font-medium text-fg2 mb-1"
-        >
-          {t.generator.nameLabel}
-        </label>
-        <input
-          id="club-name"
-          data-testid="club-name-input"
-          type="text"
-          value={state.clubName}
-          onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
-          placeholder={t.generator.namePlaceholder}
-          className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
-        />
-      </div>
-
       <ModeSelector
         value={state.mode}
         onChange={mode => { dispatch({ type: 'SET_MODE', payload: mode }); analytics.modeSelected(mode) }}
@@ -239,6 +221,26 @@ export function GeneratorPage() {
         </div>
       )}
 
+      {/* Tournament name — optional, at bottom (F-01) */}
+      <div>
+        <label
+          htmlFor="club-name"
+          className="block text-sm font-medium text-fg2 mb-1"
+        >
+          {t.generator.nameLabel}{' '}
+          <span className="text-fg3 font-normal">{t.generator.nameOptional}</span>
+        </label>
+        <input
+          id="club-name"
+          data-testid="club-name-input"
+          type="text"
+          value={state.clubName}
+          onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
+          placeholder={t.generator.namePlaceholder}
+          className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+      </div>
+
       {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
 
       {isStale && hasInputs && (
@@ -257,6 +259,7 @@ export function GeneratorPage() {
       onClick={handleGenerate}
       disabled={errors.length > 0 || isGenerating}
       className="w-full py-3 px-6 bg-brand text-brand-on rounded-lg text-sm font-semibold tracking-wide hover:bg-brand/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+      style={errors.length === 0 && !isGenerating ? { boxShadow: '0 0 0 3px color-mix(in oklab, var(--color-brand) 25%, transparent)' } : undefined}
     >
       {isGenerating ? (
         <>
