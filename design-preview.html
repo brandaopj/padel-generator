@@ -1,833 +1,801 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Padel Generator — Design Preview</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ===========================
-       DESIGN TOKENS
-       =========================== */
+    /* ─────────────────────────────────────
+       TOKENS
+    ───────────────────────────────────── */
     :root {
-      --court:        #2D5A27;
-      --court-light:  #4A8C42;
-      --lime:         #A3E635;
-      --sand:         #F5EDD8;
-      --wall:         #EBE3D2;
-      --wall-mid:     #D4C9B5;
-      --wall-dark:    #B8A990;
-      --chalk:        #FFFFFF;
-      --ink:          #1A1A1A;
-      --ink-mid:      #3A3A3A;
-      --ink-muted:    #777777;
-      --rust:         #C4440A;
-      --ember:        #D97706;
-
-      --accent-1:     #2D5A27;
-      --accent-2:     #B83A0A;
-      --accent-3:     #1E4E8C;
-      --accent-4:     #6B2481;
-      --accent-5:     #A36008;
-      --accent-6:     #136666;
-
-      --bg:           var(--sand);
-      --bg-card:      var(--chalk);
-      --bg-input:     var(--chalk);
-      --border:       var(--wall-mid);
-      --text-primary: var(--ink);
-      --text-mid:     var(--ink-mid);
-      --text-muted:   var(--ink-muted);
-      --primary:      var(--court);
-      --primary-on:   var(--chalk);
-      --primary-glow: rgba(45,90,39,0.25);
-
-      --font-display: 'Barlow Condensed', sans-serif;
-      --font-body:    'DM Sans', sans-serif;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Epilogue', sans-serif;
       --font-mono:    'JetBrains Mono', monospace;
-
-      --radius-none:  0px;
-      --radius-sm:    2px;
     }
 
     [data-theme="dark"] {
-      --bg:           #141414;
-      --bg-card:      #1C1C1C;
-      --bg-input:     #222222;
-      --border:       #2E2E2E;
-      --text-primary: #F0E8D5;
-      --text-mid:     #AAAAAA;
-      --text-muted:   #666666;
-      --primary:      var(--lime);
-      --primary-on:   #141414;
-      --primary-glow: rgba(163,230,53,0.2);
+      --bg:          #040B14;
+      --surface:     #071220;
+      --surface-2:   #0C1A2C;
+      --border:      rgba(255,255,255,0.07);
+      --border-mid:  rgba(255,255,255,0.13);
+      --primary:     #00FF87;
+      --primary-dim: rgba(0,255,135,0.10);
+      --primary-glow:rgba(0,255,135,0.22);
+      --primary-on:  #030F08;
+      --text:        #DCE8F5;
+      --text-2:      #5A85A8;
+      --text-3:      #2B4460;
+      --nav-bg:      rgba(4,11,20,0.75);
+      --dot:         rgba(255,255,255,0.032);
     }
 
-    /* ===========================
-       RESET & BASE
-       =========================== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    [data-theme="light"] {
+      --bg:          #EEF3F8;
+      --surface:     #FFFFFF;
+      --surface-2:   #E8EFF6;
+      --border:      rgba(0,0,0,0.07);
+      --border-mid:  rgba(0,0,0,0.13);
+      --primary:     #00965A;
+      --primary-dim: rgba(0,150,90,0.09);
+      --primary-glow:rgba(0,150,90,0.18);
+      --primary-on:  #FFFFFF;
+      --text:        #050D18;
+      --text-2:      #4A6E8A;
+      --text-3:      #9BAFC0;
+      --nav-bg:      rgba(238,243,248,0.80);
+      --dot:         rgba(0,0,0,0.038);
+    }
 
-    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    /* ─────────────────────────────────────
+       CARD ACCENT SYSTEM
+    ───────────────────────────────────── */
+    .c1 { --ca:#00FF87; --cb:rgba(0,255,135,.18); --cg:rgba(0,255,135,.07); }
+    .c2 { --ca:#FF6B4A; --cb:rgba(255,107,74,.18);--cg:rgba(255,107,74,.07);}
+    .c3 { --ca:#5B9CF6; --cb:rgba(91,156,246,.18);--cg:rgba(91,156,246,.07);}
+    .c4 { --ca:#B975F5; --cb:rgba(185,117,245,.18);--cg:rgba(185,117,245,.07);}
+    .c5 { --ca:#F5C344; --cb:rgba(245,195,68,.18);--cg:rgba(245,195,68,.07);}
+    .c6 { --ca:#3DE8E0; --cb:rgba(61,232,224,.18);--cg:rgba(61,232,224,.07);}
 
+    /* ─────────────────────────────────────
+       AVATAR PALETTE
+    ───────────────────────────────────── */
+    .av { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:10px;letter-spacing:.03em;flex-shrink:0; }
+    .av-1{background:rgba(0,255,135,.14);color:#00FF87;}
+    .av-2{background:rgba(255,107,74,.14);color:#FF8566;}
+    .av-3{background:rgba(91,156,246,.14);color:#7AAEFF;}
+    .av-4{background:rgba(185,117,245,.14);color:#CC8FFF;}
+    .av-5{background:rgba(245,195,68,.14);color:#F5C344;}
+    .av-6{background:rgba(61,232,224,.14);color:#3DE8E0;}
+    .av-7{background:rgba(255,80,128,.14);color:#FF6EA0;}
+    .av-8{background:rgba(255,175,50,.14);color:#FFB838;}
+
+    [data-theme="light"] .av-1{background:#CCFCE8;color:#00774A;}
+    [data-theme="light"] .av-2{background:#FFE5DE;color:#C0370E;}
+    [data-theme="light"] .av-3{background:#DDEAFF;color:#2055CC;}
+    [data-theme="light"] .av-4{background:#EEE0FF;color:#7B30CC;}
+    [data-theme="light"] .av-5{background:#FFF5CC;color:#8C6A00;}
+    [data-theme="light"] .av-6{background:#D0FAFA;color:#077070;}
+    [data-theme="light"] .av-7{background:#FFD6E5;color:#A01545;}
+    [data-theme="light"] .av-8{background:#FFE8C0;color:#904800;}
+
+    /* ─────────────────────────────────────
+       RESET
+    ───────────────────────────────────── */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{font-size:16px;-webkit-font-smoothing:antialiased;}
+
+    /* ─────────────────────────────────────
+       BODY + BACKGROUNDS
+    ───────────────────────────────────── */
     body {
       font-family: var(--font-body);
-      background: var(--bg);
-      color: var(--text-primary);
+      background-color: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
-      transition: background 0.25s, color 0.25s;
+      position: relative;
+      transition: background-color .3s, color .3s;
     }
 
-    button { font-family: inherit; cursor: pointer; }
-
-    /* ===========================
-       COURT BACKGROUND
-       =========================== */
-    .court-bg {
+    /* Gradient orbs */
+    body::after {
+      content: '';
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 55% at 20% -5%,  rgba(0,255,135,.06)  0%, transparent 65%),
+        radial-gradient(ellipse 60% 50% at 90% 105%, rgba(91,156,246,.05) 0%, transparent 60%);
+      transition: opacity .3s;
     }
 
-    .court-bg svg {
-      width: min(95vw, 1000px);
-      opacity: 0.042;
-      color: var(--primary);
-      transition: color 0.25s, opacity 0.25s;
+    /* Dot grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
 
-    [data-theme="dark"] .court-bg svg { opacity: 0.055; }
+    /* Grain overlay */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 1;
+    }
 
-    /* ===========================
-       APP SHELL
-       =========================== */
+    /* ─────────────────────────────────────
+       LAYOUT
+    ───────────────────────────────────── */
     .app {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    .container {
+    .wrap {
       width: 100%;
       max-width: 1180px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 28px;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        PREVIEW STRIP
-       =========================== */
-    .preview-strip {
-      background: var(--ink);
-      color: var(--sand);
+    ───────────────────────────────────── */
+    .strip {
       font-family: var(--font-mono);
       font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
+      font-weight: 500;
+      letter-spacing: .16em;
       text-transform: uppercase;
       text-align: center;
-      padding: 7px 16px;
-      transition: background 0.25s;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: var(--primary-on);
+      transition: background .3s, color .3s;
     }
 
-    [data-theme="dark"] .preview-strip {
-      background: #282828;
-      color: #888;
-    }
-
-    /* ===========================
-       NAVIGATION
-       =========================== */
+    /* ─────────────────────────────────────
+       NAV
+    ───────────────────────────────────── */
     nav {
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
       position: sticky;
       top: 0;
       z-index: 100;
-      transition: background 0.25s, border-color 0.25s;
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: background .3s, border-color .3s;
     }
 
-    .nav-inner {
+    .nav-row {
       display: flex;
       align-items: center;
-      height: 62px;
-      gap: 32px;
+      height: 60px;
+      gap: 8px;
     }
 
     .logo {
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 17px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -.01em;
       color: var(--primary);
-      line-height: 1.05;
       user-select: none;
       cursor: default;
-      transition: color 0.25s;
+      margin-right: 8px;
+      white-space: nowrap;
+      transition: color .3s;
     }
 
-    .nav-links {
-      display: flex;
-      gap: 2px;
-      flex: 1;
-    }
+    .nav-links { display:flex; gap:2px; flex:1; }
 
     .nav-link {
       font-family: var(--font-display);
-      font-weight: 700;
+      font-weight: 600;
       font-size: 14px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 8px 12px;
-      text-decoration: none;
-      position: relative;
+      letter-spacing: .01em;
+      color: var(--text-2);
+      padding: 6px 13px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: color 0.15s;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
+      transition: background .15s, color .15s;
+      white-space: nowrap;
     }
 
-    .nav-link:hover { color: var(--text-primary); }
+    .nav-link:hover { background: var(--border); color: var(--text); }
 
     .nav-link.active {
+      background: var(--primary-dim);
       color: var(--primary);
     }
 
-    .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 12px;
-      right: 12px;
-      height: 2px;
-      background: var(--primary);
-    }
-
     .badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary);
-      color: var(--primary-on);
       font-family: var(--font-mono);
       font-size: 9px;
       font-weight: 600;
+      background: var(--primary);
+      color: var(--primary-on);
       width: 17px;
       height: 17px;
       border-radius: 50%;
-      transition: background 0.25s, color 0.25s;
-    }
-
-    .nav-controls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      transition: background .3s, color .3s;
     }
 
-    .lang-toggle {
+    .nav-end { display:flex; align-items:center; gap:7px; }
+
+    .lang {
       display: flex;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-mid);
+      border-radius: 8px;
       overflow: hidden;
-      transition: border-color 0.25s;
-    }
-
-    .lang-toggle span {
       font-family: var(--font-mono);
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.1em;
-      padding: 5px 10px;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: background 0.15s, color 0.15s;
+      letter-spacing: .08em;
+      transition: border-color .3s;
     }
 
-    .lang-toggle span.active {
+    .lang span {
+      padding: 5px 10px;
+      cursor: pointer;
+      color: var(--text-2);
+      transition: background .15s, color .15s;
+    }
+
+    .lang span.on {
       background: var(--primary);
       color: var(--primary-on);
     }
 
-    .theme-btn {
-      width: 36px;
-      height: 36px;
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      color: var(--text-muted);
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--border-mid);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-2);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 15px;
-      transition: all 0.15s;
+      cursor: pointer;
+      transition: all .15s;
     }
 
-    .theme-btn:hover {
-      color: var(--primary);
-      border-color: var(--primary);
-    }
+    .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-    /* ===========================
-       MAIN LAYOUT
-       =========================== */
-    main { flex: 1; padding: 36px 0 64px; }
+    /* ─────────────────────────────────────
+       MAIN GRID
+    ───────────────────────────────────── */
+    main { flex: 1; padding: 40px 0 72px; }
 
-    .main-grid {
+    .grid {
       display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 40px;
+      grid-template-columns: 372px 1fr;
+      gap: 44px;
       align-items: start;
     }
 
-    /* ===========================
-       SECTION LABEL
-       =========================== */
-    .label {
+    /* ─────────────────────────────────────
+       TYPOGRAPHY HELPERS
+    ───────────────────────────────────── */
+    .eyebrow {
       font-family: var(--font-mono);
       font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.16em;
+      font-weight: 500;
+      letter-spacing: .14em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--text-3);
       margin-bottom: 10px;
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
-    /* ===========================
-       MODE SELECTOR
-       =========================== */
-    .mode-block { margin-bottom: 24px; }
+    .field-label {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: var(--text);
+      transition: color .3s;
+    }
 
-    .mode-tiles {
+    /* ─────────────────────────────────────
+       MODE TILES
+    ───────────────────────────────────── */
+    .modes { margin-bottom: 28px; }
+
+    .mode-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+      grid-template-columns: repeat(3,1fr);
+      gap: 8px;
     }
 
-    .mode-tile {
+    .tile {
       border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 14px 12px;
+      border-radius: 12px;
+      background: var(--surface);
+      padding: 16px 14px;
       cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
+      transition: border-color .2s, background .2s, box-shadow .2s;
     }
 
-    .mode-tile:hover { border-color: var(--primary); }
+    .tile:hover { border-color: var(--border-mid); }
 
-    .mode-tile.active {
+    .tile.on {
       border-color: var(--primary);
-      background: var(--primary);
+      background: var(--primary-dim);
+      box-shadow: 0 0 0 1px var(--primary), 0 0 24px var(--primary-glow);
     }
 
-    .tile-num {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      transition: color 0.15s;
+    .tile-n {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--text-3);
+      margin-bottom: 10px;
+      transition: color .2s;
     }
 
-    .mode-tile.active .tile-num {
-      color: var(--primary-on);
-      opacity: 0.65;
-    }
+    .tile.on .tile-n { color: var(--primary); }
 
     .tile-name {
       font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      line-height: 1.1;
-      transition: color 0.15s;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: var(--text-2);
+      line-height: 1.2;
+      transition: color .2s;
     }
 
-    .mode-tile.active .tile-name { color: var(--primary-on); }
+    .tile.on .tile-name { color: var(--primary); }
 
     .mode-desc {
       font-family: var(--font-body);
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 20px;
-      line-height: 1.5;
-      min-height: 34px;
-      transition: color 0.25s;
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-2);
+      margin-top: 14px;
+      min-height: 32px;
+      line-height: 1.55;
+      transition: color .3s;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        INPUT
-       =========================== */
-    .input-block { margin-bottom: 18px; }
+    ───────────────────────────────────── */
+    .field { margin-bottom: 18px; }
 
-    .input-header {
+    .field-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 8px;
     }
 
-    .input-label {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      transition: color 0.25s;
-    }
-
-    .input-count {
+    .field-count {
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 600;
+      font-weight: 500;
       color: var(--primary);
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
     textarea {
       width: 100%;
       border: 1px solid var(--border);
-      background: var(--bg-input);
-      color: var(--text-primary);
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--text);
       font-family: var(--font-mono);
       font-size: 12.5px;
-      line-height: 1.75;
-      padding: 12px 14px;
+      line-height: 1.8;
+      padding: 13px 15px;
       resize: vertical;
-      min-height: 192px;
+      min-height: 196px;
       outline: none;
-      transition: border-color 0.15s, background 0.25s, color 0.25s;
+      transition: border-color .2s, background .3s, color .3s;
     }
 
-    textarea:focus { border-color: var(--primary); }
+    textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-dim); }
+    textarea::placeholder { color: var(--text-3); }
 
-    textarea::placeholder { color: var(--text-muted); }
-
-    .input-hint {
+    .hint {
       font-size: 11.5px;
-      color: var(--text-muted);
+      color: var(--text-3);
       margin-top: 6px;
       line-height: 1.4;
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        COURT SELECTOR
-       =========================== */
-    .court-block {
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 14px 16px;
+    ───────────────────────────────────── */
+    .court-row {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
-      transition: border-color 0.25s, background 0.25s;
-    }
-
-    .court-label {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      flex-shrink: 0;
-      transition: color 0.25s;
+      gap: 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      padding: 13px 16px;
+      margin-bottom: 22px;
+      transition: border-color .3s, background .3s;
     }
 
     input[type="range"] {
       flex: 1;
       -webkit-appearance: none;
       height: 2px;
-      background: var(--border);
+      background: var(--border-mid);
+      border-radius: 99px;
       outline: none;
       cursor: pointer;
+      transition: background .3s;
     }
 
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
       background: var(--primary);
       cursor: pointer;
-      transition: background 0.25s;
+      box-shadow: 0 0 10px var(--primary-glow);
+      transition: background .3s, box-shadow .3s;
     }
 
-    .court-count {
+    .court-n {
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 30px;
+      font-weight: 800;
+      font-size: 28px;
       color: var(--primary);
-      min-width: 36px;
-      text-align: center;
+      min-width: 34px;
+      text-align: right;
       line-height: 1;
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        GENERATE BUTTON
-       =========================== */
-    .generate-btn {
+    ───────────────────────────────────── */
+    .gen-btn {
       width: 100%;
       background: var(--primary);
       color: var(--primary-on);
       border: none;
+      border-radius: 10px;
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 19px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 17px;
+      letter-spacing: .05em;
       padding: 16px 24px;
       cursor: pointer;
-      transition: transform 0.1s, box-shadow 0.15s, background 0.25s, color 0.25s;
-      border-radius: var(--radius-none);
+      transition: transform .15s, box-shadow .2s, background .3s;
+      box-shadow: 0 4px 28px var(--primary-glow);
     }
 
-    .generate-btn:hover {
+    .gen-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 24px var(--primary-glow);
+      box-shadow: 0 8px 36px var(--primary-glow);
     }
 
-    .generate-btn:active { transform: translateY(0); box-shadow: none; }
+    .gen-btn:active { transform: none; box-shadow: 0 2px 12px var(--primary-glow); }
 
-    /* ===========================
-       RESULTS PANEL
-       =========================== */
-    .results-header {
+    /* ─────────────────────────────────────
+       RESULTS HEADER
+    ───────────────────────────────────── */
+    .res-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 28px;
-      padding-bottom: 20px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
-      transition: border-color 0.25s;
+      transition: border-color .3s;
     }
 
-    .results-title {
+    .res-title {
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 30px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-primary);
+      font-weight: 800;
+      font-size: 28px;
+      letter-spacing: -.01em;
+      color: var(--text);
       line-height: 1;
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
-    .results-meta {
+    .res-meta {
       font-family: var(--font-mono);
-      font-size: 10.5px;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
+      font-size: 11px;
+      color: var(--text-2);
+      letter-spacing: .08em;
       text-transform: uppercase;
-      margin-top: 6px;
-      transition: color 0.25s;
+      margin-top: 7px;
+      transition: color .3s;
     }
 
-    .results-actions { display: flex; gap: 6px; }
+    .act-btns { display:flex; gap:6px; }
 
-    .action-btn {
+    .act-btn {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .02em;
+      color: var(--text-2);
+      border: 1px solid var(--border-mid);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 8px 15px;
+      cursor: pointer;
+      transition: all .15s;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-      background: var(--bg-card);
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: color 0.15s, border-color 0.15s, background 0.25s;
     }
 
-    .action-btn:hover { color: var(--primary); border-color: var(--primary); }
+    .act-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        ROUND BLOCK
-       =========================== */
-    .round-block { margin-bottom: 36px; }
+    ───────────────────────────────────── */
+    .round { margin-bottom: 40px; }
 
-    .round-header {
+    .round-head {
       display: flex;
       align-items: center;
       gap: 12px;
       margin-bottom: 14px;
     }
 
-    .round-title {
+    .round-lbl {
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 17px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      flex-shrink: 0;
-      transition: color 0.25s;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: .03em;
+      color: var(--text);
+      white-space: nowrap;
+      transition: color .3s;
     }
 
-    .round-rule {
+    .round-line {
       flex: 1;
       height: 1px;
       background: var(--border);
-      transition: background 0.25s;
+      transition: background .3s;
     }
 
-    .round-count {
+    .round-ct {
       font-family: var(--font-mono);
       font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: .1em;
       text-transform: uppercase;
-      flex-shrink: 0;
-      transition: color 0.25s;
+      color: var(--text-3);
+      white-space: nowrap;
+      transition: color .3s;
     }
 
     .match-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
       gap: 10px;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        MATCH CARD
-       =========================== */
-    .match-card {
-      background: var(--bg-card);
+    ───────────────────────────────────── */
+    .card {
+      background: var(--surface);
       border: 1px solid var(--border);
-      position: relative;
+      border-radius: 12px;
       overflow: hidden;
-      animation: card-rise 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
-      transition: background 0.25s, border-color 0.25s;
+      position: relative;
+      cursor: default;
+      animation: up .42s cubic-bezier(.22,1,.36,1) both;
+      transition: background .3s, border-color .2s, box-shadow .2s, transform .15s;
     }
 
-    .match-card:nth-child(1) { animation-delay: 0.04s; }
-    .match-card:nth-child(2) { animation-delay: 0.10s; }
-    .match-card:nth-child(3) { animation-delay: 0.16s; }
-    .match-card:nth-child(4) { animation-delay: 0.22s; }
-    .match-card:nth-child(5) { animation-delay: 0.28s; }
-    .match-card:nth-child(6) { animation-delay: 0.34s; }
+    .card:nth-child(1){animation-delay:.04s}
+    .card:nth-child(2){animation-delay:.11s}
+    .card:nth-child(3){animation-delay:.18s}
+    .card:nth-child(4){animation-delay:.25s}
+    .card:nth-child(5){animation-delay:.32s}
+    .card:nth-child(6){animation-delay:.39s}
 
-    @keyframes card-rise {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    @keyframes up {
+      from { opacity:0; transform:translateY(18px); }
+      to   { opacity:1; transform:translateY(0); }
     }
 
-    /* Left accent stripe */
-    .match-card::before {
+    /* Gradient top border */
+    .card::before {
       content: '';
       position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 4px;
-      background: var(--card-accent, var(--primary));
-      transition: background 0.25s;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--ca) 0%, transparent 72%);
+      opacity: .9;
     }
 
-    .match-card.a1 { --card-accent: var(--accent-1); }
-    .match-card.a2 { --card-accent: var(--accent-2); }
-    .match-card.a3 { --card-accent: var(--accent-3); }
-    .match-card.a4 { --card-accent: var(--accent-4); }
-    .match-card.a5 { --card-accent: var(--accent-5); }
-    .match-card.a6 { --card-accent: var(--accent-6); }
-
-    .card-body {
-      padding: 14px 14px 14px 18px;
+    /* Ambient top glow */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, var(--cg) 0%, transparent 100%);
+      pointer-events: none;
     }
 
-    .court-name {
+    .card:hover {
+      border-color: var(--cb);
+      box-shadow: 0 12px 36px rgba(0,0,0,.35), 0 0 0 1px var(--cb);
+      transform: translateY(-2px);
+    }
+
+    .card-body { padding: 16px 16px 14px; }
+
+    .court-lbl {
       font-family: var(--font-mono);
-      font-size: 9.5px;
+      font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: .16em;
       text-transform: uppercase;
-      color: var(--card-accent, var(--primary));
-      margin-bottom: 14px;
-      transition: color 0.25s;
+      color: var(--ca);
+      margin-bottom: 15px;
+      position: relative;
+      z-index: 1;
+      transition: color .3s;
     }
 
-    .match-layout {
+    .matchup {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 15px;
     }
 
-    .pair { display: flex; flex-direction: column; gap: 7px; }
-    .pair-l { align-items: flex-start; }
-    .pair-r { align-items: flex-end; }
+    .pair { display:flex; flex-direction:column; gap:8px; }
+    .pl   { align-items:flex-start; }
+    .pr   { align-items:flex-end; }
 
-    .player-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
+    .prow { display:flex; align-items:center; gap:8px; }
+    .pr .prow { flex-direction:row-reverse; }
 
-    .pair-r .player-row { flex-direction: row-reverse; }
-
-    .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 10px;
-      letter-spacing: 0.01em;
-      flex-shrink: 0;
-    }
-
-    /* Avatar palettes — light */
-    .av-bl { background: #DBEAFE; color: #1D4ED8; }
-    .av-em { background: #D1FAE5; color: #065F46; }
-    .av-vi { background: #EDE9FE; color: #5B21B6; }
-    .av-am { background: #FEF3C7; color: #92400E; }
-    .av-ro { background: #FFE4E6; color: #9F1239; }
-    .av-cy { background: #CFFAFE; color: #155E75; }
-    .av-or { background: #FFEDD5; color: #9A3412; }
-    .av-te { background: #CCFBF1; color: #134E4A; }
-
-    /* Avatar palettes — dark */
-    [data-theme="dark"] .av-bl { background: #1E3A5F; color: #93C5FD; }
-    [data-theme="dark"] .av-em { background: #1A3A2A; color: #6EE7B7; }
-    [data-theme="dark"] .av-vi { background: #2D1F5E; color: #C4B5FD; }
-    [data-theme="dark"] .av-am { background: #3A2800; color: #FCD34D; }
-    [data-theme="dark"] .av-ro { background: #3A1020; color: #FDA4AF; }
-    [data-theme="dark"] .av-cy { background: #0E2A30; color: #67E8F9; }
-    [data-theme="dark"] .av-or { background: #3A1A0A; color: #FCA38C; }
-    [data-theme="dark"] .av-te { background: #0A2A26; color: #5EEAD4; }
-
-    .player-name {
+    .pname {
       font-family: var(--font-body);
-      font-size: 11.5px;
+      font-size: 12px;
       font-weight: 500;
-      color: var(--text-primary);
+      color: var(--text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 90px;
-      transition: color 0.25s;
+      max-width: 88px;
+      transition: color .3s;
     }
 
     .vs {
-      font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      color: var(--text-3);
       text-align: center;
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
     /* Score area */
-    .score-area {
+    .scores {
       display: flex;
       align-items: center;
       gap: 8px;
       padding-top: 12px;
-      border-top: 1px dashed var(--border);
-      transition: border-color 0.25s;
+      border-top: 1px solid var(--border);
+      transition: border-color .3s;
     }
 
-    .score-box {
+    .sbox {
       flex: 1;
-      height: 30px;
-      border: 1.5px dashed var(--border);
+      height: 32px;
+      border: 1.5px dashed var(--border-mid);
+      border-radius: 6px;
       background: transparent;
-      transition: border-color 0.25s;
+      transition: border-color .3s;
     }
 
-    .score-dash {
+    .sdash {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 13px;
-      color: var(--text-muted);
-      transition: color 0.25s;
+      font-size: 14px;
+      color: var(--text-3);
+      flex-shrink: 0;
+      transition: color .3s;
     }
 
-    /* ===========================
+    /* ─────────────────────────────────────
        FOOTER
-       =========================== */
+    ───────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 24px 0;
-      transition: border-color 0.25s;
+      padding: 22px 0;
+      position: relative;
+      z-index: 2;
+      transition: border-color .3s;
     }
 
-    .footer-inner {
+    .foot-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    .footer-logo {
+    .foot-logo {
       font-family: var(--font-display);
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: -.01em;
       color: var(--primary);
-      transition: color 0.25s;
+      transition: color .3s;
     }
 
-    .footer-note {
+    .foot-note {
       font-family: var(--font-mono);
       font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      transition: color 0.25s;
+      letter-spacing: .1em;
+      color: var(--text-3);
+      transition: color .3s;
     }
-
   </style>
 </head>
 <body>
 
-  <!-- Court background -->
-  <div class="court-bg">
-    <svg viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="198" height="98" stroke="currentColor" stroke-width="2.2"/>
-      <rect x="1" y="1" width="30" height="98" fill="currentColor" fill-opacity="0.18" stroke="none"/>
-      <rect x="169" y="1" width="30" height="98" fill="currentColor" fill-opacity="0.18" stroke="none"/>
-      <line x1="100" y1="1" x2="100" y2="99" stroke="currentColor" stroke-width="1.6"/>
-      <line x1="31"  y1="1" x2="31"  y2="99" stroke="currentColor" stroke-width="1"/>
-      <line x1="169" y1="1" x2="169" y2="99" stroke="currentColor" stroke-width="1"/>
-      <line x1="31"  y1="50" x2="100" y2="50" stroke="currentColor" stroke-width="1"/>
-      <line x1="100" y1="50" x2="169" y2="50" stroke="currentColor" stroke-width="1"/>
-    </svg>
-  </div>
+  <!-- SVG grain filter -->
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="grain-f" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.68" numOctaves="4" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="grey"/>
+      <feBlend in="SourceGraphic" in2="grey" mode="overlay" result="blend"/>
+      <feComposite in="blend" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </svg>
+  <div class="grain" style="filter:url(#grain-f);opacity:.018;background:#fff;mix-blend-mode:overlay;"></div>
 
   <div class="app">
 
-    <div class="preview-strip">
-      Design Preview &nbsp;·&nbsp; Court Concrete Aesthetic &nbsp;·&nbsp; Not yet implemented
-    </div>
+    <!-- Preview strip -->
+    <div class="strip">Night Game — Design Preview &nbsp;·&nbsp; Toggle theme top-right</div>
 
     <!-- Nav -->
     <nav>
-      <div class="container">
-        <div class="nav-inner">
-
-          <div class="logo">Padel<br>Generator</div>
+      <div class="wrap">
+        <div class="nav-row">
+          <div class="logo">Padel Generator</div>
 
           <div class="nav-links">
             <span class="nav-link active">Generator</span>
@@ -837,53 +805,52 @@
             </span>
           </div>
 
-          <div class="nav-controls">
-            <div class="lang-toggle">
+          <div class="nav-end">
+            <div class="lang">
               <span>PT</span>
-              <span class="active">EN</span>
+              <span class="on">EN</span>
             </div>
-            <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">☽</button>
+            <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☽</button>
           </div>
-
         </div>
       </div>
     </nav>
 
     <!-- Main -->
     <main>
-      <div class="container">
-        <div class="main-grid">
+      <div class="wrap">
+        <div class="grid">
 
-          <!-- LEFT: Generator -->
+          <!-- ── LEFT: Generator ── -->
           <div>
 
-            <!-- Mode Selector -->
-            <div class="mode-block">
-              <div class="label">Game Mode</div>
-              <div class="mode-tiles">
-                <div class="mode-tile active" onclick="selectMode(this, 'Random pairs each round — everyone mixes.')">
-                  <div class="tile-num">01</div>
+            <!-- Mode selector -->
+            <div class="modes">
+              <div class="eyebrow">Game Mode</div>
+              <div class="mode-grid">
+                <div class="tile on" onclick="pickMode(this,'Random pairs every round — everyone mixes with everyone.')">
+                  <div class="tile-n">01</div>
                   <div class="tile-name">Regular</div>
                 </div>
-                <div class="mode-tile" onclick="selectMode(this, 'Permanent pairs — same partners throughout.')">
-                  <div class="tile-num">02</div>
+                <div class="tile" onclick="pickMode(this,'Fixed partners — same pair stays together all game.')">
+                  <div class="tile-n">02</div>
                   <div class="tile-name">Fixed Pairs</div>
                 </div>
-                <div class="mode-tile" onclick="selectMode(this, 'Table A vs Table B — ranked by seeding.')">
-                  <div class="tile-num">03</div>
+                <div class="tile" onclick="pickMode(this,'Table A vs Table B — ranked by seeding position.')">
+                  <div class="tile-n">03</div>
                   <div class="tile-name">Seeded</div>
                 </div>
               </div>
-              <div class="mode-desc" id="mode-desc">Random pairs each round — everyone mixes.</div>
+              <div class="mode-desc" id="mode-desc">Random pairs every round — everyone mixes with everyone.</div>
             </div>
 
-            <!-- Player Input -->
-            <div class="input-block">
-              <div class="input-header">
-                <div class="input-label">Players</div>
-                <div class="input-count" id="player-count">8 players</div>
+            <!-- Player input -->
+            <div class="field">
+              <div class="field-header">
+                <div class="field-label">Players</div>
+                <div class="field-count" id="pcount">8 players</div>
               </div>
-              <textarea id="player-input" oninput="updateCount()" placeholder="One name per line…">João Silva
+              <textarea id="ptxt" oninput="countPlayers()" placeholder="One name per line…">João Silva
 Maria Santos
 Pedro Costa
 Ana Ferreira
@@ -891,85 +858,85 @@ Miguel Rodrigues
 Sofia Oliveira
 Carlos Mendes
 Inês Pereira</textarea>
-              <div class="input-hint">One per line · Paste directly from WhatsApp</div>
+              <div class="hint">One per line · Paste directly from WhatsApp</div>
             </div>
 
-            <!-- Court Selector -->
-            <div class="court-block">
-              <div class="court-label">Courts</div>
+            <!-- Courts -->
+            <div class="court-row">
+              <div class="field-label">Courts</div>
               <input type="range" min="1" max="4" value="2"
-                oninput="document.getElementById('court-num').textContent = this.value">
-              <div class="court-count" id="court-num">2</div>
+                oninput="document.getElementById('cn').textContent=this.value">
+              <div class="court-n" id="cn">2</div>
             </div>
 
             <!-- Generate -->
-            <button class="generate-btn">Generate Tournament</button>
+            <button class="gen-btn">Generate Tournament</button>
 
           </div>
 
-          <!-- RIGHT: Results -->
+          <!-- ── RIGHT: Results ── -->
           <div>
 
-            <div class="results-header">
+            <div class="res-head">
               <div>
-                <div class="results-title">Tournament</div>
-                <div class="results-meta">8 players · 4 pairs · 2 courts · 3 rounds</div>
+                <div class="res-title">Tournament</div>
+                <div class="res-meta">8 players · 4 pairs · 2 courts · 3 rounds</div>
               </div>
-              <div class="results-actions">
-                <button class="action-btn">↑ Share</button>
-                <button class="action-btn">⎙ Print</button>
+              <div class="act-btns">
+                <button class="act-btn">↑ Share</button>
+                <button class="act-btn">⎙ Print</button>
               </div>
             </div>
 
             <!-- Round 1 -->
-            <div class="round-block">
-              <div class="round-header">
-                <div class="round-title">Round 1</div>
-                <div class="round-rule"></div>
-                <div class="round-count">2 matches</div>
+            <div class="round">
+              <div class="round-head">
+                <div class="round-lbl">Round 1</div>
+                <div class="round-line"></div>
+                <div class="round-ct">2 matches</div>
               </div>
               <div class="match-grid">
 
-                <div class="match-card a1">
+                <div class="card c1">
                   <div class="card-body">
-                    <div class="court-name">Court A</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-bl">JS</div><span class="player-name">João Silva</span></div>
-                        <div class="player-row"><div class="avatar av-em">MS</div><span class="player-name">Maria Santos</span></div>
+                    <div class="court-lbl">Court A</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
+                        <div class="prow"><div class="av av-2">MS</div><span class="pname">Maria Santos</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-vi">PC</div><span class="player-name">Pedro Costa</span></div>
-                        <div class="player-row"><div class="avatar av-am">AF</div><span class="player-name">Ana Ferreira</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-3">PC</div><span class="pname">Pedro Costa</span></div>
+                        <div class="prow"><div class="av av-4">AF</div><span class="pname">Ana Ferreira</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
 
-                <div class="match-card a2">
+                <div class="card c2">
                   <div class="card-body">
-                    <div class="court-name">Court B</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-ro">MR</div><span class="player-name">Miguel Rodrigues</span></div>
-                        <div class="player-row"><div class="avatar av-cy">SO</div><span class="player-name">Sofia Oliveira</span></div>
+                    <div class="court-lbl">Court B</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-5">MR</div><span class="pname">Miguel Rodrigues</span></div>
+                        <div class="prow"><div class="av av-6">SO</div><span class="pname">Sofia Oliveira</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-or">CM</div><span class="player-name">Carlos Mendes</span></div>
-                        <div class="player-row"><div class="avatar av-te">IP</div><span class="player-name">Inês Pereira</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-7">CM</div><span class="pname">Carlos Mendes</span></div>
+                        <div class="prow"><div class="av av-8">IP</div><span class="pname">Inês Pereira</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
@@ -978,54 +945,54 @@ Inês Pereira</textarea>
             </div>
 
             <!-- Round 2 -->
-            <div class="round-block">
-              <div class="round-header">
-                <div class="round-title">Round 2</div>
-                <div class="round-rule"></div>
-                <div class="round-count">2 matches</div>
+            <div class="round">
+              <div class="round-head">
+                <div class="round-lbl">Round 2</div>
+                <div class="round-line"></div>
+                <div class="round-ct">2 matches</div>
               </div>
               <div class="match-grid">
 
-                <div class="match-card a1">
+                <div class="card c3">
                   <div class="card-body">
-                    <div class="court-name">Court A</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-bl">JS</div><span class="player-name">João Silva</span></div>
-                        <div class="player-row"><div class="avatar av-vi">PC</div><span class="player-name">Pedro Costa</span></div>
+                    <div class="court-lbl">Court A</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
+                        <div class="prow"><div class="av av-3">PC</div><span class="pname">Pedro Costa</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-ro">MR</div><span class="player-name">Miguel Rodrigues</span></div>
-                        <div class="player-row"><div class="avatar av-am">AF</div><span class="player-name">Ana Ferreira</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-5">MR</div><span class="pname">Miguel Rodrigues</span></div>
+                        <div class="prow"><div class="av av-4">AF</div><span class="pname">Ana Ferreira</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
 
-                <div class="match-card a3">
+                <div class="card c4">
                   <div class="card-body">
-                    <div class="court-name">Court B</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-em">MS</div><span class="player-name">Maria Santos</span></div>
-                        <div class="player-row"><div class="avatar av-cy">SO</div><span class="player-name">Sofia Oliveira</span></div>
+                    <div class="court-lbl">Court B</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-2">MS</div><span class="pname">Maria Santos</span></div>
+                        <div class="prow"><div class="av av-6">SO</div><span class="pname">Sofia Oliveira</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-or">CM</div><span class="player-name">Carlos Mendes</span></div>
-                        <div class="player-row"><div class="avatar av-te">IP</div><span class="player-name">Inês Pereira</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-7">CM</div><span class="pname">Carlos Mendes</span></div>
+                        <div class="prow"><div class="av av-8">IP</div><span class="pname">Inês Pereira</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
@@ -1034,54 +1001,54 @@ Inês Pereira</textarea>
             </div>
 
             <!-- Round 3 -->
-            <div class="round-block">
-              <div class="round-header">
-                <div class="round-title">Round 3</div>
-                <div class="round-rule"></div>
-                <div class="round-count">2 matches</div>
+            <div class="round">
+              <div class="round-head">
+                <div class="round-lbl">Round 3</div>
+                <div class="round-line"></div>
+                <div class="round-ct">2 matches</div>
               </div>
               <div class="match-grid">
 
-                <div class="match-card a2">
+                <div class="card c5">
                   <div class="card-body">
-                    <div class="court-name">Court A</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-bl">JS</div><span class="player-name">João Silva</span></div>
-                        <div class="player-row"><div class="avatar av-cy">SO</div><span class="player-name">Sofia Oliveira</span></div>
+                    <div class="court-lbl">Court A</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
+                        <div class="prow"><div class="av av-6">SO</div><span class="pname">Sofia Oliveira</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-or">CM</div><span class="player-name">Carlos Mendes</span></div>
-                        <div class="player-row"><div class="avatar av-vi">PC</div><span class="player-name">Pedro Costa</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-7">CM</div><span class="pname">Carlos Mendes</span></div>
+                        <div class="prow"><div class="av av-3">PC</div><span class="pname">Pedro Costa</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
 
-                <div class="match-card a4">
+                <div class="card c6">
                   <div class="card-body">
-                    <div class="court-name">Court B</div>
-                    <div class="match-layout">
-                      <div class="pair pair-l">
-                        <div class="player-row"><div class="avatar av-em">MS</div><span class="player-name">Maria Santos</span></div>
-                        <div class="player-row"><div class="avatar av-te">IP</div><span class="player-name">Inês Pereira</span></div>
+                    <div class="court-lbl">Court B</div>
+                    <div class="matchup">
+                      <div class="pair pl">
+                        <div class="prow"><div class="av av-2">MS</div><span class="pname">Maria Santos</span></div>
+                        <div class="prow"><div class="av av-8">IP</div><span class="pname">Inês Pereira</span></div>
                       </div>
                       <div class="vs">VS</div>
-                      <div class="pair pair-r">
-                        <div class="player-row"><div class="avatar av-ro">MR</div><span class="player-name">Miguel Rodrigues</span></div>
-                        <div class="player-row"><div class="avatar av-am">AF</div><span class="player-name">Ana Ferreira</span></div>
+                      <div class="pair pr">
+                        <div class="prow"><div class="av av-5">MR</div><span class="pname">Miguel Rodrigues</span></div>
+                        <div class="prow"><div class="av av-4">AF</div><span class="pname">Ana Ferreira</span></div>
                       </div>
                     </div>
-                    <div class="score-area">
-                      <div class="score-box"></div>
-                      <div class="score-dash">—</div>
-                      <div class="score-box"></div>
+                    <div class="scores">
+                      <div class="sbox"></div>
+                      <div class="sdash">:</div>
+                      <div class="sbox"></div>
                     </div>
                   </div>
                 </div>
@@ -1095,10 +1062,10 @@ Inês Pereira</textarea>
     </main>
 
     <footer>
-      <div class="container">
-        <div class="footer-inner">
-          <div class="footer-logo">Padel Generator</div>
-          <div class="footer-note">Design Preview · Court Concrete · 2026</div>
+      <div class="wrap">
+        <div class="foot-row">
+          <div class="foot-logo">Padel Generator</div>
+          <div class="foot-note">Night Game — Design Preview · 2026</div>
         </div>
       </div>
     </footer>
@@ -1108,21 +1075,21 @@ Inês Pereira</textarea>
   <script>
     function toggleTheme() {
       const html = document.documentElement;
-      const isDark = html.dataset.theme === 'dark';
-      html.dataset.theme = isDark ? 'light' : 'dark';
-      document.getElementById('theme-btn').textContent = isDark ? '☽' : '☀';
+      const dark = html.dataset.theme === 'dark';
+      html.dataset.theme = dark ? 'light' : 'dark';
+      document.getElementById('theme-btn').textContent = dark ? '☀' : '☽';
     }
 
-    function selectMode(el, desc) {
-      document.querySelectorAll('.mode-tile').forEach(t => t.classList.remove('active'));
-      el.classList.add('active');
+    function pickMode(el, desc) {
+      document.querySelectorAll('.tile').forEach(t => t.classList.remove('on'));
+      el.classList.add('on');
       document.getElementById('mode-desc').textContent = desc;
     }
 
-    function updateCount() {
-      const n = document.getElementById('player-input').value
+    function countPlayers() {
+      const n = document.getElementById('ptxt').value
         .split('\n').filter(l => l.trim()).length;
-      document.getElementById('player-count').textContent = n + ' player' + (n === 1 ? '' : 's');
+      document.getElementById('pcount').textContent = n + (n === 1 ? ' player' : ' players');
     }
   </script>
 
