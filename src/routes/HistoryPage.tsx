@@ -4,6 +4,7 @@ import { useHistory } from '../hooks/useHistory'
 import { useToast } from '../context/ToastContext'
 import { useLanguage } from '../context/LanguageContext'
 import { HistoryList } from '../components/history/HistoryList'
+import { analytics } from '../analytics'
 
 export function HistoryPage() {
   const { getAll, remove } = useHistory()
@@ -15,6 +16,7 @@ export function HistoryPage() {
     remove(id)
     setTournaments(prev => prev.filter(tourney => tourney.id !== id))
     showToast('info', t.toast.deleted)
+    analytics.tournamentDeleted()
   }, [showToast, t.toast.deleted])
 
   return (

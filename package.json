@@ -17,6 +17,8 @@
   "dependencies": {
     "@sentry/react": "^10.53.1",
     "@tailwindcss/vite": "^4.3.0",
+    "@vercel/analytics": "^2.0.1",
+    "posthog-js": "^1.374.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.15.1",

@@ -2,6 +2,7 @@ import { useToast } from '../../context/ToastContext'
 import { useLanguage } from '../../context/LanguageContext'
 import type { Tournament } from '../../types'
 import { shareTournament } from '../../utils/shareTournament'
+import { analytics } from '../../analytics'
 
 function ShareIcon() {
   return (
@@ -15,13 +16,15 @@ type Props = {
   tournament: Tournament
   variant?: 'button' | 'icon'
   className?: string
+  source?: string
 }
 
-export function ShareButton({ tournament, variant = 'button', className }: Props) {
+export function ShareButton({ tournament, variant = 'button', className, source = 'unknown' }: Props) {
   const { showToast } = useToast()
   const { t } = useLanguage()
 
   function handleShare() {
+    analytics.shareClicked(source)
     shareTournament(tournament, showToast, {
       shareCopied: t.toast.shareCopied,
       shareError: t.toast.shareError,

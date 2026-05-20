@@ -37,7 +37,7 @@ export function TournamentDetailPage() {
           {t.history.back}
         </Link>
         <div className="flex items-center gap-2">
-          <ShareButton tournament={tournament} />
+          <ShareButton tournament={tournament} source="detail" />
           <PrintButton />
         </div>
       </div>

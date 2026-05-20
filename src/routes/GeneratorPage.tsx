@@ -12,6 +12,7 @@ import { RoundsPanel } from '../components/rounds/RoundsPanel'
 import { validate } from '../utils/validation'
 import { generateTournament } from '../utils/gameLogic'
 import { useHistory } from '../hooks/useHistory'
+import { analytics } from '../analytics'
 
 const EXAMPLE_PLAYERS = [
   'Ana Costa', 'Bruno Silva', 'Carlos Mota', 'Diana Ferreira',
@@ -57,6 +58,7 @@ export function GeneratorPage() {
     dispatch({ type: 'SET_MODE', payload: 'regular' })
     dispatch({ type: 'SET_PLAYERS', payload: EXAMPLE_PLAYERS })
     setExampleKey(k => k + 1)
+    analytics.exampleLoaded()
   }
 
   function handleGenerate() {
@@ -81,6 +83,7 @@ export function GeneratorPage() {
           const roundCount = tournament.rounds.length
           const matchCount = tournament.rounds.reduce((sum, r) => sum + r.matches.length, 0)
           showToast('success', t.toast.generated(roundCount, matchCount))
+          analytics.tournamentGenerated({ mode: state.mode, rounds: roundCount, matches: matchCount, courts: tournament.courts })
           setTimeout(() => {
             roundsPanelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
           }, 50)
@@ -118,7 +121,7 @@ export function GeneratorPage() {
 
             <ModeSelector
               value={state.mode}
-              onChange={mode => dispatch({ type: 'SET_MODE', payload: mode })}
+              onChange={mode => { dispatch({ type: 'SET_MODE', payload: mode }); analytics.modeSelected(mode) }}
             />
 
             {state.mode === 'regular' && (

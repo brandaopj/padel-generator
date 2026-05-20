@@ -100,7 +100,7 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
 
         {/* Actions — stopPropagation so clicks here don't trigger card navigation */}
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
-          <ShareButton tournament={tourney} variant="icon" />
+          <ShareButton tournament={tourney} variant="icon" source="history" />
           <DeleteButton onDelete={() => onDelete(tourney.id)} />
           <Link
             to={`/history/${tourney.id}`}

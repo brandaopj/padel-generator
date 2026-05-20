@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
+import { analytics } from './analytics'
 import { AppProvider } from './context/AppContext'
 import { AppContext } from './context/AppContext'
 import { ToastProvider } from './context/ToastContext'
@@ -139,7 +141,7 @@ function Shell() {
             )}
             {showPrint && state.generated && (
               <div className="hidden lg:flex">
-                <ShareButton tournament={state.generated} />
+                <ShareButton tournament={state.generated} source="header" />
               </div>
             )}
             {/* Ko-fi — desktop only */}
@@ -148,13 +150,13 @@ function Shell() {
             </div>
             <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden text-xs font-medium">
               <button
-                onClick={() => setLang('pt')}
+                onClick={() => { setLang('pt'); analytics.languageChanged('pt') }}
                 className={`px-2 py-1 transition-colors ${lang === 'pt' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
               >
                 PT
               </button>
               <button
-                onClick={() => setLang('en')}
+                onClick={() => { setLang('en'); analytics.languageChanged('en') }}
                 className={`px-2 py-1 transition-colors ${lang === 'en' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}
               >
                 EN
@@ -197,7 +199,7 @@ function Shell() {
               {showPrint && (
                 <div className="pt-2 border-t border-gray-100 dark:border-gray-700 flex flex-col gap-1">
                   <PrintButton className="w-full justify-start" />
-                  {state.generated && <ShareButton tournament={state.generated} className="w-full justify-start" />}
+                  {state.generated && <ShareButton tournament={state.generated} source="drawer" className="w-full justify-start" />}
                 </div>
               )}
               <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
@@ -225,6 +227,7 @@ function Shell() {
         </Routes>
       </main>
       {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}
+      <Analytics />
     </div>
   )
 }
