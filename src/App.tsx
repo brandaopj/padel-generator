@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useContext, useEffect, useState } from 'react'
+import { lazy, Suspense, useContext, useEffect, useState } from 'react'
 import { createBrowserRouter, RouterProvider, Outlet, Link, NavLink, useLocation } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import { analytics } from './analytics'
@@ -85,19 +85,6 @@ function Shell() {
   const location = useLocation()
   const [helpOpen, setHelpOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [historyCount, setHistoryCount] = useState(() => {
-    try { return (JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length } catch { return 0 }
-  })
-
-  const refreshCount = useCallback(() => {
-    try { setHistoryCount((JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length) } catch { setHistoryCount(0) }
-  }, [])
-
-  useEffect(() => {
-    window.addEventListener('padel-history-change', refreshCount)
-    return () => window.removeEventListener('padel-history-change', refreshCount)
-  }, [refreshCount])
-
   useEffect(() => { setMenuOpen(false) }, [location.pathname])
 
   useEffect(() => {
@@ -133,11 +120,6 @@ function Shell() {
               <NavLink to="/history" className={navLinkClass}>
                 <HistoryIcon />
                 <span>{t.nav.history}</span>
-                {historyCount > 0 && (
-                  <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold flex items-center justify-center leading-none">
-                    {historyCount}
-                  </span>
-                )}
               </NavLink>
               <button
                 type="button"
@@ -204,11 +186,6 @@ function Shell() {
               <NavLink to="/history" onClick={() => setMenuOpen(false)} className={mobileNavLinkClass}>
                 <HistoryIcon />
                 <span>{t.nav.history}</span>
-                {historyCount > 0 && (
-                  <span className="ml-auto min-w-[20px] h-5 px-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center leading-none">
-                    {historyCount}
-                  </span>
-                )}
               </NavLink>
               <button
                 type="button"
