@@ -1,4 +1,17 @@
 {
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "(cd /Users/pedro/BrandaoLab/padel-generator && git status --porcelain | grep -q . && git add -A && git commit -m \"auto: Claude Code changes $(date '+%Y-%m-%d %H:%M')\" && git push) 2>/dev/null || true",
+            "statusMessage": "Committing and pushing changes to git..."
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Bash(npx playwright *)",
@@ -15,7 +28,22 @@
       "Bash(git commit -m ' *)",
       "Bash(gh run *)",
       "Bash(npx tsc *)",
-      "Bash(npx vitest *)"
+      "Bash(npx vitest *)",
+      "WebFetch(domain:github.com)",
+      "Bash(gh repo *)",
+      "Read(//tmp/**)",
+      "Bash(grep -r \"VSCode\\\\|VS Code\\\\|vscode\\\\|IDE extension\\\\|Claude Code\" /tmp/rtk-search --include=\"*.md\" 2>/dev/null)",
+      "Read(//private/tmp/rtk-search/**)",
+      "Bash(npm install *)",
+      "WebFetch(domain:padel-generator-three.vercel.app)",
+      "Bash(curl -s https://padel-generator-three.vercel.app/)",
+      "Bash(curl -s https://padel-generator-three.vercel.app/assets/index-CSS3gRFX.js)",
+      "WebFetch(domain:padel-generator-5hbm010ic-brandaopjlab.vercel.app)",
+      "Bash(command -v lighthouse)",
+      "Bash(lighthouse http://localhost:4173 --output=json --output-path=/tmp/lighthouse-report.json --chrome-flags=\"--headless --no-sandbox\" --only-categories=accessibility,best-practices)",
+      "Bash(node -e ' *)",
+      "Bash(pkill -f \"vite preview\")",
+      "Bash(npx lighthouse *)"
     ]
   }
 }
