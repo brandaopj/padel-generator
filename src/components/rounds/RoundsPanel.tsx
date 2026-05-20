@@ -8,10 +8,11 @@ type Props = {
   tournament: Tournament | null
   onEditCourtName?: (court: number, name: string) => void
   showShare?: boolean
+  showPrint?: boolean
   onScoreChange?: (roundIdx: number, matchIdx: number, scores: [number | null, number | null]) => void
 }
 
-export function RoundsPanel({ tournament, onEditCourtName, showShare = false, onScoreChange }: Props) {
+export function RoundsPanel({ tournament, onEditCourtName, showShare = false, showPrint = true, onScoreChange }: Props) {
   const { lang, t } = useLanguage()
 
   if (!tournament) return null
@@ -27,14 +28,16 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false, on
           </h2>
           <div className="flex items-center gap-2 shrink-0 print:hidden">
             {showShare && <ShareButton tournament={tournament} source="rounds-panel" />}
-            <button
-              type="button"
-              onClick={() => window.print()}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-surface2 text-fg2 rounded-md text-sm hover:bg-surface2/80 transition-colors"
-            >
-              <Printer className="w-4 h-4" />
-              {t.print}
-            </button>
+            {showPrint && (
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-surface2 text-fg2 rounded-md text-sm hover:bg-surface2/80 transition-colors"
+              >
+                <Printer className="w-4 h-4" />
+                {t.print}
+              </button>
+            )}
           </div>
         </div>
 

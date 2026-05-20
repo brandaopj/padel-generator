@@ -184,7 +184,7 @@ function Shell() {
                 <span>{t.nav.howItWorks}</span>
               </button>
               {showPrint && (
-                <div className="pt-2 border-t border-border flex flex-col gap-1">
+                <div className="pt-2 border-t border-border flex flex-col gap-1 md:hidden">
                   <PrintButton className="w-full justify-start" />
                   {state.generated && <ShareButton tournament={state.generated} source="drawer" className="w-full justify-start" />}
                 </div>

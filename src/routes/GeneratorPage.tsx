@@ -336,7 +336,7 @@ export function GeneratorPage() {
           className={`min-w-0 ${!state.generated || mobileTab === 'config' ? 'hidden md:block' : 'block'}`}
         >
           {state.generated
-            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} onScoreChange={handleScoreChange} showShare />
+            ? <RoundsPanel tournament={state.generated} onEditCourtName={handleEditCourtName} onScoreChange={handleScoreChange} showShare showPrint={false} />
             : <EmptyState onLoadExample={handleLoadExample} />
           }
         </div>

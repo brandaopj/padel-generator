@@ -3,7 +3,6 @@ import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
 import { useLanguage } from '../context/LanguageContext'
 import { RoundsPanel } from '../components/rounds/RoundsPanel'
-import { PrintButton } from '../components/ui/PrintButton'
 import { ShareButton } from '../components/ui/ShareButton'
 
 export function TournamentDetailPage() {
@@ -33,7 +32,6 @@ export function TournamentDetailPage() {
         </Link>
         <div className="flex items-center gap-2">
           <ShareButton tournament={tournament} source="detail" />
-          <PrintButton />
         </div>
       </div>
       <RoundsPanel tournament={tournament} />
