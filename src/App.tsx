@@ -226,8 +226,8 @@ function Shell() {
           <Route path="/history/:id" element={<TournamentDetailPage />} />
         </Routes>
       </main>
-      <footer className="text-center text-[11px] text-gray-400 dark:text-gray-600 py-4 pb-20 lg:pb-4 print:hidden">
-        {new Date(__BUILD_DATE__).toLocaleDateString('pt-PT', { day: 'numeric', month: 'long', year: 'numeric' })}
+      <footer className="text-center text-[11px] text-gray-400 dark:text-gray-600 py-4 print:hidden">
+        {new Date(__BUILD_DATE__).toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
       </footer>
       {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}
       <Analytics />
