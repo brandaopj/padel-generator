@@ -81,7 +81,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 ### Appearance
 
 - **Night Game design system** — Tailwind v4 `@theme` block defines semantic CSS custom property tokens (`bg-canvas`, `bg-surface`, `text-fg`, `text-brand`, `border-border`, etc.) for light and dark modes. The `.dark` class swaps token values; no `dark:` prefix is needed on token-based utilities
-- **Typography** — display headings use Bricolage Grotesque (variable grotesque), body text uses Manrope (humanist sans), data labels use JetBrains Mono
+- **Typography** — display headings use Open Sans, body text uses Open Sans, data labels use JetBrains Mono
 - **Icons** — Lucide React throughout the UI (nav: Trophy, Clock, HelpCircle, Menu/X; editor: Pencil; actions: Share, Printer, etc.)
 - **Backgrounds** — subtle padel court SVG diagram (net, service lines, back-wall zones) fixed behind page content; radial gradient orbs in dark mode
 - **Cards** — rounded corners, per-court accent colour on the top border (`--color-court1` through `--color-court6`), frosted glass header (`backdrop-blur-sm bg-surface/90`)

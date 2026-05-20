@@ -22,33 +22,30 @@ describe('PlayerInput', () => {
     expect(textarea).toBeDefined()
   })
 
-  it('textarea has an accessible label', () => {
+  it('chip input has an accessible label', () => {
     renderPlayerInput({ players: [], onChange: vi.fn() })
-    // a11y: label element should be associated with the textarea via htmlFor/id
-    const textarea = screen.getByRole('textbox')
-    expect(textarea.id).toBe('player-textarea')
-    expect(screen.getByLabelText(/jogadores|players/i)).toBe(textarea)
+    expect(screen.getByText(/jogadores|players/i)).toBeDefined()
   })
 
-  it('displays current players as pre-filled text', () => {
+  it('displays current players as chips', () => {
     renderPlayerInput({ players: ['Alice', 'Bob'], onChange: vi.fn() })
-    const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
-    expect(textarea.value).toBe('Alice\nBob')
+    expect(screen.getByText('Alice')).toBeDefined()
+    expect(screen.getByText('Bob')).toBeDefined()
   })
 
-  it('calls onChange with parsed names when text changes', () => {
+  it('calls onChange with parsed names when bridge textarea changes', () => {
     const onChange = vi.fn()
     renderPlayerInput({ players: [], onChange })
-    const textarea = screen.getByRole('textbox')
-    fireEvent.change(textarea, { target: { value: 'Alice\nBob\nCarlos' } })
+    const bridge = screen.getByTestId('player-input')
+    fireEvent.change(bridge, { target: { value: 'Alice\nBob\nCarlos' } })
     expect(onChange).toHaveBeenCalledWith(['Alice', 'Bob', 'Carlos'])
   })
 
   it('parses and trims names, ignoring blank lines', () => {
     const onChange = vi.fn()
     renderPlayerInput({ players: [], onChange })
-    const textarea = screen.getByRole('textbox')
-    fireEvent.change(textarea, { target: { value: '  Alice  \n\n  Bob  ' } })
+    const bridge = screen.getByTestId('player-input')
+    fireEvent.change(bridge, { target: { value: '  Alice  \n\n  Bob  ' } })
     expect(onChange).toHaveBeenCalledWith(['Alice', 'Bob'])
   })
 

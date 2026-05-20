@@ -8,8 +8,8 @@
 ───────────────────────────────────────────────────────────────────────────── */
 @theme {
   /* Fonts */
-  --font-display: 'Bricolage Grotesque', sans-serif;
-  --font-body:    'Manrope', sans-serif;
+  --font-display: 'Open Sans', sans-serif;
+  --font-body:    'Open Sans', sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
   /* Colours — light mode defaults */

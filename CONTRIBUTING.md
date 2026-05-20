@@ -65,7 +65,7 @@ All colours, typography, and surface styles are defined as semantic CSS custom p
 
 Dark mode is handled by the `.dark` class on `<html>`. Token values swap automatically — no `dark:` prefix needed on token utilities.
 
-Typography: `font-display` (Bricolage Grotesque), `font-body` (Manrope), `font-mono` (JetBrains Mono).
+Typography: `font-display` (Open Sans), `font-body` (Open Sans), `font-mono` (JetBrains Mono).
 
 Icons: import from `lucide-react`. Use `className="w-4 h-4 shrink-0"` for nav/button icons.
 

@@ -12,7 +12,7 @@ async function navigateToHistory(page: Page) {
   if (await openMenuBtn.isVisible()) {
     await openMenuBtn.click()
   }
-  await page.getByRole('link', { name: 'Histórico' }).last().click()
+  await page.getByRole('link', { name: 'Histórico' }).first().click()
 }
 
 test.describe('History page', () => {
