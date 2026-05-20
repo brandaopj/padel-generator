@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { Tournament } from '../../types'
+import { AppContext } from '../../context/AppContext'
 import { useLanguage } from '../../context/LanguageContext'
 import { ConfirmModal } from '../ui/ConfirmModal'
 import { ShareButton } from '../ui/ShareButton'
@@ -21,6 +22,7 @@ const MODE_BADGE_CLASS: Record<string, string> = {
   'seeded':      'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
 }
 
+const USERS_PATH = 'M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z'
 const TRASH_PATH = 'M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
 const ARROW_PATH = 'M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z'
 
@@ -29,6 +31,40 @@ function TrashIcon({ className = 'w-4 h-4' }: { className?: string }) {
     <svg className={className} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
       <path fillRule="evenodd" d={TRASH_PATH} clipRule="evenodd" />
     </svg>
+  )
+}
+
+function UseTemplateButton({ tournament }: { tournament: Tournament }) {
+  const { dispatch } = useContext(AppContext)
+  const { t } = useLanguage()
+  const navigate = useNavigate()
+
+  function handleClick(e: React.MouseEvent) {
+    e.stopPropagation()
+    dispatch({ type: 'SET_MODE', payload: tournament.mode })
+    if (tournament.mode === 'regular') {
+      dispatch({ type: 'SET_PLAYERS', payload: tournament.players })
+    } else if (tournament.mode === 'fixed-pairs') {
+      dispatch({ type: 'SET_PAIRS', payload: tournament.pairs })
+    } else {
+      dispatch({ type: 'SET_TABLE_A', payload: tournament.tableA ?? [] })
+      dispatch({ type: 'SET_TABLE_B', payload: tournament.tableB ?? [] })
+    }
+    navigate('/')
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      title={t.history.useAsTemplate}
+      aria-label={t.history.useAsTemplate}
+      className="p-1.5 text-gray-400 hover:text-blue-500 dark:text-gray-500 dark:hover:text-blue-400 transition-colors rounded"
+    >
+      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d={USERS_PATH} />
+      </svg>
+    </button>
   )
 }
 
@@ -100,6 +136,7 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
 
         {/* Actions — stopPropagation so clicks here don't trigger card navigation */}
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+          <UseTemplateButton tournament={tourney} />
           <ShareButton tournament={tourney} variant="icon" source="history" />
           <DeleteButton onDelete={() => onDelete(tourney.id)} />
           <Link

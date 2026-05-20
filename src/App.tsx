@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react'
+import { lazy, Suspense, useContext, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import { Analytics } from '@vercel/analytics/react'
 import { analytics } from './analytics'
@@ -15,8 +15,8 @@ import { HowItWorksModal } from './components/ui/HowItWorksModal'
 import { KofiButton } from './components/ui/KofiButton'
 import { useDarkMode } from './hooks/useDarkMode'
 import { GeneratorPage } from './routes/GeneratorPage'
-import { HistoryPage } from './routes/HistoryPage'
-import { TournamentDetailPage } from './routes/TournamentDetailPage'
+const HistoryPage = lazy(() => import('./routes/HistoryPage').then(m => ({ default: m.HistoryPage })))
+const TournamentDetailPage = lazy(() => import('./routes/TournamentDetailPage').then(m => ({ default: m.TournamentDetailPage })))
 
 function PadelLogo({ onClick }: { onClick?: () => void }) {
   return (
@@ -220,11 +220,13 @@ function Shell() {
       )}
 
       <main>
-        <Routes>
-          <Route path="/" element={<GeneratorPage />} />
-          <Route path="/history" element={<HistoryPage />} />
-          <Route path="/history/:id" element={<TournamentDetailPage />} />
-        </Routes>
+        <Suspense fallback={<div className="flex justify-center items-center h-48"><div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" /></div>}>
+          <Routes>
+            <Route path="/" element={<GeneratorPage />} />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/history/:id" element={<TournamentDetailPage />} />
+          </Routes>
+        </Suspense>
       </main>
       <footer className="text-center text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-800 py-3 pb-20 lg:pb-3 mt-4 print:hidden">
         {lang === 'pt' ? 'Última atualização' : 'Last updated'}: {new Date(__BUILD_DATE__).toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
