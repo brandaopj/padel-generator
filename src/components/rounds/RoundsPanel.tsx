@@ -29,7 +29,7 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false }: 
             </div>
           )}
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
           {new Date(tournament.date).toLocaleDateString(dateLocale)}
           <span className="print:hidden"> · {t.rounds.courts(tournament.courts)} · {t.rounds.pairs(tournament.pairs.length)}</span>
         </p>

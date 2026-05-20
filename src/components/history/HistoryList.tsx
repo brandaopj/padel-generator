@@ -32,7 +32,7 @@ function HistoryEmpty() {
         <p className="text-base font-medium text-gray-600 dark:text-gray-400">
           {t.history.empty.title}
         </p>
-        <p className="text-sm text-gray-400 dark:text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           {t.history.empty.subtitle}
         </p>
       </div>

@@ -25,7 +25,7 @@ export function RoundCard({ round, courtNames, onEditCourtName }: Props) {
         </div>
         <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
       </div>
-      <div className="grid gap-3 md:grid-cols-2 print:grid-cols-2 print:gap-2">
+      <div className="grid gap-3 sm:grid-cols-2 print:grid-cols-2 print:gap-2">
         {round.matches.map((match, i) => (
           <MatchCard
             key={i}

@@ -31,7 +31,7 @@ function PadelLogo({ onClick }: { onClick?: () => void }) {
           <path d="M1.5 5 Q5 8.5 8.5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
       </span>
-      <span className="font-light text-gray-400 dark:text-gray-500 tracking-widest text-sm leading-none select-none">
+      <span className="font-light text-gray-500 dark:text-gray-400 tracking-widest text-sm leading-none select-none">
         GENERATOR
       </span>
     </Link>
@@ -186,7 +186,7 @@ function Shell() {
               onClick={() => setMenuOpen(o => !o)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
-              className="lg:hidden p-1.5 -mr-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+              className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center -mr-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
               {menuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
@@ -246,7 +246,7 @@ function Shell() {
           <Outlet />
         </Suspense>
       </main>
-      <footer className="text-center text-xs text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-800 py-3 pb-20 lg:pb-3 mt-4 print:hidden">
+      <footer className="text-center text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 py-3 pb-20 lg:pb-3 mt-4 print:hidden">
         {lang === 'pt' ? 'Última atualização' : 'Last updated'}: {new Date(__BUILD_DATE__).toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
       </footer>
       {helpOpen && <HowItWorksModal onClose={() => setHelpOpen(false)} />}

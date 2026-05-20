@@ -20,7 +20,7 @@ export function TournamentDetailPage() {
   if (!tournament) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p data-testid="tournament-not-found" className="text-gray-400">
+        <p data-testid="tournament-not-found" className="text-gray-500 dark:text-gray-400">
           {t.history.notFound}
         </p>
       </div>

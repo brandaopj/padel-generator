@@ -31,7 +31,7 @@ export function EmptyState({ onLoadExample }: Props) {
         <p className="text-base font-medium text-gray-500 dark:text-gray-400">
           {t.emptyState.title}
         </p>
-        <p className="text-sm text-gray-400 dark:text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           {t.emptyState.subtitle}
         </p>
       </div>
