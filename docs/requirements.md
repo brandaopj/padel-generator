@@ -1,7 +1,7 @@
 # Functional Requirements — Padel Generator
 
-**Version:** 1.0
-**Date:** 2026-05-15
+**Version:** 1.1
+**Date:** 2026-05-20
 **App:** https://padel-generator-three.vercel.app
 
 ---
@@ -30,6 +30,9 @@ There is no backend or authentication. All persistence is handled via `localStor
 | M2 | History |
 | M3 | Tournament detail |
 | M4 | Printing |
+| M5 | Localisation |
+| M6 | Notifications |
+| M7 | Share |
 
 ---
 
@@ -65,7 +68,7 @@ The user must be able to enter pairs via a textarea, one pair per line, in the f
 The user must be able to enter two groups of players (Table A and Table B) in separate textareas, one name per line.
 
 #### RF-08 Clear textarea
-Each textarea must have a "Clear all" button that clears all content. Before clearing, the system must ask for user confirmation via an inline dialogue (without using the browser's `window.confirm`).
+Each textarea must have a "Clear all" button that clears all content. Before clearing, the system must ask for user confirmation via a modal dialog rendered over the full viewport (using `createPortal`), without using the browser's `window.confirm`.
 
 #### RF-09 Automatic court calculation
 The number of courts must be calculated automatically from the number of pairs, using the formula `max(1, floor(numPairs / 2))`. The calculated value must be shown in real time as the user enters names. The user must not be able to change this value manually.
@@ -128,6 +131,9 @@ Each generated tournament must be saved automatically to the history (`localStor
 #### RF-20 Tournament list
 The `/history` page must list all generated tournaments, ordered from most recent to oldest. Each entry must show: tournament name, game mode, number of courts, number of pairs, and date.
 
+#### RF-37 Delete tournament from history
+Each history entry must have a delete button. Clicking it must open a confirmation modal. On confirmation, the tournament must be removed from `localStorage` and a toast notification must be shown.
+
 #### RF-21 Empty state
 If no tournaments exist in the history, a message must be displayed informing the user.
 
@@ -167,6 +173,39 @@ When printing, match cards must occupy the full page width (single column), rega
 
 ### General
 
+---
+
+### M5 — Localisation
+
+#### RF-34 Language selection
+The application must support Portuguese (PT) and English (EN). On first visit, the language must be detected from `navigator.language`. The user must be able to switch language via a PT/EN toggle in the header. The selected language must be persisted in `localStorage` under the key `padel-lang` and applied on subsequent visits. All UI strings, validation messages, and notifications must respect the active language.
+
+---
+
+### M6 — Notifications
+
+#### RF-35 Toast notifications
+The application must display non-blocking slide-in toast notifications in the bottom-right corner of the viewport. Three variants must be supported: `success` (green, auto-dismiss after 4 s), `info` (blue, auto-dismiss after 2 s), and `error` (red, persistent until dismissed). Toasts must be announced by screen readers via `aria-live`. They must not be visible when printing. The following events must trigger a toast:
+
+| Event | Variant |
+|-------|---------|
+| Tournament generated | success |
+| Court name updated | info |
+| Tournament deleted | info |
+| Schedule copied to clipboard | success |
+| Share or copy error | error |
+
+---
+
+### M7 — Share
+
+#### RF-36 Share tournament
+The application must allow the organiser to share the generated schedule. A share button must be present in the generator header (when a tournament is generated), on each history entry, and on the tournament detail page. On devices that support the Web Share API (`navigator.share`), the native share sheet must be invoked with the formatted schedule. On devices without Web Share API support, the formatted schedule must be copied to the clipboard and a success toast must be shown. The formatted text must include the tournament name, round count, match count, and the full list of matches with court names.
+
+---
+
+### General
+
 #### RF-30 Dark mode
 The application must support dark mode. The user's preference must be persisted in `localStorage` and applied on subsequent visits.
 
@@ -190,7 +229,7 @@ After generating a tournament, the name of each court must be editable inline in
 | RN-03 | In Regular mode, the number of players must be a multiple of 4 |
 | RN-04 | The number of courts is always `max(1, floor(numPairs / 2))` |
 | RN-05 | In Seeded mode, if the tables are of different sizes, `min(\|A\|, \|B\|)` pairs are used and the user is warned |
-| RN-06 | History is read-only — past tournaments cannot be edited or deleted; exception: court names can be edited inline and are persisted automatically |
+| RN-06 | Tournament results are read-only — match outcomes cannot be edited. Court names can be edited inline and are persisted automatically. Tournaments can be deleted from the history with confirmation. |
 | RN-07 | Each tournament is identified by a UUID generated at the moment of creation |
 
 ---
@@ -205,7 +244,7 @@ After generating a tournament, the name of each court must be editable inline in
 | RNF-04 | All form labels must be associated with their respective inputs via `htmlFor`/`id` |
 | RNF-05 | Dynamic messages (errors, success) must have `role="alert"` or `role="status"` with `aria-live` for screen readers |
 | RNF-06 | Decorative icons must have `aria-hidden="true"` |
-| RNF-07 | Unit test coverage must be ≥ 90% of lines and functions, ≥ 80% of branches, in the `src/utils/` and `src/hooks/useHistory.ts` layers |
+| RNF-07 | Unit test coverage must be ≥ 90% of lines and functions, ≥ 80% of branches, in the `src/utils/` and `src/hooks/useHistory.ts` layers (51 tests) |
 | RNF-08 | The CI pipeline must run unit and E2E tests on every push to `main` and on every pull request |
 | RNF-09 | The production deployment (Vercel) must be automatic on every push to `main` |
 
@@ -215,9 +254,9 @@ After generating a tournament, the name of each court must be editable inline in
 
 - Authentication or user accounts
 - Backend or remote database
-- Editing or deleting tournaments from history
+- Editing tournament results
 - Export to PDF, CSV, or other formats
-- Sharing tournaments between devices
+- Sharing tournament data between devices (share exports text only)
 - Recording match results in the application
 - Player management (persistent player database)
 - Push notifications or real-time features

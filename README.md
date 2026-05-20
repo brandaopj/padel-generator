@@ -1,6 +1,6 @@
 # Padel Generator
 
-Tournament scheduler for padel, supporting three game modes, tournament history, dark mode, and print-ready scoresheets.
+Tournament scheduler for padel, supporting three game modes, tournament history, PT/EN localisation, dark mode, and print-ready scoresheets.
 
 **Live app:** https://padel-generator-three.vercel.app
 
@@ -12,47 +12,65 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 | Mode | Description |
 |------|-------------|
-| **Regular** | Random pairs drawn from a list of players |
-| **Fixed Pairs** | User-defined pairs |
-| **Seeded** | Table A vs Table B — pairs matched by position after independent shuffles |
+| **Regular** | Random pairs drawn from a list of players each round |
+| **Fixed Pairs** | User-defined pairs — partners stay the same across all rounds |
+| **Seeded** | Table A vs Table B — paired by position after independent shuffles |
 
 ### Generator
 
-- Club name field per tournament
-- Court count calculated automatically from the number of pairs; shown in real time as names are entered
-- Round-robin scheduling — every pair plays every other pair exactly once, all matches per round are simultaneous
-- Mode description shown below the mode selector to guide first-time users
-- Stale-results warning when the form is edited after a tournament has been generated (only shown when the current mode has data entered)
+- Tournament name field (optional)
+- Court count calculated automatically from the number of pairs; shown in real time
+- Round-robin scheduling — every pair plays every other pair exactly once
+- Mode description shown below the mode selector
+- Stale-results warning when the form is edited after generation
 - Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
-- Names preserved when switching between modes — no need to re-enter if the wrong mode was selected
-- Clear button on every textarea with inline confirmation (no native browser dialog)
-- Validation errors shown only after the user starts entering names
+- Names preserved when switching between modes
+- Clear button on every textarea with confirmation modal (no native browser dialog)
+- Validation errors shown inline; generate button disabled while errors exist
+- Loading spinner on the generate button during generation
+- Regenerate button shown after a tournament has already been generated
 
 ### Match cards
 
-- Player avatar (neutral silhouette) shown next to each name
-- Two-column symmetric layout — both pairs always aligned
-- Player names wrap to multiple lines — no truncation regardless of name length
-- Score writing area at the bottom of each card
-- Court names editable inline after generation — click the pencil icon to rename any court (e.g. "Padel Lisboa"); names persist in history and print
+- Player avatars (initials + colour palette) next to each name
+- Symmetric two-column layout — both pairs always aligned
+- Player names wrap freely — no truncation regardless of name length
+- Score writing area at the bottom of each card, separated from the players by a divider
+- Court names editable inline — pencil icon appears on hover; names persist in history and print
+
+### Notifications & confirmations
+
+- **Toast system** — slide-in notifications (bottom-right): tournament generated, court name updated, tournament deleted, schedule copied
+- **Confirm modal** — `createPortal`-based overlay for all destructive actions (clear list, delete tournament); covers the full viewport regardless of page structure
 
 ### Navigation & history
 
-- Read-only tournament history stored in `localStorage`
+- Tournament history stored in `localStorage`
+- Each entry shows: name, mode badge, courts, pairs, date
+- Delete tournament from history with confirmation and toast feedback
 - Auto-scroll to results after generation on mobile
 
-### Accessibility (WCAG 2.1 AA)
+### Share
 
-- All form labels associated with inputs via `htmlFor`/`id`
-- Validation banner and success banner use `role="alert"` / `role="status"` with `aria-live` — announced by screen readers
-- All decorative icons have `aria-hidden="true"`
-- Input font size `text-base` on mobile — prevents iOS auto-zoom on focus
-- Adequate touch targets on all interactive elements
+- **Share button** in the generator header, on each history entry, and on the tournament detail page
+- Uses the native Web Share API on mobile; falls back to clipboard copy on desktop
+- Formats the full schedule as emoji-rich text ready to paste into WhatsApp
+
+### Localisation
+
+- Full **PT / EN** bilingual support
+- Browser language detected on first visit (`navigator.language`)
+- Preference persisted in `localStorage` under key `padel-lang`
+- PT/EN toggle in the header
 
 ### Appearance
 
-- Dark mode with `localStorage` persistence
-- Print view: form panel hidden, A4 page size (`@page { size: A4; margin: 2cm }`), match cards in single full-width column with score writing area per match
+- Dark mode with `localStorage` persistence; pill toggle with sun/moon icons
+- Print view: form and header hidden, A4 layout (`@page { size: A4; margin: 2cm }`), single-column match cards with score area
+
+### Support
+
+- 🍺 [Ko-fi](https://ko-fi.com/brandaopj) button in the header
 
 ---
 
@@ -78,27 +96,35 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 ```
 src/
 ├── types/          # Shared types (GameMode, Match, Round, Tournament, AppState)
+├── i18n/
+│   └── translations.ts     # PT and EN translation objects
 ├── utils/
-│   ├── gameLogic.ts    # Pure logic: shuffle, round-robin, court distribution
-│   ├── validation.ts   # Form validation (errors + warnings)
-│   └── modes.ts        # Centralised mode labels and descriptions
+│   ├── gameLogic.ts        # Pure logic: shuffle, round-robin, court distribution
+│   ├── validation.ts       # Form validation (errors + warnings)
+│   ├── modes.ts            # Mode icon data
+│   └── shareTournament.ts  # Format + share/copy tournament text
 ├── hooks/
-│   ├── useHistory.ts   # localStorage CRUD for tournament history
-│   └── useDarkMode.ts  # Dark mode toggle with persistence
+│   ├── useHistory.ts       # localStorage CRUD for tournament history
+│   └── useDarkMode.ts      # Dark mode toggle with persistence
 ├── context/
-│   ├── AppContext.tsx   # Provider + AppContext
-│   └── reducer.ts      # Reducer + initialState with auto-courts calculation
+│   ├── AppContext.tsx       # Global app state provider
+│   ├── reducer.ts          # Reducer + initialState
+│   ├── LanguageContext.tsx  # PT/EN language provider + useLanguage()
+│   └── ToastContext.tsx     # Toast notification provider + useToast()
 ├── components/
-│   ├── generator/      # ModeSelector, PlayerInput, PairInput, SeededInput, ValidationBanner
-│   ├── rounds/         # RoundsPanel, RoundCard, MatchCard
-│   ├── history/        # HistoryList, HistoryEntry
-│   └── ui/             # ErrorBoundary, DarkModeToggle, PrintButton, ClearButton
+│   ├── generator/          # ModeSelector, PlayerInput, PairInput, SeededInput,
+│   │                       # ValidationBanner, EmptyState
+│   ├── rounds/             # RoundsPanel, RoundCard, MatchCard
+│   ├── history/            # HistoryList, HistoryEntry
+│   └── ui/                 # ErrorBoundary, DarkModeToggle, PrintButton,
+│                           # ShareButton, ClearButton, ConfirmModal,
+│                           # HowItWorksModal, KofiButton
 └── routes/
     ├── GeneratorPage.tsx        # / — form + rounds panel
     ├── HistoryPage.tsx          # /history — saved tournament list
     └── TournamentDetailPage.tsx # /history/:id — tournament detail
 tests/
-├── unit/           # 35 tests (gameLogic, validation, history)
+├── unit/           # 51 tests (gameLogic, validation, history, shareTournament)
 └── e2e/            # 12 Playwright tests (regular, fixed-pairs, seeded)
 ```
 
@@ -145,7 +171,7 @@ npm test                # Unit + E2E
 
 ## Tests
 
-### Unit — 35 tests
+### Unit — 51 tests
 
 ```bash
 npm run test:unit
@@ -156,6 +182,7 @@ Cover pure functions in `src/utils/` and the `useHistory` module:
 - `gameLogic`: shuffle, makePairs, makeSeededPairs, roundRobin, distribute, generateTournament, generateId
 - `validation`: all modes, error and warning cases
 - `history`: getAll, save, getById, corrupted data handling
+- `shareTournament`: formatTournamentText, Web Share API path, clipboard fallback, abort and error branches
 
 ### Coverage
 
@@ -163,7 +190,7 @@ Cover pure functions in `src/utils/` and the `useHistory` module:
 npm run test:coverage
 ```
 
-Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced in CI with these thresholds:
+Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced in CI:
 
 | Metric | Threshold |
 |--------|-----------|
@@ -184,7 +211,7 @@ npm run test:e2e
 | `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
 | `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
 
-Screenshots and traces are captured on failure and uploaded as CI artifacts for debugging.
+Screenshots and traces are captured on failure and uploaded as CI artifacts.
 
 ---
 
@@ -215,11 +242,11 @@ The `main` branch requires `unit-tests` and `e2e-tests` to pass before any merge
 
 ### Failure tracking
 
-When tests fail on `main`, the pipeline automatically opens a GitHub issue labelled [`ci-failure`](https://github.com/brandaopj/padel-generator/labels/ci-failure) with a link to the failing run. Subsequent failures add a comment to the existing issue. The issue is closed automatically once all tests pass again.
+When tests fail on `main`, the pipeline automatically opens a GitHub issue labelled [`ci-failure`](https://github.com/brandaopj/padel-generator/labels/ci-failure) with a link to the failing run. The issue is closed automatically once all tests pass again.
 
 ### Dependency updates
 
-Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validates them automatically before merge. The `publish-report` job is skipped on pull request runs to avoid conflicts with the GitHub Pages environment protection.
+Dependabot opens weekly PRs for npm dependency updates. The CI pipeline validates them automatically before merge.
 
 ### Required secret
 
@@ -233,7 +260,7 @@ Set it at: **GitHub → Settings → Secrets and variables → Actions**
 
 ## Contributing
 
-Open a pull request against `main`. The PR template includes a checklist. CI must be green before merging.
+Open a pull request against `main`. CI must be green before merging.
 
 ---
 
@@ -253,3 +280,4 @@ Open a pull request against `main`. The PR template includes a checklist. CI mus
 | App | https://padel-generator-three.vercel.app |
 | Repository | https://github.com/brandaopj/padel-generator |
 | Allure Report | https://brandaopj.github.io/padel-generator |
+| Support | https://ko-fi.com/brandaopj |
