@@ -62,6 +62,9 @@ All colours, typography, and surface styles are defined as semantic CSS custom p
 | `text-fg` / `text-fg2` / `text-fg3` | Primary / secondary / muted text |
 | `border-border` / `border-bordermd` | Subtle / stronger border |
 | `bg-court1`…`bg-court6` | Court accent palette |
+| `bg-accent` / `text-accent` | Amber accent (VS badge, logo ball, ball markers) |
+
+The primary brand colour is teal (`#0D6E6E` in light mode / `#2DBFBF` in dark mode), replacing the previous blue.
 
 Dark mode is handled by the `.dark` class on `<html>`. Token values swap automatically — no `dark:` prefix needed on token utilities.
 
@@ -126,13 +129,13 @@ npm run test:coverage      # with v8 coverage report → coverage/
 ```
 
 **End-to-end tests** — `tests/e2e/`  
-Written with Playwright. Tests run against the built app served by `vite preview`. Each spec file corresponds to a game mode or feature (`regular.spec.ts`, `fixed-pairs.spec.ts`, `seeded.spec.ts`, `history.spec.ts`). Three browser projects are configured: `Desktop Chrome`, `Mobile Chrome` (Pixel 5), and `Mobile Safari` (iPhone 12).
+Written with Playwright. Tests run against the built app served by `vite preview`. Each spec file corresponds to a game mode or feature (`regular.spec.ts`, `fixed-pairs.spec.ts`, `seeded.spec.ts`, `history.spec.ts`). Two browser projects are configured: `Desktop Chrome` and `Mobile Safari` (iPhone 12).
 
 ```bash
 npm run test:e2e
 ```
 
-**Navigation in tests:** use in-app SPA navigation (not `page.goto()`) to preserve `localStorage` across route changes — `page.goto()` triggers `addInitScript`, which clears localStorage. For links that live in the hamburger drawer on mobile, use the `navigateToHistory()` helper pattern (open the drawer first, then click the link).
+**Navigation in tests:** use in-app SPA navigation (not `page.goto()`) to preserve `localStorage` across route changes — `page.goto()` triggers `addInitScript`, which clears localStorage. For links that live in the hamburger drawer on mobile, use the `navigateToHistory()` helper pattern (open the drawer first, then click the link). Tests that fill the tournament name input must first click `getByTestId('club-name-toggle')` to open the `<details>` disclosure before filling `club-name-input`.
 
 ## CI/CD
 
@@ -140,7 +143,7 @@ On every push and pull request against `main`, GitHub Actions runs:
 
 1. **lint** — `npm run lint`; gates all downstream jobs
 2. **unit-tests** — `npm run test:coverage`
-3. **e2e-tests** — builds the app, checks the gzipped bundle size (limit 300 kB), then runs Playwright tests across Desktop Chrome, Mobile Chrome (Pixel 5), and Mobile Safari (iPhone 12)
+3. **e2e-tests** — builds the app, checks the gzipped bundle size (limit 300 kB), then runs Playwright tests across Desktop Chrome and Mobile Safari (iPhone 12)
 4. **report-failure** / **resolve-failure** — opens or closes a GitHub issue labelled `ci-failure` automatically
 5. **deploy** _(push to `main` only)_ — runs `npx vercel --prod` to deploy to production
 6. **publish-report** — generates an Allure test report and publishes it to GitHub Pages

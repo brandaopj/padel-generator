@@ -18,27 +18,27 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Generator
 
-- Tournament name field (optional)
+- Tournament name — collapsed `<details>` disclosure at the bottom of the form; the `<summary>` acts as the toggle; the input is revealed on click; the disclosure opens automatically if a name is already set (`open={state.clubName.length > 0 || undefined}`)
 - Court count calculated automatically from the number of pairs; shown in real time
 - Round-robin scheduling — every pair plays every other pair exactly once
-- Mode description shown below the mode selector; mode tabs have a 44 px minimum touch target
+- Mode selector: the currently selected mode occupies a large primary slot (icon + label + description); the other two render in a compact 2-column pair below it. Mode tabs have a 44 px minimum touch target
 - Stale-results warning when the form is edited after generation
-- Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
+- Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`); a count badge ("N ✓", teal pill) appears in the header row once the first item is added
 - Names preserved when switching between modes
 - Clear button on every textarea with confirmation modal (no native browser dialog)
-- Validation errors shown inline; generate button disabled while errors exist
+- Validation errors shown inline and are actionable and count-aware — e.g. "You have 6 players — add 2 or remove 2 to complete the pairs." rather than a generic "must be a multiple of 4"; generate button disabled while errors exist
 - Loading spinner on the generate button during generation
 - Regenerate button shown after a tournament has already been generated
-- **Round count cap** — range slider to limit the number of rounds (e.g. for time-constrained sessions); shows "All" when all rounds are selected
+- **Round count cap** — segmented pill control (border-joined buttons) with one button per round number from 1 to the max; the last button is labeled with the allRounds translation ("All" / "Todas"). A `≈ N min` time estimate (15 min per round) appears to the right of the label
 - On mobile/tablet, the generate button is sticky (`sticky bottom-16`) so it remains visible while scrolling the form
 
 ### Match cards
 
-- Player avatars (initials + colour palette) next to each name
+- Player avatars rendered as inline initials chips (deterministic colour palette) next to each name — no network request
 - Symmetric two-column layout — both pairs always aligned
 - Player names wrap freely — no truncation regardless of name length
 - Score writing area at the bottom of each card, separated from the players by a divider (visual-only print element — not an interactive input)
-- Court names editable inline — pencil icon appears on hover; names persist in history and print
+- Court names editable inline — pencil icon is always visible at 40% opacity and reaches full opacity on hover/focus, ensuring the edit affordance is discoverable on touch devices; names persist in history and print
 - Responsive sizing: compact padding and avatars on small screens (`p-3 sm:p-5`, `w-7 h-7 sm:w-8 sm:h-8`)
 
 ### Notifications & confirmations
@@ -52,7 +52,8 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Each entry shows: name, mode badge, courts, pairs, date
 - **Reuse players** — people-icon button on each history entry loads that tournament's mode + players/pairs/tables back into the generator and navigates to `/`; shows a success toast; works for all three modes
 - **Undo delete** — deleting a tournament removes it from the UI immediately (optimistic) with a 5-second undo toast; the `localStorage` write is deferred so the action can be reversed without a confirm modal
-- **Sort & filter** — history list can be sorted newest/oldest and filtered by game mode; full-width selects on mobile, inline on tablet+
+- **Sort & filter** — history list can be sorted newest/oldest and filtered by game mode; full-width selects on mobile, inline on tablet+; wider column (`max-w-4xl`)
+- **Delete** — the delete button uses a trash icon; clicking it opens a confirm modal ("Apagar torneio?" / "This action cannot be undone.") before triggering the optimistic removal + undo toast
 - **Tournament count badge** — History nav link shows a live count badge (desktop + mobile drawer); updated via a custom `padel-history-change` DOM event dispatched on save/remove
 - **Navigation guard** — navigating away from the generator while results are stale (form edited after generation) prompts for confirmation via a `useBlocker` modal (requires the data router via `createBrowserRouter`)
 - Auto-scroll to results after generation (scrolls to the top of the results panel)
@@ -67,6 +68,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Share
 
+- **Print buttons** — `RoundsPanel` accepts a `showPrint` prop (default `true`). `GeneratorPage` passes `showPrint={false}` since the sticky header owns the print action there. `TournamentDetailPage` omits the prop (defaults to `true`) and no longer renders its own `<PrintButton>` — the panel handles it. Print/Share appear in the header from `md` (768 px) rather than `lg`.
 - **Share button** in the rounds panel header, in the generator header, on each history entry, and on the tournament detail page
 - Uses the native Web Share API on mobile; falls back to clipboard copy on desktop
 - Formats the full schedule as emoji-rich text ready to paste into WhatsApp
@@ -80,7 +82,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Appearance
 
-- **Night Game design system** — Tailwind v4 `@theme` block defines semantic CSS custom property tokens (`bg-canvas`, `bg-surface`, `text-fg`, `text-brand`, `border-border`, etc.) for light and dark modes. The `.dark` class swaps token values; no `dark:` prefix is needed on token-based utilities
+- **Night Game design system** — Tailwind v4 `@theme` block defines semantic CSS custom property tokens (`bg-canvas`, `bg-surface`, `text-fg`, `text-brand`, `border-border`, etc.) for light and dark modes. The `.dark` class swaps token values; no `dark:` prefix is needed on token-based utilities. Brand color is `#0D6E6E` (teal) in light mode and `#2DBFBF` in dark mode. An `--color-accent` token (`#FBB040` amber) is used for the logo ball, VS badge glow, and padel ball markers
 - **Typography** — display headings use Open Sans, body text uses Open Sans, data labels use JetBrains Mono
 - **Icons** — Lucide React throughout the UI (nav: Trophy, Clock, HelpCircle, Menu/X; editor: Pencil; actions: Share, Printer, etc.)
 - **Backgrounds** — subtle padel court SVG diagram (net, service lines, back-wall zones) fixed behind page content; radial gradient orbs in dark mode
@@ -92,8 +94,8 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 ### PWA
 
 - Installable as a Progressive Web App via `vite-plugin-pwa` (`registerType: 'autoUpdate'`)
-- Workbox precaches all static assets; Dicebear avatar API uses `CacheFirst` (30-day expiry, max 100 entries)
-- Standalone display, `#2563eb` theme colour, SVG icon
+- Workbox precaches all static assets
+- Standalone display, `#0D6E6E` theme colour, SVG icon
 
 ### Support
 
@@ -115,7 +117,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 | Monitoring | Sentry v8 (`@sentry/react`) |
 | Analytics | PostHog `posthog-js` + Vercel Analytics `@vercel/analytics` |
 | Unit tests | Vitest 4 + jsdom |
-| E2E tests | Playwright (Desktop Chrome, Pixel 5, iPhone 12) |
+| E2E tests | Playwright (Desktop Chrome, iPhone 12) |
 | Test reports | Allure (unit + e2e) |
 | CI/CD | GitHub Actions → Vercel (deploy) + GitHub Pages (Allure Report) |
 
@@ -233,13 +235,13 @@ Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced 
 | Functions | 90% |
 | Branches | 80% |
 
-### E2E — 21 scenarios × 3 browsers = 63 test runs (Playwright)
+### E2E — 21 scenarios × 2 browsers = 42 test runs (Playwright)
 
 ```bash
 npm run test:e2e
 ```
 
-Tests run across three browser projects: `Desktop Chrome`, `Mobile Chrome` (Pixel 5), and `Mobile Safari` (iPhone 12).
+Tests run across two browser projects: `Desktop Chrome` and `Mobile Safari` (iPhone 12).
 
 | File | Scenarios |
 |------|-----------|
@@ -269,13 +271,15 @@ push → lint ────────┬──→ unit-tests ──┬──→
 |-----|--------------|
 | `lint` | `npm run lint` — gates all downstream jobs |
 | `unit-tests` | Vitest with coverage thresholds + Allure and coverage artifacts |
-| `e2e-tests` | Build → bundle size check (300 kB gzip limit) → preview server → Playwright (Desktop Chrome, Pixel 5, iPhone 12) → Allure and playwright-report artifacts |
+| `e2e-tests` | Build → bundle size check (300 kB gzip limit) → preview server → Playwright (Desktop Chrome, iPhone 12) → Allure and playwright-report artifacts |
 | `deploy` | Runs `npx vercel --prod` after lint and both test jobs pass (push to `main` only) |
 | `publish-report` | Merges both Allure result sets → deploys to GitHub Pages (push to `main` only) |
 | `report-failure` | Opens a GitHub issue if any test job fails; comments on the existing issue if already open |
 | `resolve-failure` | Closes the open CI issue automatically when all tests pass again |
 
 Vercel's GitHub auto-deploy is disabled (`"github": { "enabled": false }` in `vercel.json`). Deployment is handled exclusively by the `deploy` CI job, which ensures every production deploy is a fresh build from green tests.
+
+A `concurrency` group (`${{ github.workflow }}-${{ github.ref }}`) with `cancel-in-progress: true` prevents multiple simultaneous runs on the same branch — a new push cancels the in-progress run.
 
 ### Branch protection
 
