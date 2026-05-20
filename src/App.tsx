@@ -72,22 +72,6 @@ function Shell() {
 
   return (
     <div className="min-h-screen bg-canvas text-fg font-body overflow-x-hidden relative">
-      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden print:hidden" aria-hidden="true">
-        <svg viewBox="0 0 600 400" className="absolute inset-0 w-full h-full opacity-[0.03] dark:opacity-[0.06]" fill="none" stroke="currentColor" strokeWidth="1.5">
-          {/* Outer boundary */}
-          <rect x="60" y="40" width="480" height="320" />
-          {/* Net line (horizontal center) */}
-          <line x1="60" y1="200" x2="540" y2="200" />
-          {/* Service lines — 3m from net each side */}
-          <line x1="60" y1="160" x2="540" y2="160" />
-          <line x1="60" y1="240" x2="540" y2="240" />
-          {/* Center service line (vertical) */}
-          <line x1="300" y1="160" x2="300" y2="240" />
-          {/* Side walls — back zones */}
-          <rect x="60" y="40" width="480" height="40" fill="none" />
-          <rect x="60" y="320" width="480" height="40" fill="none" />
-        </svg>
-      </div>
       <header className="border-b border-border bg-surface/90 backdrop-blur-sm print:hidden sticky top-0 z-30 relative">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
