@@ -56,24 +56,24 @@
        CARD ACCENT SYSTEM
     ───────────────────────────────────── */
     .c1 { --ca:#4A9EFF; --cb:rgba(74,158,255,.18); --cg:rgba(74,158,255,.07); }
-    .c2 { --ca:#FF6B4A; --cb:rgba(255,107,74,.18);--cg:rgba(255,107,74,.07);}
-    .c3 { --ca:#5B9CF6; --cb:rgba(91,156,246,.18);--cg:rgba(91,156,246,.07);}
+    .c2 { --ca:#FF6B4A; --cb:rgba(255,107,74,.18); --cg:rgba(255,107,74,.07); }
+    .c3 { --ca:#5B9CF6; --cb:rgba(91,156,246,.18); --cg:rgba(91,156,246,.07); }
     .c4 { --ca:#B975F5; --cb:rgba(185,117,245,.18);--cg:rgba(185,117,245,.07);}
-    .c5 { --ca:#F5C344; --cb:rgba(245,195,68,.18);--cg:rgba(245,195,68,.07);}
-    .c6 { --ca:#3DE8E0; --cb:rgba(61,232,224,.18);--cg:rgba(61,232,224,.07);}
+    .c5 { --ca:#F5C344; --cb:rgba(245,195,68,.18); --cg:rgba(245,195,68,.07); }
+    .c6 { --ca:#3DE8E0; --cb:rgba(61,232,224,.18); --cg:rgba(61,232,224,.07); }
 
     /* ─────────────────────────────────────
        AVATAR PALETTE
     ───────────────────────────────────── */
     .av { width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:10px;letter-spacing:.03em;flex-shrink:0; }
-    .av-1{background:rgba(74,158,255,.14);color:#4A9EFF;}
-    .av-2{background:rgba(255,107,74,.14);color:#FF8566;}
-    .av-3{background:rgba(91,156,246,.14);color:#7AAEFF;}
+    .av-1{background:rgba(74,158,255,.14); color:#4A9EFF;}
+    .av-2{background:rgba(255,107,74,.14); color:#FF8566;}
+    .av-3{background:rgba(91,156,246,.14); color:#7AAEFF;}
     .av-4{background:rgba(185,117,245,.14);color:#CC8FFF;}
-    .av-5{background:rgba(245,195,68,.14);color:#F5C344;}
-    .av-6{background:rgba(61,232,224,.14);color:#3DE8E0;}
-    .av-7{background:rgba(255,80,128,.14);color:#FF6EA0;}
-    .av-8{background:rgba(255,175,50,.14);color:#FFB838;}
+    .av-5{background:rgba(245,195,68,.14); color:#F5C344;}
+    .av-6{background:rgba(61,232,224,.14); color:#3DE8E0;}
+    .av-7{background:rgba(255,80,128,.14); color:#FF6EA0;}
+    .av-8{background:rgba(255,175,50,.14); color:#FFB838;}
 
     [data-theme="light"] .av-1{background:#DDEEFF;color:#1A4ECC;}
     [data-theme="light"] .av-2{background:#FFE5DE;color:#C0370E;}
@@ -83,6 +83,24 @@
     [data-theme="light"] .av-6{background:#D0FAFA;color:#077070;}
     [data-theme="light"] .av-7{background:#FFD6E5;color:#A01545;}
     [data-theme="light"] .av-8{background:#FFE8C0;color:#904800;}
+
+    /* ─────────────────────────────────────
+       LUCIDE ICON SIZING
+    ───────────────────────────────────── */
+    [data-lucide] { display:inline-block; vertical-align:middle; flex-shrink:0; }
+
+    .logo [data-lucide]        { width:20px; height:20px; stroke-width:2.5; margin-right:7px; }
+    .nav-link [data-lucide]    { width:15px; height:15px; stroke-width:2; }
+    .tile-icon                 { width:22px; height:22px; stroke-width:1.75; display:block; margin-bottom:12px; stroke:var(--text-3); transition:stroke .2s; }
+    .tile.on .tile-icon        { stroke:var(--primary); }
+    .field-label [data-lucide] { width:14px; height:14px; stroke-width:2; margin-right:5px; }
+    .field-count [data-lucide] { width:12px; height:12px; stroke-width:2; margin-right:4px; }
+    .gen-btn [data-lucide]     { width:18px; height:18px; stroke-width:2.2; }
+    .act-btn [data-lucide]     { width:14px; height:14px; stroke-width:2; }
+    .icon-btn [data-lucide]    { width:16px; height:16px; stroke-width:2; }
+    .court-lbl [data-lucide]   { width:9px;  height:9px;  stroke-width:2.5; margin-right:5px; opacity:.8; }
+    .hint [data-lucide]        { width:12px; height:12px; stroke-width:2; margin-right:4px; }
+    .foot-note [data-lucide]   { width:11px; height:11px; stroke-width:2; margin:0 3px; vertical-align:middle; }
 
     /* ─────────────────────────────────────
        RESET
@@ -103,7 +121,6 @@
       transition: background-color .3s, color .3s;
     }
 
-    /* Gradient orbs */
     body::after {
       content: '';
       position: fixed;
@@ -116,7 +133,6 @@
       transition: opacity .3s;
     }
 
-    /* Dot grid */
     body::before {
       content: '';
       position: fixed;
@@ -127,13 +143,11 @@
       background-size: 28px 28px;
     }
 
-    /* Grain overlay */
     .grain {
       position: fixed;
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      opacity: 1;
     }
 
     /* ─────────────────────────────────────
@@ -201,6 +215,8 @@
       cursor: default;
       margin-right: 8px;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
 
@@ -223,11 +239,7 @@
     }
 
     .nav-link:hover { background: var(--border); color: var(--text); }
-
-    .nav-link.active {
-      background: var(--primary-dim);
-      color: var(--primary);
-    }
+    .nav-link.active { background: var(--primary-dim); color: var(--primary); }
 
     .badge {
       font-family: var(--font-mono);
@@ -262,13 +274,14 @@
       padding: 5px 10px;
       cursor: pointer;
       color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 5px;
       transition: background .15s, color .15s;
     }
 
-    .lang span.on {
-      background: var(--primary);
-      color: var(--primary-on);
-    }
+    .lang span.on { background: var(--primary); color: var(--primary-on); }
+    .lang [data-lucide] { width:11px; height:11px; stroke-width:2; }
 
     .icon-btn {
       width: 34px;
@@ -280,7 +293,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
       cursor: pointer;
       transition: all .15s;
     }
@@ -319,6 +331,8 @@
       font-size: 13px;
       letter-spacing: .02em;
       color: var(--text);
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
 
@@ -353,10 +367,10 @@
     .tile-n {
       font-family: var(--font-display);
       font-weight: 800;
-      font-size: 28px;
+      font-size: 26px;
       line-height: 1;
       color: var(--text-3);
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       transition: color .2s;
     }
 
@@ -402,6 +416,8 @@
       font-size: 11px;
       font-weight: 500;
       color: var(--primary);
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
 
@@ -429,6 +445,8 @@
       color: var(--text-3);
       margin-top: 6px;
       line-height: 1.4;
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
 
@@ -495,15 +513,15 @@
       letter-spacing: .05em;
       padding: 16px 24px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
       transition: transform .15s, box-shadow .2s, background .3s;
       box-shadow: 0 4px 28px var(--primary-glow);
     }
 
-    .gen-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 36px var(--primary-glow);
-    }
-
+    .gen-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 36px var(--primary-glow); }
     .gen-btn:active { transform: none; box-shadow: 0 2px 12px var(--primary-glow); }
 
     /* ─────────────────────────────────────
@@ -536,8 +554,13 @@
       letter-spacing: .08em;
       text-transform: uppercase;
       margin-top: 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       transition: color .3s;
     }
+
+    .res-meta [data-lucide] { width:11px; height:11px; stroke-width:2; opacity:.6; }
 
     .act-btns { display:flex; gap:6px; }
 
@@ -555,7 +578,7 @@
       transition: all .15s;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
     }
 
     .act-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-dim); }
@@ -579,8 +602,13 @@
       letter-spacing: .03em;
       color: var(--text);
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
       transition: color .3s;
     }
+
+    .round-lbl [data-lucide] { width:13px; height:13px; stroke-width:2; color:var(--text-3); }
 
     .round-line {
       flex: 1;
@@ -597,8 +625,13 @@
       text-transform: uppercase;
       color: var(--text-3);
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
       transition: color .3s;
     }
+
+    .round-ct [data-lucide] { width:11px; height:11px; stroke-width:2; }
 
     .match-grid {
       display: grid;
@@ -632,7 +665,6 @@
       to   { opacity:1; transform:translateY(0); }
     }
 
-    /* Gradient top border */
     .card::before {
       content: '';
       position: absolute;
@@ -642,7 +674,6 @@
       opacity: .9;
     }
 
-    /* Ambient top glow */
     .card::after {
       content: '';
       position: absolute;
@@ -670,6 +701,8 @@
       margin-bottom: 15px;
       position: relative;
       z-index: 1;
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
 
@@ -710,7 +743,6 @@
       transition: color .3s;
     }
 
-    /* Score area */
     .scores {
       display: flex;
       align-items: center;
@@ -738,6 +770,16 @@
       transition: color .3s;
     }
 
+    .score-hint {
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      opacity: .5;
+      transition: color .3s;
+    }
+
+    .score-hint [data-lucide] { width:12px; height:12px; stroke-width:2; }
+
     /* ─────────────────────────────────────
        FOOTER
     ───────────────────────────────────── */
@@ -761,21 +803,27 @@
       font-size: 14px;
       letter-spacing: -.01em;
       color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
       transition: color .3s;
     }
+
+    .foot-logo [data-lucide] { width:14px; height:14px; stroke-width:2.5; }
 
     .foot-note {
       font-family: var(--font-mono);
       font-size: 10px;
       letter-spacing: .1em;
       color: var(--text-3);
+      display: flex;
+      align-items: center;
       transition: color .3s;
     }
   </style>
 </head>
 <body>
 
-  <!-- SVG grain filter -->
   <svg width="0" height="0" style="position:absolute">
     <filter id="grain-f" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
       <feTurbulence type="fractalNoise" baseFrequency="0.68" numOctaves="4" stitchTiles="stitch" result="noise"/>
@@ -788,18 +836,25 @@
 
   <div class="app">
 
-    <!-- Preview strip -->
     <div class="strip">Night Game — Design Preview &nbsp;·&nbsp; Toggle theme top-right</div>
 
     <!-- Nav -->
     <nav>
       <div class="wrap">
         <div class="nav-row">
-          <div class="logo">Padel Generator</div>
+
+          <div class="logo">
+            <i data-lucide="zap"></i>
+            Padel Generator
+          </div>
 
           <div class="nav-links">
-            <span class="nav-link active">Generator</span>
+            <span class="nav-link active">
+              <i data-lucide="shuffle"></i>
+              Generator
+            </span>
             <span class="nav-link">
+              <i data-lucide="clock"></i>
               History
               <span class="badge">5</span>
             </span>
@@ -807,11 +862,14 @@
 
           <div class="nav-end">
             <div class="lang">
-              <span>PT</span>
-              <span class="on">EN</span>
+              <span><i data-lucide="globe"></i>PT</span>
+              <span class="on"><i data-lucide="globe"></i>EN</span>
             </div>
-            <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☽</button>
+            <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+              <i data-lucide="moon" id="theme-icon"></i>
+            </button>
           </div>
+
         </div>
       </div>
     </nav>
@@ -821,25 +879,32 @@
       <div class="wrap">
         <div class="grid">
 
-          <!-- ── LEFT: Generator ── -->
+          <!-- LEFT: Generator -->
           <div>
 
             <!-- Mode selector -->
             <div class="modes">
               <div class="eyebrow">Game Mode</div>
               <div class="mode-grid">
+
                 <div class="tile on" onclick="pickMode(this,'Random pairs every round — everyone mixes with everyone.')">
+                  <i data-lucide="shuffle" class="tile-icon"></i>
                   <div class="tile-n">01</div>
                   <div class="tile-name">Regular</div>
                 </div>
+
                 <div class="tile" onclick="pickMode(this,'Fixed partners — same pair stays together all game.')">
+                  <i data-lucide="users-2" class="tile-icon"></i>
                   <div class="tile-n">02</div>
                   <div class="tile-name">Fixed Pairs</div>
                 </div>
+
                 <div class="tile" onclick="pickMode(this,'Table A vs Table B — ranked by seeding position.')">
+                  <i data-lucide="trophy" class="tile-icon"></i>
                   <div class="tile-n">03</div>
                   <div class="tile-name">Seeded</div>
                 </div>
+
               </div>
               <div class="mode-desc" id="mode-desc">Random pairs every round — everyone mixes with everyone.</div>
             </div>
@@ -847,8 +912,14 @@
             <!-- Player input -->
             <div class="field">
               <div class="field-header">
-                <div class="field-label">Players</div>
-                <div class="field-count" id="pcount">8 players</div>
+                <div class="field-label">
+                  <i data-lucide="users-2"></i>
+                  Players
+                </div>
+                <div class="field-count" id="pcount">
+                  <i data-lucide="hash"></i>
+                  8 players
+                </div>
               </div>
               <textarea id="ptxt" oninput="countPlayers()" placeholder="One name per line…">João Silva
 Maria Santos
@@ -858,48 +929,74 @@ Miguel Rodrigues
 Sofia Oliveira
 Carlos Mendes
 Inês Pereira</textarea>
-              <div class="hint">One per line · Paste directly from WhatsApp</div>
+              <div class="hint">
+                <i data-lucide="message-circle"></i>
+                One per line · Paste directly from WhatsApp
+              </div>
             </div>
 
             <!-- Courts -->
             <div class="court-row">
-              <div class="field-label">Courts</div>
+              <div class="field-label">
+                <i data-lucide="layout-grid"></i>
+                Courts
+              </div>
               <input type="range" min="1" max="4" value="2"
                 oninput="document.getElementById('cn').textContent=this.value">
               <div class="court-n" id="cn">2</div>
             </div>
 
             <!-- Generate -->
-            <button class="gen-btn">Generate Tournament</button>
+            <button class="gen-btn">
+              <i data-lucide="shuffle"></i>
+              Generate Tournament
+            </button>
 
           </div>
 
-          <!-- ── RIGHT: Results ── -->
+          <!-- RIGHT: Results -->
           <div>
 
             <div class="res-head">
               <div>
                 <div class="res-title">Tournament</div>
-                <div class="res-meta">8 players · 4 pairs · 2 courts · 3 rounds</div>
+                <div class="res-meta">
+                  <i data-lucide="users-2"></i>8 players
+                  <i data-lucide="link-2"></i>4 pairs
+                  <i data-lucide="layout-grid"></i>2 courts
+                  <i data-lucide="repeat-2"></i>3 rounds
+                </div>
               </div>
               <div class="act-btns">
-                <button class="act-btn">↑ Share</button>
-                <button class="act-btn">⎙ Print</button>
+                <button class="act-btn">
+                  <i data-lucide="share-2"></i>
+                  Share
+                </button>
+                <button class="act-btn">
+                  <i data-lucide="printer"></i>
+                  Print
+                </button>
               </div>
             </div>
 
             <!-- Round 1 -->
             <div class="round">
               <div class="round-head">
-                <div class="round-lbl">Round 1</div>
+                <div class="round-lbl">
+                  <i data-lucide="circle-dot"></i>
+                  Round 1
+                </div>
                 <div class="round-line"></div>
-                <div class="round-ct">2 matches</div>
+                <div class="round-ct">
+                  <i data-lucide="swords"></i>
+                  2 matches
+                </div>
               </div>
               <div class="match-grid">
 
                 <div class="card c1">
                   <div class="card-body">
-                    <div class="court-lbl">Court A</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court A</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
@@ -915,13 +1012,14 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
 
                 <div class="card c2">
                   <div class="card-body">
-                    <div class="court-lbl">Court B</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court B</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-5">MR</div><span class="pname">Miguel Rodrigues</span></div>
@@ -937,6 +1035,7 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
@@ -947,15 +1046,21 @@ Inês Pereira</textarea>
             <!-- Round 2 -->
             <div class="round">
               <div class="round-head">
-                <div class="round-lbl">Round 2</div>
+                <div class="round-lbl">
+                  <i data-lucide="circle-dot"></i>
+                  Round 2
+                </div>
                 <div class="round-line"></div>
-                <div class="round-ct">2 matches</div>
+                <div class="round-ct">
+                  <i data-lucide="swords"></i>
+                  2 matches
+                </div>
               </div>
               <div class="match-grid">
 
                 <div class="card c3">
                   <div class="card-body">
-                    <div class="court-lbl">Court A</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court A</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
@@ -971,13 +1076,14 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
 
                 <div class="card c4">
                   <div class="card-body">
-                    <div class="court-lbl">Court B</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court B</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-2">MS</div><span class="pname">Maria Santos</span></div>
@@ -993,6 +1099,7 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
@@ -1003,15 +1110,21 @@ Inês Pereira</textarea>
             <!-- Round 3 -->
             <div class="round">
               <div class="round-head">
-                <div class="round-lbl">Round 3</div>
+                <div class="round-lbl">
+                  <i data-lucide="circle-dot"></i>
+                  Round 3
+                </div>
                 <div class="round-line"></div>
-                <div class="round-ct">2 matches</div>
+                <div class="round-ct">
+                  <i data-lucide="swords"></i>
+                  2 matches
+                </div>
               </div>
               <div class="match-grid">
 
                 <div class="card c5">
                   <div class="card-body">
-                    <div class="court-lbl">Court A</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court A</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-1">JS</div><span class="pname">João Silva</span></div>
@@ -1027,13 +1140,14 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
 
                 <div class="card c6">
                   <div class="card-body">
-                    <div class="court-lbl">Court B</div>
+                    <div class="court-lbl"><i data-lucide="map-pin"></i>Court B</div>
                     <div class="matchup">
                       <div class="pair pl">
                         <div class="prow"><div class="av av-2">MS</div><span class="pname">Maria Santos</span></div>
@@ -1049,6 +1163,7 @@ Inês Pereira</textarea>
                       <div class="sbox"></div>
                       <div class="sdash">:</div>
                       <div class="sbox"></div>
+                      <div class="score-hint"><i data-lucide="pencil-line"></i></div>
                     </div>
                   </div>
                 </div>
@@ -1064,20 +1179,31 @@ Inês Pereira</textarea>
     <footer>
       <div class="wrap">
         <div class="foot-row">
-          <div class="foot-logo">Padel Generator</div>
-          <div class="foot-note">Night Game — Design Preview · 2026</div>
+          <div class="foot-logo">
+            <i data-lucide="zap"></i>
+            Padel Generator
+          </div>
+          <div class="foot-note">
+            Night Game · Design Preview
+            <i data-lucide="heart"></i>
+            2026
+          </div>
         </div>
       </div>
     </footer>
 
   </div>
 
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script>
+    lucide.createIcons();
+
     function toggleTheme() {
       const html = document.documentElement;
       const dark = html.dataset.theme === 'dark';
       html.dataset.theme = dark ? 'light' : 'dark';
-      document.getElementById('theme-btn').textContent = dark ? '☀' : '☽';
+      document.getElementById('theme-icon').setAttribute('data-lucide', dark ? 'sun' : 'moon');
+      lucide.createIcons();
     }
 
     function pickMode(el, desc) {
@@ -1089,7 +1215,9 @@ Inês Pereira</textarea>
     function countPlayers() {
       const n = document.getElementById('ptxt').value
         .split('\n').filter(l => l.trim()).length;
-      document.getElementById('pcount').textContent = n + (n === 1 ? ' player' : ' players');
+      document.getElementById('pcount').innerHTML =
+        '<i data-lucide="hash"></i>' + n + (n === 1 ? ' player' : ' players');
+      lucide.createIcons();
     }
   </script>
 
