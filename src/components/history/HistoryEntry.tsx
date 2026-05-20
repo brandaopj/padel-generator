@@ -1,9 +1,10 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { Tournament } from '../../types'
 import { AppContext } from '../../context/AppContext'
 import { useLanguage } from '../../context/LanguageContext'
 import { useToast } from '../../context/ToastContext'
+import { ConfirmModal } from '../ui/ConfirmModal'
 
 const MODE_BADGE: Record<string, string> = {
   'regular':     'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300',
@@ -60,18 +61,32 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
 
 function DeleteButton({ onDelete }: { onDelete: () => void }) {
   const { t } = useLanguage()
+  const [confirming, setConfirming] = useState(false)
+
   return (
-    <button
-      type="button"
-      onClick={e => { e.stopPropagation(); onDelete() }}
-      aria-label={t.history.deleteTooltip}
-      title={t.history.deleteTooltip}
-      className="w-8 h-8 flex items-center justify-center rounded-md text-fg3 hover:bg-surface2 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-    >
-      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
-      </svg>
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={e => { e.stopPropagation(); setConfirming(true) }}
+        aria-label={t.history.deleteTooltip}
+        title={t.history.deleteTooltip}
+        className="w-8 h-8 flex items-center justify-center rounded-md text-fg3 hover:bg-surface2 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+      >
+        <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+        </svg>
+      </button>
+      {confirming && (
+        <ConfirmModal
+          title={t.history.deleteConfirmTitle}
+          description={t.history.deleteConfirmDescription}
+          confirmLabel={t.history.delete}
+          cancelLabel={t.history.cancel}
+          onConfirm={() => { setConfirming(false); onDelete() }}
+          onCancel={() => setConfirming(false)}
+        />
+      )}
+    </>
   )
 }
 
