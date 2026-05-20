@@ -240,27 +240,21 @@ export function GeneratorPage() {
         </div>
       )}
 
-      {/* Tournament name — optional, disclosed at bottom (P1-D) */}
-      <details className="group" open={state.clubName.length > 0 || undefined}>
-        <summary data-testid="club-name-toggle" className="text-xs font-semibold text-fg3 cursor-pointer list-none flex items-center gap-1.5 hover:text-fg2 transition-colors select-none">
-          <svg className="w-2.5 h-2.5 transition-transform group-open:rotate-90 shrink-0" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
-            <path d="M3 2l4 3-4 3V2z" />
-          </svg>
+      <div>
+        <label htmlFor="club-name" className="block text-sm font-medium text-fg2 mb-1.5">
           {t.generator.nameLabel}
-          <span className="font-normal opacity-60">{t.generator.nameOptional}</span>
-        </summary>
-        <div className="mt-2">
-          <input
-            id="club-name"
-            data-testid="club-name-input"
-            type="text"
-            value={state.clubName}
-            onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
-            placeholder={t.generator.namePlaceholder}
-            className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
-          />
-        </div>
-      </details>
+          <span className="ml-1.5 font-normal text-fg3">{t.generator.nameOptional}</span>
+        </label>
+        <input
+          id="club-name"
+          data-testid="club-name-input"
+          type="text"
+          value={state.clubName}
+          onChange={e => dispatch({ type: 'SET_CLUB_NAME', payload: e.target.value })}
+          placeholder={t.generator.namePlaceholder}
+          className="w-full rounded-md border border-bordermd px-3 py-2 text-sm bg-surface text-fg focus:outline-none focus:ring-2 focus:ring-brand"
+        />
+      </div>
 
       {hasInputs && <ValidationBanner errors={errors} warnings={warnings} />}
 

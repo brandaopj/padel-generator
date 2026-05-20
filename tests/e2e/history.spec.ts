@@ -1,7 +1,6 @@
 import { test, expect, type Page } from '@playwright/test'
 
 async function generateTournament(page: Page, name = 'Torneio Teste') {
-  await page.getByTestId('club-name-toggle').click()
   await page.getByTestId('club-name-input').fill(name)
   await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
   await page.getByTestId('generate-button').click()

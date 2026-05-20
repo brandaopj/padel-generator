@@ -18,7 +18,6 @@ test.describe('Regular mode', () => {
   })
 
   test('generates rounds for 8 players on 2 courts', async ({ page }) => {
-    await page.getByTestId('club-name-toggle').click()
     await page.getByTestId('club-name-input').fill('Clube Teste')
     await expect(page.getByTestId('mode-regular')).toHaveAttribute('aria-selected', 'true')
 
@@ -55,7 +54,6 @@ test.describe('Regular mode', () => {
   })
 
   test('generated tournament appears in history', async ({ page }) => {
-    await page.getByTestId('club-name-toggle').click()
     await page.getByTestId('club-name-input').fill('Clube Histórico')
     await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
     await page.getByTestId('generate-button').click()
@@ -67,7 +65,6 @@ test.describe('Regular mode', () => {
   })
 
   test('history entry links to tournament detail page', async ({ page }) => {
-    await page.getByTestId('club-name-toggle').click()
     await page.getByTestId('club-name-input').fill('Clube Link')
     await page.getByTestId('player-input').fill('Ana\nBruno\nCarlos\nDiana')
     await page.getByTestId('generate-button').click()

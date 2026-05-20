@@ -11,7 +11,6 @@ test.describe('Cabeças de Série mode', () => {
   })
 
   test('generates rounds for equal-sized tables', async ({ page }) => {
-    await page.getByTestId('club-name-toggle').click()
     await page.getByTestId('club-name-input').fill('Club Seeded')
 
     await page.getByTestId('table-a-input').fill('A1\nA2\nA3\nA4')
