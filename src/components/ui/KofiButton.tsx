@@ -8,7 +8,7 @@ export function KofiButton() {
       className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 border border-gray-200 dark:border-gray-600 hover:border-amber-400 dark:hover:border-amber-500 rounded-md transition-colors print:hidden"
     >
       <span aria-hidden="true">🍺</span>
-      <span className="hidden sm:inline">Buy me a beer</span>
+      <span>Buy me a beer</span>
     </a>
   )
 }

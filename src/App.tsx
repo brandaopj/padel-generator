@@ -110,8 +110,8 @@ function Shell() {
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <PadelLogo onClick={handleReset} />
-            {/* Desktop nav — hidden on mobile */}
-            <nav className="hidden sm:flex gap-4">
+            {/* Desktop nav — hidden below lg */}
+            <nav className="hidden lg:flex gap-4">
               <NavLink to="/" end onClick={handleReset} className={navLinkClass}>
                 <TrophyIcon />
                 <span>{t.nav.newTournament}</span>
@@ -130,20 +130,20 @@ function Shell() {
               </button>
             </nav>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Print + Share: desktop only — on mobile they live in the drawer */}
+          <div className="flex items-center gap-2">
+            {/* Print + Share: desktop only (lg+) — below lg they live in the drawer */}
             {showPrint && (
-              <div className="hidden sm:flex">
+              <div className="hidden lg:flex">
                 <PrintButton />
               </div>
             )}
             {showPrint && state.generated && (
-              <div className="hidden sm:flex">
+              <div className="hidden lg:flex">
                 <ShareButton tournament={state.generated} />
               </div>
             )}
-            {/* Ko-fi — hidden on mobile */}
-            <div className="hidden sm:flex">
+            {/* Ko-fi — desktop only */}
+            <div className="hidden lg:flex">
               <KofiButton />
             </div>
             <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-600 rounded-md overflow-hidden text-xs font-medium">
@@ -161,22 +161,22 @@ function Shell() {
               </button>
             </div>
             <DarkModeToggle dark={dark} onToggle={toggle} />
-            {/* Hamburger — mobile only */}
+            {/* Hamburger — below lg */}
             <button
               type="button"
               onClick={() => setMenuOpen(o => !o)}
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
-              className="sm:hidden p-1.5 -mr-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+              className="lg:hidden p-1.5 -mr-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
             >
               {menuOpen ? <CloseIcon /> : <MenuIcon />}
             </button>
           </div>
         </div>
 
-        {/* Mobile drawer */}
+        {/* Mobile/tablet drawer — below lg */}
         {menuOpen && (
-          <div className="absolute top-full left-0 right-0 sm:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
+          <div className="absolute top-full left-0 right-0 lg:hidden bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-lg">
             <nav className="px-4 py-3 space-y-1">
               <NavLink to="/" end onClick={() => { setMenuOpen(false); handleReset() }} className={mobileNavLinkClass}>
                 <TrophyIcon />
@@ -208,10 +208,10 @@ function Shell() {
         )}
       </header>
 
-      {/* Backdrop for mobile menu — below header (z-30) but above page content */}
+      {/* Backdrop for mobile/tablet menu — below header (z-30) but above page content */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-20 sm:hidden"
+          className="fixed inset-0 z-20 lg:hidden"
           onClick={() => setMenuOpen(false)}
           aria-hidden="true"
         />
