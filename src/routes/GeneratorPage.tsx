@@ -18,10 +18,11 @@ import { useHistory } from '../hooks/useHistory'
 import { analytics } from '../analytics'
 
 const NAME_POOL = [
-  'Ana', 'Bruno', 'Carlos', 'Diana', 'Eduardo', 'Filipa',
-  'Gonçalo', 'Helena', 'Inês', 'João', 'Katia', 'Luís',
-  'Marta', 'Nuno', 'Olga', 'Pedro', 'Rita', 'Sérgio',
-  'Teresa', 'Vasco',
+  'Ana Costa', 'Bruno Silva', 'Carlos Mota', 'Diana Ferreira',
+  'Eduardo Pinto', 'Filipa Santos', 'Gonçalo Lima', 'Helena Cruz',
+  'Inês Rocha', 'João Sousa', 'Katia Lopes', 'Luís Faria',
+  'Marta Neves', 'Nuno Carvalho', 'Olga Martins', 'Pedro Ribeiro',
+  'Rita Gomes', 'Sérgio Teixeira', 'Teresa Alves', 'Vasco Cunha',
 ]
 
 function pickRandom(arr: string[], n: number): string[] {
