@@ -50,7 +50,7 @@ The system must support three tournament generation modes:
 | Seeded | `seeded` | Table A vs Table B — each table is shuffled independently and players are paired by position |
 
 #### RF-02 Mode selection
-The user must be able to select the game mode via a tab selector. The active mode must have a clear visual indicator. Each tab must show a brief description of the mode to guide new users.
+The user must be able to select the game mode via a tab selector. The active mode must have a clear visual indicator. Each tab must show a brief description of the mode to guide new users. Each tab must have a minimum touch target height of 44 px (`min-h-[44px]`) to meet mobile usability standards.
 
 #### RF-03 Data preservation when switching modes
 When switching modes, data entered in other modes must be preserved in memory. The user must not need to re-enter data if they selected the wrong mode.
@@ -119,7 +119,7 @@ Each pair must play against every other pair exactly once. All matches in a roun
 The matches in each round must be distributed across the available courts in a cyclic manner (court 1, court 2, …, court N, court 1, …).
 
 #### RF-18 Automatic scroll after generation (mobile)
-After generating a tournament on a mobile device, the page must smoothly scroll to the results panel.
+After generating a tournament on a mobile device, the page must smoothly scroll to the results panel using `scrollIntoView({ behavior: 'smooth', block: 'start' })`.
 
 #### RF-19 Tournament persistence in history
 Each generated tournament must be saved automatically to the history (`localStorage`) without any action required from the user.
@@ -206,6 +206,21 @@ The application must allow the organiser to share the generated schedule. A shar
 
 ### General
 
+#### RF-38 Responsive navigation — hamburger menu
+Below 1024 px (`lg` breakpoint) the header navigation must collapse into a hamburger (☰) button. Tapping it must toggle a slide-down drawer containing: nav links (New Tournament, History, How It Works), Print and Share buttons (only when a tournament is generated), and the Ko-fi button. The drawer must be dismissed when a link or button inside it is activated. The desktop navigation (logo + full links + Print + Share + Ko-fi) must only be visible at 1024 px and above.
+
+#### RF-39 Bottom navigation bar (mobile)
+On the generator page, a fixed bottom navigation bar must be present and visible only below 1024 px (`lg:hidden`). It must contain two scroll shortcut buttons: one that scrolls to the configuration form ("Config") and one that scrolls to the results panel ("Results" / "Torneio"). The page root must have bottom padding (`pb-24 lg:pb-8`) so that content is not obscured by the bar.
+
+#### RF-40 Results panel always visible on mobile
+On the generator page, the results panel (EmptyState or RoundsPanel) must always be rendered below the form on mobile — it must not be hidden or require any interaction to appear. The two-column desktop layout (form | results) must apply at 1024 px and above only.
+
+#### RF-41 Sticky generate button on mobile
+On mobile and tablet (below 1024 px), the "Generate Tournament" button must be sticky (`sticky bottom-16`) so that it remains visible as the user scrolls through the form. On desktop (`lg`) the button must be in its normal static position.
+
+#### RF-42 Responsive match card sizing
+Match cards must adapt their padding, avatar size, and gap to the viewport width: compact on small screens (`p-3`, avatars `w-7 h-7`, gap `gap-2`) and larger on wider screens (`sm:p-5`, avatars `sm:w-8 sm:h-8`, `sm:gap-3`). The score area at the bottom of each card is a visual-only print element and must not be an interactive input.
+
 #### RF-30 Dark mode
 The application must support dark mode. The user's preference must be persisted in `localStorage` and applied on subsequent visits.
 
@@ -239,7 +254,7 @@ After generating a tournament, the name of each court must be editable inline in
 | ID | Requirement |
 |----|-------------|
 | RNF-01 | The application must work without a backend — all logic is client-side |
-| RNF-02 | The application must be responsive and usable on a smartphone (primary use case) |
+| RNF-02 | The application must be responsive and usable on a smartphone (primary use case). The breakpoint for collapsing navigation and switching to the single-column layout is 1024 px (`lg`). Interactive touch targets must be at least 44 px tall. |
 | RNF-03 | Text inputs must have `font-size` ≥ 16px on mobile to avoid automatic zoom on iOS |
 | RNF-04 | All form labels must be associated with their respective inputs via `htmlFor`/`id` |
 | RNF-05 | Dynamic messages (errors, success) must have `role="alert"` or `role="status"` with `aria-live` for screen readers |

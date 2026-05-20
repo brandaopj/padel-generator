@@ -21,7 +21,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Tournament name field (optional)
 - Court count calculated automatically from the number of pairs; shown in real time
 - Round-robin scheduling — every pair plays every other pair exactly once
-- Mode description shown below the mode selector
+- Mode description shown below the mode selector; mode tabs have a 44 px minimum touch target
 - Stale-results warning when the form is edited after generation
 - Player/pair names entered via textarea — paste directly from a WhatsApp list (one name per line; pairs as `Player1 / Player2`)
 - Names preserved when switching between modes
@@ -29,14 +29,16 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Validation errors shown inline; generate button disabled while errors exist
 - Loading spinner on the generate button during generation
 - Regenerate button shown after a tournament has already been generated
+- On mobile/tablet, the generate button is sticky (`sticky bottom-16`) so it remains visible while scrolling the form
 
 ### Match cards
 
 - Player avatars (initials + colour palette) next to each name
 - Symmetric two-column layout — both pairs always aligned
 - Player names wrap freely — no truncation regardless of name length
-- Score writing area at the bottom of each card, separated from the players by a divider
+- Score writing area at the bottom of each card, separated from the players by a divider (visual-only print element — not an interactive input)
 - Court names editable inline — pencil icon appears on hover; names persist in history and print
+- Responsive sizing: compact padding and avatars on small screens (`p-3 sm:p-5`, `w-7 h-7 sm:w-8 sm:h-8`)
 
 ### Notifications & confirmations
 
@@ -48,7 +50,15 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Tournament history stored in `localStorage`
 - Each entry shows: name, mode badge, courts, pairs, date
 - Delete tournament from history with confirmation and toast feedback
-- Auto-scroll to results after generation on mobile
+- Auto-scroll to results after generation (scrolls to the top of the results panel)
+
+#### Mobile / responsive
+
+- Below 1024 px (`lg`) the header nav collapses into a hamburger (☰) button; a slide-down drawer exposes the nav links (New Tournament, History, How It Works), Print and Share (when a tournament is generated), and Ko-fi
+- Desktop nav (logo + full links + Print + Share + Ko-fi) is only visible at 1024 px and above
+- A fixed bottom navigation bar (`lg:hidden`) on the generator page provides two scroll shortcuts: "Config" (scrolls to the form) and "Results" (scrolls to the rounds panel); the page has `pb-24 lg:pb-8` to keep content clear of the bar
+- The results panel (EmptyState / RoundsPanel) is always rendered below the form on mobile — not hidden behind a separate column
+- `overflow-x-hidden` on the root container prevents horizontal scroll artefacts from the slide-down drawer
 
 ### Share
 
