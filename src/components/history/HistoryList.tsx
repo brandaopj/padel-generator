@@ -56,7 +56,7 @@ export function HistoryList({ tournaments, onDelete }: Props) {
   if (!tournaments.length) return <HistoryEmpty />
 
   return (
-    <ul data-testid="history-list" className="divide-y divide-border">
+    <ul data-testid="history-list" className="flex flex-col gap-2.5">
       {tournaments.map(t => (
         <li key={t.id}>
           <HistoryEntry tournament={t} onDelete={onDelete} />

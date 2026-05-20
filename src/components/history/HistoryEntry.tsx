@@ -4,44 +4,20 @@ import type { Tournament } from '../../types'
 import { AppContext } from '../../context/AppContext'
 import { useLanguage } from '../../context/LanguageContext'
 import { useToast } from '../../context/ToastContext'
-import { ShareButton } from '../ui/ShareButton'
 
-// Mode dot colors — matches existing badge logic
-const MODE_COLORS: Record<string, string> = {
-  'regular':     'var(--color-brand)',
-  'fixed-pairs': '#7c3aed',
-  'seeded':      '#d97706',
-}
-
-function relativeTime(dateStr: string, lang: string): string {
-  const now = Date.now()
-  const then = new Date(dateStr).getTime()
-  const diffMs = now - then
-  const diffMin = Math.floor(diffMs / 60000)
-  const diffHours = Math.floor(diffMs / 3600000)
-  const diffDays = Math.floor(diffMs / 86400000)
-  const diffWeeks = Math.floor(diffDays / 7)
-  const diffMonths = Math.floor(diffDays / 30)
-  const diffYears = Math.floor(diffDays / 365)
-
-  const isPt = lang === 'pt'
-  if (diffMin < 1) return isPt ? 'Agora mesmo' : 'Just now'
-  if (diffMin < 60) return isPt ? `Há ${diffMin} min` : `${diffMin}m ago`
-  if (diffHours < 24) return isPt ? `Há ${diffHours} hora${diffHours !== 1 ? 's' : ''}` : `${diffHours}h ago`
-  if (diffDays < 7) return isPt ? `Há ${diffDays} dia${diffDays !== 1 ? 's' : ''}` : `${diffDays}d ago`
-  if (diffWeeks < 5) return isPt ? `Há ${diffWeeks} semana${diffWeeks !== 1 ? 's' : ''}` : `${diffWeeks}w ago`
-  if (diffMonths < 12) return isPt ? `Há ${diffMonths} ${diffMonths === 1 ? 'mês' : 'meses'}` : `${diffMonths}mo ago`
-  return isPt ? `Há ${diffYears} ano${diffYears !== 1 ? 's' : ''}` : `${diffYears}y ago`
+const MODE_BADGE: Record<string, string> = {
+  'regular':     'bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300',
+  'fixed-pairs': 'bg-violet-50 text-violet-700 dark:bg-violet-950/50 dark:text-violet-300',
+  'seeded':      'bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-300',
 }
 
 function tournamentTitle(t: Tournament, autoTitle: { regular: (n: number) => string; fixedPairs: (n: number) => string; seeded: (n: number) => string }): string {
   if (t.clubName) return t.clubName
-  const auto = {
+  return {
     'regular': autoTitle.regular(t.pairs.length),
     'fixed-pairs': autoTitle.fixedPairs(t.pairs.length),
     'seeded': autoTitle.seeded(t.pairs.length),
-  }
-  return auto[t.mode]
+  }[t.mode]
 }
 
 function UseTemplateButton({ tournament }: { tournament: Tournament }) {
@@ -71,10 +47,12 @@ function UseTemplateButton({ tournament }: { tournament: Tournament }) {
       onClick={handleClick}
       title={t.history.useAsTemplate}
       aria-label={t.history.useAsTemplate}
-      className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-fg3 hover:text-brand transition-colors rounded"
+      className="w-8 h-8 flex items-center justify-center rounded-md text-fg3 hover:bg-surface2 hover:text-brand transition-colors"
     >
+      {/* Copy icon (F-14) */}
       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        <path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z"/>
+        <path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h8a2 2 0 00-2-2H5z"/>
       </svg>
     </button>
   )
@@ -88,10 +66,10 @@ function DeleteButton({ onDelete }: { onDelete: () => void }) {
       onClick={e => { e.stopPropagation(); onDelete() }}
       aria-label={t.history.deleteTooltip}
       title={t.history.deleteTooltip}
-      className="p-1.5 min-w-[36px] min-h-[36px] flex items-center justify-center text-fg3 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded"
+      className="w-8 h-8 flex items-center justify-center rounded-md text-fg3 hover:bg-surface2 hover:text-red-500 dark:hover:text-red-400 transition-colors"
     >
       <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+        <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"/>
       </svg>
     </button>
   )
@@ -104,50 +82,37 @@ export function HistoryEntry({ tournament: tourney, onDelete }: Props) {
   const navigate = useNavigate()
   const title = tournamentTitle(tourney, t.history.autoTitle)
 
-  const date = new Date(tourney.date)
-  const day = date.toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-GB', { day: 'numeric' })
-  const month = date.toLocaleDateString(lang === 'pt' ? 'pt-PT' : 'en-GB', { month: 'short' }).replace('.', '').toUpperCase()
+  const dateStr = new Date(tourney.date).toLocaleDateString(
+    lang === 'pt' ? 'pt-PT' : 'en-GB',
+    { day: 'numeric', month: 'short', year: 'numeric' }
+  )
 
-  const ago = relativeTime(tourney.date, lang)
-  const playerCount = tourney.mode === 'regular'
-    ? tourney.players.length
-    : tourney.pairs.length * 2
-  const meta = `${ago} · ${t.history.players(playerCount)} · ${t.history.courts(tourney.courts)}`
+  const badgeClass = MODE_BADGE[tourney.mode] ?? 'bg-surface2 text-fg3'
 
   return (
     <article
       data-testid={`history-entry-${tourney.id}`}
       onClick={() => navigate(`/history/${tourney.id}`)}
-      className="flex items-center gap-4 py-4 cursor-pointer group hover:bg-surface2/40 rounded-lg px-2 -mx-2 transition-colors"
+      className="flex items-center gap-3 px-4 py-3 bg-surface border border-border rounded-xl cursor-pointer hover:border-brand/30 hover:shadow-sm transition-all group"
     >
-      {/* Date block */}
-      <div className="w-10 text-center shrink-0">
-        <div className="text-xl font-black text-fg leading-none tabular-nums">{day}</div>
-        <div className="text-[10px] font-bold text-fg3 uppercase tracking-wider mt-0.5">{month}</div>
-      </div>
-
-      {/* Vertical divider */}
-      <div className="w-px h-8 bg-border shrink-0" aria-hidden="true" />
-
       {/* Content */}
       <div className="flex-1 min-w-0">
         <p className="font-semibold text-fg truncate leading-tight">{title}</p>
-        <p className="text-xs text-fg3 mt-0.5 truncate">{meta}</p>
+        <p className="text-xs text-fg3 mt-0.5">{dateStr}</p>
       </div>
 
-      {/* Mode indicator */}
+      {/* Badges — hidden on tiny screens */}
       <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-        <span
-          className="w-2 h-2 rounded-full shrink-0"
-          style={{ background: MODE_COLORS[tourney.mode] ?? 'var(--color-brand)' }}
-          aria-hidden="true"
-        />
-        <span className="text-xs text-fg3 font-medium">{t.modes[tourney.mode].label}</span>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${badgeClass}`}>
+          {t.modes[tourney.mode].label}
+        </span>
+        <span className="bg-surface2 text-fg3 px-2 py-0.5 rounded-full text-[10px] font-medium">
+          {t.history.courts(tourney.courts)} · {t.history.pairs(tourney.pairs.length)}
+        </span>
       </div>
 
-      {/* Actions — stop propagation so they don't trigger navigation */}
+      {/* Actions */}
       <div className="flex items-center shrink-0" onClick={e => e.stopPropagation()}>
-        <ShareButton tournament={tourney} variant="icon" source="history" />
         <UseTemplateButton tournament={tourney} />
         <DeleteButton onDelete={() => onDelete(tourney.id)} />
       </div>

@@ -17,18 +17,17 @@ export function RoundCard({ round, courtNames, onEditCourtName, onScoreChange }:
       data-testid={`round-${round.number}`}
       className="space-y-3 print:space-y-2"
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
-          <svg width="22" height="22" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="shrink-0">
-            <circle cx="7" cy="7" r="6.5" fill="#F5C344"/>
-            <path d="M1.5 7 Q7 2 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
-            <path d="M1.5 7 Q7 12 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
-          </svg>
-          <span className="text-lg font-bold text-fg font-display print:text-sm">
-            {t.rounds.round(round.number)}
-          </span>
-        </div>
-        <span className="text-xs font-bold tracking-widest text-fg3 uppercase">
+      <div className="flex items-center gap-2.5 mb-3">
+        <svg width="22" height="22" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="shrink-0">
+          <circle cx="7" cy="7" r="6.5" fill="#F5C344"/>
+          <path d="M1.5 7 Q7 2 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
+          <path d="M1.5 7 Q7 12 12.5 7" stroke="rgba(0,0,0,0.22)" strokeWidth="1.3" strokeLinecap="round"/>
+        </svg>
+        <span className="text-lg font-bold text-fg font-display print:text-sm shrink-0">
+          {t.rounds.round(round.number)}
+        </span>
+        <div className="flex-1 h-px bg-border" aria-hidden="true" />
+        <span className="text-xs font-bold tracking-widest text-fg3 uppercase shrink-0">
           {t.rounds.matchCount(round.matches.length)}
         </span>
       </div>

@@ -47,10 +47,23 @@ function Shell() {
   const [helpOpen, setHelpOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [lastPathname, setLastPathname] = useState(location.pathname)
+  const [historyCount, setHistoryCount] = useState(() => {
+    try { return (JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length }
+    catch { return 0 }
+  })
   if (lastPathname !== location.pathname) {
     setLastPathname(location.pathname)
     if (menuOpen) setMenuOpen(false)
   }
+
+  useEffect(() => {
+    function syncCount() {
+      try { setHistoryCount((JSON.parse(localStorage.getItem('padel-history') ?? '[]') as unknown[]).length) }
+      catch { setHistoryCount(0) }
+    }
+    window.addEventListener('padel-history-change', syncCount)
+    return () => window.removeEventListener('padel-history-change', syncCount)
+  }, [])
 
   useEffect(() => {
     if (!menuOpen) return
@@ -85,6 +98,11 @@ function Shell() {
               <NavLink to="/history" className={navLinkClass}>
                 <Clock className="w-4 h-4 shrink-0" />
                 <span>{t.nav.history}</span>
+                {historyCount > 0 && (
+                  <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-brand text-brand-on text-[9px] font-bold flex items-center justify-center leading-none">
+                    {historyCount}
+                  </span>
+                )}
               </NavLink>
               <button
                 type="button"
@@ -151,6 +169,11 @@ function Shell() {
               <NavLink to="/history" onClick={() => setMenuOpen(false)} className={mobileNavLinkClass}>
                 <Clock className="w-4 h-4 shrink-0" />
                 <span>{t.nav.history}</span>
+                {historyCount > 0 && (
+                  <span className="ml-auto min-w-[18px] h-[18px] px-1 rounded-full bg-brand text-brand-on text-[9px] font-bold flex items-center justify-center leading-none">
+                    {historyCount}
+                  </span>
+                )}
               </NavLink>
               <button
                 type="button"
