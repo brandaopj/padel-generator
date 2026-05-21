@@ -1,6 +1,8 @@
 import { Calendar, Printer } from 'lucide-react'
 import type { Tournament } from '../../types'
 import { RoundCard } from './RoundCard'
+import { StandingsTable } from './StandingsTable'
+import { allMatchesScored, buildStandings } from '../../utils/standings'
 import { useLanguage } from '../../context/LanguageContext'
 import { ShareButton } from '../ui/ShareButton'
 
@@ -18,6 +20,8 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false, sh
   if (!tournament) return null
 
   const dateLocale = lang === 'pt' ? 'pt-PT' : 'en-GB'
+  const showStandings = tournament.rounds.length > 0 && allMatchesScored(tournament)
+  const standings = showStandings ? buildStandings(tournament) : null
 
   return (
     <div data-testid="rounds-panel" className="space-y-8 print:space-y-4 animate-fade-in-up">
@@ -77,6 +81,8 @@ export function RoundsPanel({ tournament, onEditCourtName, showShare = false, sh
           onScoreChange={onScoreChange ? (matchIdx, s) => onScoreChange(i, matchIdx, s) : undefined}
         />
       ))}
+
+      {standings && <StandingsTable standings={standings} />}
     </div>
   )
 }
