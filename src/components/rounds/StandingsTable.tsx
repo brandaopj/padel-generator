@@ -8,7 +8,7 @@ export function StandingsTable({ standings }: Props) {
   const s = t.rounds.standings
 
   return (
-    <div className="rounded-xl border border-border overflow-hidden">
+    <div data-testid="standings-table" className="rounded-xl border border-border overflow-hidden">
       <div className="px-4 py-3 bg-surface2 border-b border-border">
         <h3 className="text-sm font-bold text-fg tracking-wide">{s.title}</h3>
       </div>

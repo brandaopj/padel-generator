@@ -70,6 +70,7 @@ export function TournamentDetailPage() {
           {hasChanges && (
             <button
               type="button"
+              data-testid="save-scores-button"
               onClick={handleSave}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-brand text-brand-on rounded-md text-sm font-medium hover:bg-brand/90 transition-colors"
             >
