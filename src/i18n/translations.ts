@@ -118,6 +118,7 @@ export const translations = {
     history: {
       title: 'Histórico',
       back: '← Histórico',
+      saveScores: 'Guardar Resultados',
       notFound: 'Torneio não encontrado.',
       deleteTooltip: 'Apagar torneio',
       deleteConfirmTitle: 'Apagar torneio?',
@@ -166,6 +167,7 @@ export const translations = {
       close: 'Fechar',
       generated: (rounds: number, matches: number) => `Torneio gerado — ${rounds} rondas · ${matches} jogos`,
       courtUpdated: 'Nome do campo atualizado',
+      scoresSaved: 'Resultados guardados',
       deleted: 'Torneio apagado',
       playersLoaded: 'Jogadores carregados no gerador',
       undo: 'Desfazer',
@@ -298,6 +300,7 @@ export const translations = {
     history: {
       title: 'History',
       back: '← History',
+      saveScores: 'Save Results',
       notFound: 'Tournament not found.',
       deleteTooltip: 'Delete tournament',
       deleteConfirmTitle: 'Delete tournament?',
@@ -346,6 +349,7 @@ export const translations = {
       close: 'Close',
       generated: (rounds: number, matches: number) => `Tournament generated — ${rounds} rounds · ${matches} matches`,
       courtUpdated: 'Court name updated',
+      scoresSaved: 'Results saved',
       deleted: 'Tournament deleted',
       playersLoaded: 'Players loaded into the generator',
       undo: 'Undo',
