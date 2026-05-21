@@ -18,7 +18,8 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Generator
 
-- Tournament name — collapsed `<details>` disclosure at the bottom of the form; the `<summary>` acts as the toggle; the input is revealed on click; the disclosure opens automatically if a name is already set (`open={state.clubName.length > 0 || undefined}`)
+- **Layout** — two-column layout on `md`+ screens: 340 px form sidebar on the left, rounds panel (`1fr`) on the right. Below `md` the panels stack vertically
+- Tournament name — plain label + input always visible at the bottom of the form (no collapsible disclosure)
 - Court count calculated automatically from the number of pairs; shown in real time
 - Round-robin scheduling — every pair plays every other pair exactly once
 - Mode selector: the currently selected mode occupies a large primary slot (icon + label + description); the other two render in a compact 2-column pair below it. Mode tabs have a 44 px minimum touch target
@@ -27,6 +28,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Names preserved when switching between modes
 - Clear button on every textarea with confirmation modal (no native browser dialog)
 - Validation errors shown inline and are actionable and count-aware — e.g. "You have 6 players — add 2 or remove 2 to complete the pairs." rather than a generic "must be a multiple of 4"; generate button disabled while errors exist
+- **Load Example** — mode-aware: Regular fills 8 random players, Fixed Pairs fills 4 random pairs, Seeded fills 4+4 players across both tables; names are randomised each time and drawn from the active language pool (PT or EN)
 - Loading spinner on the generate button during generation
 - Regenerate button shown after a tournament has already been generated
 - **Round count cap** — segmented pill control (border-joined buttons) with one button per round number from 1 to the max; the last button is labeled with the allRounds translation ("All" / "Todas"). A `≈ N min` time estimate (15 min per round) appears to the right of the label
@@ -41,6 +43,11 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Court names editable inline — pencil icon is always visible at 40% opacity and reaches full opacity on hover/focus, ensuring the edit affordance is discoverable on touch devices; names persist in history and print
 - Responsive sizing: compact padding and avatars on small screens (`p-3 sm:p-5`, `w-7 h-7 sm:w-8 sm:h-8`)
 
+### Editable scores & standings
+
+- **Score entry** — match scores are editable on both the generator view and the tournament detail page. On the detail page, score changes are local-only until the user clicks "Guardar Resultados / Save Results" (brand-colour button that appears only when there are unsaved changes); saving shows a success toast. Court name edits on the detail page continue to auto-save immediately
+- **Standings table** — when all matches in a tournament have scores entered, a Classificação / Standings table appears automatically below the rounds. Columns: Pos, Dupla/Team, J/P (played), V/W (wins), D/L (losses), E/D (draws — hidden if none), MF/PF (points for), MC/PA (points against), +/- (diff). Ranked by wins → diff → points for. First-place row is highlighted. Works in both the generator view and the history detail page
+
 ### Notifications & confirmations
 
 - **Toast system** — slide-in notifications (bottom-right): tournament generated, court name updated, tournament deleted, schedule copied
@@ -52,7 +59,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - Each entry shows: name, mode badge, courts, pairs, date
 - **Reuse players** — people-icon button on each history entry loads that tournament's mode + players/pairs/tables back into the generator and navigates to `/`; shows a success toast; works for all three modes
 - **Undo delete** — deleting a tournament removes it from the UI immediately (optimistic) with a 5-second undo toast; the `localStorage` write is deferred so the action can be reversed without a confirm modal
-- **Sort & filter** — history list can be sorted newest/oldest and filtered by game mode; full-width selects on mobile, inline on tablet+; wider column (`max-w-4xl`)
+- **Sort & filter** — history list can be sorted newest/oldest and filtered by game mode; full-width selects on mobile, inline on tablet+; width aligned to `max-w-7xl` (same as generator)
 - **Delete** — the delete button uses a trash icon; clicking it opens a confirm modal ("Apagar torneio?" / "This action cannot be undone.") before triggering the optimistic removal + undo toast
 - **Tournament count badge** — History nav link shows a live count badge (desktop + mobile drawer); updated via a custom `padel-history-change` DOM event dispatched on save/remove
 - **Navigation guard** — navigating away from the generator while results are stale (form edited after generation) prompts for confirmation via a `useBlocker` modal (requires the data router via `createBrowserRouter`)
@@ -68,7 +75,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 
 ### Share
 
-- **Print buttons** — `RoundsPanel` accepts a `showPrint` prop (default `true`). `GeneratorPage` passes `showPrint={false}` since the sticky header owns the print action there. `TournamentDetailPage` omits the prop (defaults to `true`) and no longer renders its own `<PrintButton>` — the panel handles it. Print/Share appear in the header from `md` (768 px) rather than `lg`.
+- **Print button** — consistent location across pages: in the generator it lives in the app-level header action bar; on the tournament detail page it sits in the local action bar next to the Share button. It is not rendered inside `RoundsPanel` on any page.
 - **Share button** in the rounds panel header, in the generator header, on each history entry, and on the tournament detail page
 - Uses the native Web Share API on mobile; falls back to clipboard copy on desktop
 - Formats the full schedule as emoji-rich text ready to paste into WhatsApp
@@ -88,6 +95,7 @@ Tournament scheduler for padel, supporting three game modes, tournament history,
 - **Backgrounds** — subtle padel court SVG diagram (net, service lines, back-wall zones) fixed behind page content; radial gradient orbs in dark mode
 - **Cards** — rounded corners, per-court accent colour on the top border (`--color-court1` through `--color-court6`), frosted glass header (`backdrop-blur-sm bg-surface/90`)
 - Dark mode toggle persisted to `localStorage`; pill toggle with sun/moon icons
+- **localStorage resilience** — `useDarkMode` and `useHistory` wrap all `setItem`/`getItem` calls in `try-catch`, silently handling private-browsing restrictions and `QuotaExceededError`
 - Print view: form and header hidden, A4 layout (`@page { size: A4; margin: 1.5cm }`), 2-column match cards with score area
 - Build date footer at the bottom of every page — date is injected at build time via Vite `define` and respects the active language (`pt-PT` / `en-GB`)
 
@@ -134,7 +142,8 @@ src/
 │   ├── gameLogic.ts        # Pure logic: shuffle, round-robin, court distribution
 │   ├── validation.ts       # Form validation (errors + warnings)
 │   ├── modes.ts            # Mode icon data
-│   └── shareTournament.ts  # Format + share/copy tournament text
+│   ├── shareTournament.ts  # Format + share/copy tournament text
+│   └── standings.ts        # allMatchesScored() + buildStandings() pure functions
 ├── hooks/
 │   ├── useHistory.ts       # localStorage CRUD for tournament history
 │   └── useDarkMode.ts      # Dark mode toggle with persistence
@@ -146,7 +155,7 @@ src/
 ├── components/
 │   ├── generator/          # ModeSelector, PlayerInput, PairInput, SeededInput,
 │   │                       # ValidationBanner, EmptyState
-│   ├── rounds/             # RoundsPanel, RoundCard, MatchCard
+│   ├── rounds/             # RoundsPanel, RoundCard, MatchCard, StandingsTable
 │   ├── history/            # HistoryList, HistoryEntry
 │   ├── ui/                 # ErrorBoundary, DarkModeToggle, PrintButton,
 │   │                       # ShareButton, ClearButton, ConfirmModal,
@@ -157,8 +166,8 @@ src/
     ├── HistoryPage.tsx          # /history — saved tournament list
     └── TournamentDetailPage.tsx # /history/:id — tournament detail
 tests/
-├── unit/           # utility tests (gameLogic, validation, history, shareTournament)
-└── e2e/            # Playwright tests (regular, fixed-pairs, seeded, history)
+├── unit/           # utility tests (gameLogic, validation, history, shareTournament, standings)
+└── e2e/            # Playwright tests (regular, fixed-pairs, seeded, history, scores)
 ```
 
 ---
@@ -217,6 +226,7 @@ Cover pure functions in `src/utils/`, the `useHistory` module, and React compone
 - `validation`: all modes, error and warning cases
 - `history`: getAll, save, getById, corrupted data handling
 - `shareTournament`: formatTournamentText, Web Share API path, clipboard fallback, abort and error branches
+- `standings`: allMatchesScored(), buildStandings() — ranking logic, draw handling, edge cases (12 tests)
 - `PlayerInput`: clear button visibility, confirmation modal, onChange callback
 - `ConfirmModal`: rendering, confirm/cancel callbacks, portal behaviour
 - `Toast`: variants (success, error, info), accessibility roles, dismiss and action buttons
@@ -235,7 +245,7 @@ Coverage is measured on `src/utils/` and `src/hooks/useHistory.ts` and enforced 
 | Functions | 90% |
 | Branches | 80% |
 
-### E2E — 21 scenarios × 2 browsers = 42 test runs (Playwright)
+### E2E — 28 scenarios × 2 browsers = 56 test runs (Playwright)
 
 ```bash
 npm run test:e2e
@@ -249,6 +259,7 @@ Tests run across two browser projects: `Desktop Chrome` and `Mobile Safari` (iPh
 | `fixed-pairs.spec.ts` | Generate with 4 pairs, validation, add/remove pairs |
 | `seeded.spec.ts` | Equal tables, unequal-size warning, minimum validation |
 | `history.spec.ts` | History list, empty state, delete + undo, reuse players, count badge filter, detail view, back link, not-found |
+| `scores.spec.ts` | Score entry, save button lifecycle (appears on change, clears on save), standings table appearance |
 
 Mobile navigation: tests that navigate to `/history` use a `navigateToHistory()` helper that opens the hamburger drawer on mobile viewports before clicking the link — preserving `localStorage` state via SPA navigation rather than a full page reload.
 

@@ -29,7 +29,7 @@ src/
   components/
     generator/          Form inputs (mode selector, player/pair/seeded inputs, etc.)
     history/            History list and individual history entry card
-    rounds/             Tournament output (round cards, match cards, rounds panel)
+    rounds/             Tournament output (round cards, match cards, rounds panel, standings table)
     ui/                 Shared UI primitives (modals, toast, buttons, dark mode toggle)
     __tests__/          Component unit tests (PlayerInput, ConfirmModal, Toast)
     GeneratorPage.tsx   Full generator page component
@@ -47,6 +47,7 @@ src/
   types/                Shared TypeScript types (Tournament, GameMode, Pair, etc.)
   utils/
     gameLogic.ts        Pure scheduling algorithms (see Game modes below)
+    standings.ts        allMatchesScored() and buildStandings() pure functions
 ```
 
 ## Design system
@@ -120,7 +121,7 @@ All three modes pass their final pairs into `distribute(roundRobin(pairs), court
 ## Testing
 
 **Unit tests** — `tests/unit/` and `src/components/__tests__/`  
-Written with Vitest. Cover `gameLogic`, `validation`, `history` utilities, `shareTournament`, and component tests for `PlayerInput`, `ConfirmModal`, and `Toast`.
+Written with Vitest. Cover `gameLogic`, `validation`, `history` utilities, `shareTournament`, `standings`, and component tests for `PlayerInput`, `ConfirmModal`, and `Toast`.
 
 ```bash
 npm run test:unit          # run once
@@ -129,13 +130,13 @@ npm run test:coverage      # with v8 coverage report → coverage/
 ```
 
 **End-to-end tests** — `tests/e2e/`  
-Written with Playwright. Tests run against the built app served by `vite preview`. Each spec file corresponds to a game mode or feature (`regular.spec.ts`, `fixed-pairs.spec.ts`, `seeded.spec.ts`, `history.spec.ts`). Two browser projects are configured: `Desktop Chrome` and `Mobile Safari` (iPhone 12).
+Written with Playwright. Tests run against the built app served by `vite preview`. Spec files: `regular.spec.ts`, `fixed-pairs.spec.ts`, `seeded.spec.ts`, `history.spec.ts`, `scores.spec.ts` (score entry, save button lifecycle, standings). Two browser projects are configured: `Desktop Chrome` and `Mobile Safari` (iPhone 12). Total: 56 test runs (28 scenarios × 2 browsers).
 
 ```bash
 npm run test:e2e
 ```
 
-**Navigation in tests:** use in-app SPA navigation (not `page.goto()`) to preserve `localStorage` across route changes — `page.goto()` triggers `addInitScript`, which clears localStorage. For links that live in the hamburger drawer on mobile, use the `navigateToHistory()` helper pattern (open the drawer first, then click the link). Tests that fill the tournament name input must first click `getByTestId('club-name-toggle')` to open the `<details>` disclosure before filling `club-name-input`.
+**Navigation in tests:** use in-app SPA navigation (not `page.goto()`) to preserve `localStorage` across route changes — `page.goto()` triggers `addInitScript`, which clears localStorage. For links that live in the hamburger drawer on mobile, use the `navigateToHistory()` helper pattern (open the drawer first, then click the link).
 
 ## CI/CD
 
