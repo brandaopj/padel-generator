@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import type { Tournament } from '../types'
 import { useHistory } from '../hooks/useHistory'
@@ -8,9 +9,11 @@ import { PrintButton } from '../components/ui/PrintButton'
 
 export function TournamentDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { getById } = useHistory()
+  const { getById, update } = useHistory()
   const { t } = useLanguage()
-  const tournament: Tournament | null = id ? (getById(id) ?? null) : null
+  const [tournament, setTournament] = useState<Tournament | null>(() =>
+    id ? (getById(id) ?? null) : null
+  )
 
   if (!tournament) {
     return (
@@ -20,6 +23,31 @@ export function TournamentDetailPage() {
         </p>
       </div>
     )
+  }
+
+  function handleScoreChange(roundIdx: number, matchIdx: number, scores: [number | null, number | null]) {
+    if (!tournament) return
+    const rounds = tournament.rounds.map((round, ri) =>
+      ri !== roundIdx ? round : {
+        ...round,
+        matches: round.matches.map((match, mi) =>
+          mi !== matchIdx ? match : { ...match, scores }
+        ),
+      }
+    )
+    const updated = { ...tournament, rounds }
+    setTournament(updated)
+    update(updated)
+  }
+
+  function handleEditCourtName(court: number, name: string) {
+    if (!tournament) return
+    const updated = {
+      ...tournament,
+      courtNames: { ...tournament.courtNames, [court]: name },
+    }
+    setTournament(updated)
+    update(updated)
   }
 
   return (
@@ -36,7 +64,12 @@ export function TournamentDetailPage() {
           <ShareButton tournament={tournament} source="detail" />
         </div>
       </div>
-      <RoundsPanel tournament={tournament} showPrint={false} />
+      <RoundsPanel
+        tournament={tournament}
+        showPrint={false}
+        onScoreChange={handleScoreChange}
+        onEditCourtName={handleEditCourtName}
+      />
     </div>
   )
 }
